@@ -1,5 +1,12 @@
 import { Link } from '@inertiajs/react';
-import { Globe, LayoutGrid } from 'lucide-react';
+import {
+    BarChart3,
+    Compass,
+    Globe,
+    Newspaper,
+    Palmtree,
+    Users,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -16,11 +23,32 @@ import {
 import { dashboard, home } from '@/routes';
 import type { NavItem } from '@/types';
 
+// Item navigasi sidebar sesuai modul PRD
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Pengelolaan Aparat',
         href: dashboard(),
-        icon: LayoutGrid,
+        icon: Users,
+    },
+    {
+        title: 'Visi & Misi',
+        href: '/dashboard?tab=visimisi',
+        icon: Compass,
+    },
+    {
+        title: 'Data Demografi',
+        href: '/dashboard?tab=demografi',
+        icon: BarChart3,
+    },
+    {
+        title: 'Kelola Berita',
+        href: '/dashboard?tab=berita',
+        icon: Newspaper,
+    },
+    {
+        title: 'Kelola Wisata',
+        href: '/dashboard?tab=wisata',
+        icon: Palmtree,
     },
 ];
 
