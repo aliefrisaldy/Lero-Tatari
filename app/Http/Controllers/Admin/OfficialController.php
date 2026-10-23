@@ -14,30 +14,23 @@ use Inertia\Response;
 class OfficialController extends Controller
 {
     /**
-     * Tampilkan halaman pengelolaan aparat desa.
+     * Display the officials management page.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $officials = Official::orderBy('order_index')->get();
 
-        return Inertia::render('officials', [
+        return Inertia::render('admin/officials/index', [
             'officials' => $officials,
         ]);
     }
 
     /**
-     * Tambahkan data aparat desa baru.
+     * Store a newly created official.
      */
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'position' => ['required', 'string', 'max:255'],
-            'category' => ['required', Rule::in(['pimpinan', 'sekretariat', 'kasi', 'kadusun'])],
-            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'order_index' => ['nullable', 'integer'],
-            'is_active' => ['nullable', 'boolean'],
-        ]);
+        $validated = $this->validateOfficial($request);
 
         $photoPath = null;
         if ($request->hasFile('photo')) {
@@ -48,64 +41,86 @@ class OfficialController extends Controller
             'name' => $validated['name'],
             'position' => $validated['position'],
             'category' => $validated['category'],
-            'photo_path' => $photoPath ? Storage::url($photoPath) : null,
-            'order_index' => $validated['order_index'] ?? (Official::max('order_index') + 1),
+            'sk_nip' => $validated['sk_nip'] ?? null,
+            'photo_path' => $photoPath ? '/storage/'.$photoPath : null,
+            'order_index' => $validated['order_index'] ?? 0,
             'is_active' => $request->boolean('is_active', true),
         ]);
 
-        return back()->with('success', 'Data aparat berhasil ditambahkan.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Data aparat berhasil ditambahkan.']);
+
+        return back();
     }
 
     /**
-     * Perbarui data aparat desa.
+     * Update the specified official.
      */
-    public function update(Request $request, int $id): RedirectResponse
+    public function update(Request $request, Official $official): RedirectResponse
     {
-        $official = Official::findOrFail($id);
-
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'position' => ['required', 'string', 'max:255'],
-            'category' => ['required', Rule::in(['pimpinan', 'sekretariat', 'kasi', 'kadusun'])],
-            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'order_index' => ['nullable', 'integer'],
-            'is_active' => ['nullable', 'boolean'],
-        ]);
+        $validated = $this->validateOfficial($request);
 
         if ($request->hasFile('photo')) {
-            if ($official->photo_path) {
-                $oldPath = str_replace('/storage/', '', $official->photo_path);
-                Storage::disk('public')->delete($oldPath);
-            }
+            $this->deletePhoto($official->photo_path);
+
             $photoPath = $request->file('photo')->store('officials', 'public');
-            $official->photo_path = Storage::url($photoPath);
+            $official->photo_path = '/storage/'.$photoPath;
         }
 
         $official->update([
             'name' => $validated['name'],
             'position' => $validated['position'],
             'category' => $validated['category'],
+            'sk_nip' => $validated['sk_nip'] ?? null,
             'order_index' => $validated['order_index'] ?? $official->order_index,
             'is_active' => $request->has('is_active') ? $request->boolean('is_active') : $official->is_active,
         ]);
 
-        return back()->with('success', 'Data aparat berhasil diperbarui.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Data aparat berhasil diperbarui.']);
+
+        return back();
     }
 
     /**
-     * Hapus data aparat desa.
+     * Remove the specified official.
      */
-    public function destroy(int $id): RedirectResponse
+    public function destroy(Official $official): RedirectResponse
     {
-        $official = Official::findOrFail($id);
-
-        if ($official->photo_path) {
-            $oldPath = str_replace('/storage/', '', $official->photo_path);
-            Storage::disk('public')->delete($oldPath);
-        }
-
+        $this->deletePhoto($official->photo_path);
         $official->delete();
 
-        return back()->with('success', 'Data aparat berhasil dihapus.');
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Data aparat berhasil dihapus.']);
+
+        return back();
+    }
+
+    /**
+     * Validate official input.
+     *
+     * @return array{name: string, position: string, category: string, sk_nip?: string|null, photo?: mixed, order_index?: int|null, is_active?: bool|null}
+     */
+    private function validateOfficial(Request $request): array
+    {
+        return $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'position' => ['required', 'string', 'max:255'],
+            'category' => ['required', Rule::in(['pimpinan', 'sekretariat', 'kasi', 'kadusun'])],
+            'sk_nip' => ['nullable', 'string', 'max:64'],
+            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'order_index' => ['nullable', 'integer'],
+            'is_active' => ['nullable', 'boolean'],
+        ]);
+    }
+
+    /**
+     * Delete the stored photo of an official.
+     */
+    private function deletePhoto(?string $photoPath): void
+    {
+        if (! $photoPath) {
+            return;
+        }
+
+        $oldPath = str_replace('/storage/', '', $photoPath);
+        Storage::disk('public')->delete($oldPath);
     }
 }

@@ -21,13 +21,14 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard, home } from '@/routes';
+import { index as officialsIndex } from '@/routes/admin/officials';
 import type { NavItem } from '@/types';
 
 // Item navigasi sidebar sesuai modul PRD
 const mainNavItems: NavItem[] = [
     {
         title: 'Pengelolaan Aparat',
-        href: dashboard(),
+        href: officialsIndex(),
         icon: Users,
     },
     {
