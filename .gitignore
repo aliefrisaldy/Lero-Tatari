@@ -42,3 +42,8 @@ yarn-error.log
 /boost.json
 /opencode.json
 /opencode.jsonc
+
+# Local tooling & design reference (tidak untuk repository)
+/.opencode/
+/composer.phar
+/stitch-exports/

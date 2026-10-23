@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Globe, LayoutGrid } from 'lucide-react';
+import { Globe, LayoutGrid, Users } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -14,6 +14,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard, home } from '@/routes';
+import { index as officialsIndex } from '@/routes/admin/officials';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -21,6 +22,11 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Kelola Aparat Desa',
+        href: officialsIndex(),
+        icon: Users,
     },
 ];
 
