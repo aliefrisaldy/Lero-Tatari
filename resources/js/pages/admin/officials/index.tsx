@@ -16,11 +16,14 @@ export default function OfficialsIndex() {
     const props = usePage<OfficialsPageProps>().props;
     const officials = props.officials ?? [];
 
-    const [selectedOfficial, setSelectedOfficial] = useState<Official | null>(null);
+    const [selectedOfficial, setSelectedOfficial] = useState<Official | null>(
+        null,
+    );
     const [isFormOpen, setIsFormOpen] = useState(false);
 
     // Featured = pejabat pimpinan pertama (Kepala Desa)
-    const featured = officials.find((official) => official.category === 'pimpinan') ?? null;
+    const featured =
+        officials.find((official) => official.category === 'pimpinan') ?? null;
 
     const openForm = (official?: Official) => {
         setSelectedOfficial(official ?? null);
@@ -40,7 +43,10 @@ export default function OfficialsIndex() {
             <main className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
                 {/* COLUMN 1: LEFT (Featured Village Head & History) */}
                 <div className="flex flex-col space-y-6 lg:col-span-4">
-                    <FeaturedOfficialCard official={featured} onEdit={() => openForm(featured ?? undefined)} />
+                    <FeaturedOfficialCard
+                        official={featured}
+                        onEdit={() => openForm(featured ?? undefined)}
+                    />
                     <ActivityLogCard />
                 </div>
 
@@ -52,8 +58,16 @@ export default function OfficialsIndex() {
             {/* END: BentoGridContainer */}
 
             {/* Form Sheet */}
-            <Sheet open={isFormOpen} onOpenChange={(open) => { if (!open) closeForm(); }}>
-                <OfficialForm initialData={selectedOfficial} onClose={closeForm} />
+            <Sheet
+                open={isFormOpen}
+                onOpenChange={(open) => {
+                    if (!open) closeForm();
+                }}
+            >
+                <OfficialForm
+                    initialData={selectedOfficial}
+                    onClose={closeForm}
+                />
             </Sheet>
         </>
     );

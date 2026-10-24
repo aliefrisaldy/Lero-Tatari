@@ -33,9 +33,12 @@ export function VisionCard({ vision }: VisionCardProps) {
                         <span className="h-1.5 w-1.5 rounded-full bg-[#047857]" />
                         RPJMDes {period}
                     </span>
-                    <h2 className="mt-1.5 text-lg font-bold tracking-tight text-slate-text">Pernyataan Visi Desa</h2>
+                    <h2 className="mt-1.5 text-lg font-bold tracking-tight text-slate-text">
+                        Pernyataan Visi Desa
+                    </h2>
                     <p className="text-xs leading-relaxed text-slate-muted">
-                        Arah haluan pembangunan jangka menengah Desa Lero Tatari.
+                        Arah haluan pembangunan jangka menengah Desa Lero
+                        Tatari.
                     </p>
                 </div>
                 <button
@@ -60,12 +63,15 @@ export function VisionCard({ vision }: VisionCardProps) {
                 </div>
 
                 <div className="relative z-10 my-2">
-                    <p className="text-sm leading-snug font-bold md:text-base">{statement}</p>
+                    <p className="text-sm leading-snug font-bold md:text-base">
+                        {statement}
+                    </p>
                 </div>
 
                 <div className="relative z-10 flex items-center justify-between border-t border-white/20 pt-2 text-xs">
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" /> Sah &amp; Mengikat
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />{' '}
+                        Sah &amp; Mengikat
                     </span>
                     <span className="text-[11px] font-medium text-emerald-100">
                         Periode {period.replace('–', ' - ')}
@@ -104,7 +110,10 @@ export function VisionCard({ vision }: VisionCardProps) {
                         {({ errors, processing, recentlySuccessful }) => (
                             <>
                                 <div className="space-y-1">
-                                    <label htmlFor="vision_statement" className="text-xs font-semibold text-slate-700">
+                                    <label
+                                        htmlFor="vision_statement"
+                                        className="text-xs font-semibold text-slate-700"
+                                    >
                                         Naskah Visi Desa
                                     </label>
                                     <textarea
@@ -114,11 +123,16 @@ export function VisionCard({ vision }: VisionCardProps) {
                                         defaultValue={statement}
                                         className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:outline-none"
                                     />
-                                    <InputError message={errors.vision_statement} />
+                                    <InputError
+                                        message={errors.vision_statement}
+                                    />
                                 </div>
 
                                 <div className="space-y-1">
-                                    <label htmlFor="vision_period" className="text-xs font-semibold text-slate-700">
+                                    <label
+                                        htmlFor="vision_period"
+                                        className="text-xs font-semibold text-slate-700"
+                                    >
                                         Periode
                                     </label>
                                     <input
@@ -148,7 +162,9 @@ export function VisionCard({ vision }: VisionCardProps) {
                                         disabled={processing}
                                         className="rounded-full bg-[#047857] px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-[#065f46] disabled:opacity-60"
                                     >
-                                        {processing ? 'Menyimpan...' : 'Simpan Naskah Visi'}
+                                        {processing
+                                            ? 'Menyimpan...'
+                                            : 'Simpan Naskah Visi'}
                                     </button>
                                     {recentlySuccessful && null}
                                 </div>

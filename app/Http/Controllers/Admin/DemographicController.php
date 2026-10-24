@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
+use InvalidArgumentException;
 
 class DemographicController extends Controller
 {
@@ -27,9 +28,11 @@ class DemographicController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
-        $section = $request->validate([
+        $request->validate([
             'section' => ['required', Rule::in(['kependudukan', 'pendidikan', 'komoditas'])],
-        ])['section'];
+        ]);
+
+        $section = $request->string('section')->toString();
 
         $rules = match ($section) {
             'kependudukan' => [
@@ -54,6 +57,7 @@ class DemographicController extends Controller
                 'healthy_wc_families' => ['required', 'integer', 'min:0'],
                 'brick_houses' => ['required', 'integer', 'min:0'],
             ],
+            default => throw new InvalidArgumentException('Unsupported demographic section.'),
         };
 
         $validated = $request->validate($rules);

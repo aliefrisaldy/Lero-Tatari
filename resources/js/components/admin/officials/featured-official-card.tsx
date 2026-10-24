@@ -5,18 +5,21 @@ interface FeaturedOfficialCardProps {
     onEdit: () => void;
 }
 
-export function FeaturedOfficialCard({ official, onEdit }: FeaturedOfficialCardProps) {
+export function FeaturedOfficialCard({
+    official,
+    onEdit,
+}: FeaturedOfficialCardProps) {
     return (
-        <section
-            className="relative flex flex-col justify-between overflow-hidden rounded-card border border-slate-100 bg-white p-6 shadow-bento transition-all duration-300 hover:shadow-card-hover md:p-7"
-        >
+        <section className="relative flex flex-col justify-between overflow-hidden rounded-card border border-slate-100 bg-white p-6 shadow-bento transition-all duration-300 hover:shadow-card-hover md:p-7">
             {/* Header with pill label & arrow */}
             <div className="mb-5 flex items-center justify-between">
                 <div>
                     <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
                         Pimpinan Utama Desa
                     </span>
-                    <p className="text-xs text-slate-muted">{official?.position ?? 'Belum ada data'}</p>
+                    <p className="text-xs text-slate-muted">
+                        {official?.position ?? 'Belum ada data'}
+                    </p>
                 </div>
                 <button
                     type="button"
@@ -24,8 +27,18 @@ export function FeaturedOfficialCard({ official, onEdit }: FeaturedOfficialCardP
                     onClick={onEdit}
                     className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-700"
                 >
-                    <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M7 17L17 7M17 7H7M17 7V17" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                    <svg
+                        className="size-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M7 17L17 7M17 7H7M17 7V17"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                        />
                     </svg>
                 </button>
             </div>
@@ -37,9 +50,17 @@ export function FeaturedOfficialCard({ official, onEdit }: FeaturedOfficialCardP
                     <div className="group relative shrink-0">
                         <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border-2 border-white/30 bg-white/15 shadow-inner">
                             {official?.photo_path ? (
-                                <img src={official.photo_path} alt={official.name} className="h-16 w-16 object-cover" />
+                                <img
+                                    src={official.photo_path}
+                                    alt={official.name}
+                                    className="h-16 w-16 object-cover"
+                                />
                             ) : (
-                                <svg className="size-8 text-white/70" fill="currentColor" viewBox="0 0 24 24">
+                                <svg
+                                    className="size-8 text-white/70"
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
                                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                                 </svg>
                             )}
@@ -51,20 +72,32 @@ export function FeaturedOfficialCard({ official, onEdit }: FeaturedOfficialCardP
                             onClick={onEdit}
                             className="absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full bg-white text-[#007A55] shadow-sm transition-transform hover:scale-105"
                         >
-                            <svg className="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg
+                                className="size-3.5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
                                 <path
                                     d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                     strokeWidth="2"
                                 />
-                                <path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                                <path
+                                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                />
                             </svg>
                         </button>
                     </div>
                     <div className="min-w-0 flex-1">
                         <span className="block text-[11px] font-medium tracking-wide text-emerald-100">
-                            {official?.category === 'pimpinan' ? 'PIMPINAN DESA' : 'APARAT DESA'}
+                            {official?.category === 'pimpinan'
+                                ? 'PIMPINAN DESA'
+                                : 'APARAT DESA'}
                         </span>
                         <h3 className="mt-0.5 truncate text-base font-bold tracking-tight text-white md:text-lg">
                             {official?.name ?? 'Belum Ada Data'}

@@ -9,7 +9,7 @@ import {
     Phone,
     ArrowRight,
     Building2,
-    CheckCircle2
+    CheckCircle2,
 } from 'lucide-react';
 import { dashboard, login } from '@/routes';
 
@@ -42,7 +42,7 @@ export default function Welcome() {
     return (
         <>
             <Head title="Website Resmi Desa Lero Tatari" />
-            <div className="min-h-screen bg-neutral-50 text-neutral-800 antialiased dark:bg-neutral-950 dark:text-neutral-100 flex flex-col justify-between">
+            <div className="flex min-h-screen flex-col justify-between bg-neutral-50 text-neutral-800 antialiased dark:bg-neutral-950 dark:text-neutral-100">
                 {/* Header / Navbar */}
                 <header className="sticky top-0 z-50 w-full border-b border-neutral-200/80 bg-white/90 backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/90">
                     <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
@@ -51,7 +51,7 @@ export default function Welcome() {
                                 <Building2 className="size-5" />
                             </div>
                             <div>
-                                <span className="block text-base font-bold leading-tight tracking-tight text-neutral-900 dark:text-white">
+                                <span className="block text-base leading-tight font-bold tracking-tight text-neutral-900 dark:text-white">
                                     Desa Lero Tatari
                                 </span>
                                 <span className="block text-xs text-neutral-500 dark:text-neutral-400">
@@ -91,10 +91,14 @@ export default function Welcome() {
                                     Portal Resmi Pemerintah Desa
                                 </div>
                                 <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl lg:text-5xl dark:text-white">
-                                    Mewujudkan Desa Lero Tatari yang Maju & Transparan
+                                    Mewujudkan Desa Lero Tatari yang Maju &
+                                    Transparan
                                 </h1>
                                 <p className="mt-4 text-base leading-relaxed text-neutral-600 sm:text-lg dark:text-neutral-300">
-                                    Selamat datang di website resmi Desa Lero Tatari. Wadah keterbukaan informasi publik, sarana interaksi warga, serta kemudahan pelayanan administrasi masyarakat desa.
+                                    Selamat datang di website resmi Desa Lero
+                                    Tatari. Wadah keterbukaan informasi publik,
+                                    sarana interaksi warga, serta kemudahan
+                                    pelayanan administrasi masyarakat desa.
                                 </p>
 
                                 <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -124,7 +128,9 @@ export default function Welcome() {
                                     Pelayanan & Fasilitas Desa
                                 </h2>
                                 <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
-                                    Komitmen aparatur pemerintah Desa Lero Tatari dalam memberikan layanan prima kepada warga.
+                                    Komitmen aparatur pemerintah Desa Lero
+                                    Tatari dalam memberikan layanan prima kepada
+                                    warga.
                                 </p>
                             </div>
 
@@ -153,7 +159,10 @@ export default function Welcome() {
                     </section>
 
                     {/* Contact Info Banner */}
-                    <section id="kontak" className="border-t border-neutral-200/80 bg-white py-12 dark:border-neutral-800 dark:bg-neutral-900">
+                    <section
+                        id="kontak"
+                        className="border-t border-neutral-200/80 bg-white py-12 dark:border-neutral-800 dark:bg-neutral-900"
+                    >
                         <div className="mx-auto max-w-6xl px-4 sm:px-6">
                             <div className="grid gap-6 md:grid-cols-3">
                                 <div className="flex items-start gap-3">
@@ -161,9 +170,12 @@ export default function Welcome() {
                                         <MapPin className="size-5" />
                                     </div>
                                     <div>
-                                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-white">Kantor Desa</h4>
+                                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-white">
+                                            Kantor Desa
+                                        </h4>
                                         <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-                                            Jl. Poros Desa Lero Tatari, Kecamatan Tatari
+                                            Jl. Poros Desa Lero Tatari,
+                                            Kecamatan Tatari
                                         </p>
                                     </div>
                                 </div>
@@ -172,7 +184,9 @@ export default function Welcome() {
                                         <Clock className="size-5" />
                                     </div>
                                     <div>
-                                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-white">Jam Operasional</h4>
+                                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-white">
+                                            Jam Operasional
+                                        </h4>
                                         <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                                             Senin - Jumat: 08.00 - 15.00 WITA
                                         </p>
@@ -183,7 +197,9 @@ export default function Welcome() {
                                         <Phone className="size-5" />
                                     </div>
                                     <div>
-                                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-white">Kontak Pelayanan</h4>
+                                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-white">
+                                            Kontak Pelayanan
+                                        </h4>
                                         <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                                             Pusat Pengaduan & Layanan Warga Desa
                                         </p>
@@ -196,7 +212,10 @@ export default function Welcome() {
 
                 {/* Footer */}
                 <footer className="border-t border-neutral-200 bg-neutral-100 py-6 text-center text-xs text-neutral-500 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-500">
-                    <p>© {new Date().getFullYear()} Pemerintah Desa Lero Tatari. Seluruh hak cipta dilindungi.</p>
+                    <p>
+                        © {new Date().getFullYear()} Pemerintah Desa Lero
+                        Tatari. Seluruh hak cipta dilindungi.
+                    </p>
                 </footer>
             </div>
         </>

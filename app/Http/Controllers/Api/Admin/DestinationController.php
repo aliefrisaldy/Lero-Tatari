@@ -38,6 +38,10 @@ class DestinationController extends Controller
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('destinations', 'public');
+
+            if ($imagePath === false) {
+                return response()->json(['message' => 'Gagal menyimpan gambar.'], 500);
+            }
         }
 
         $destination = Destination::create([
@@ -75,6 +79,11 @@ class DestinationController extends Controller
                 Storage::disk('public')->delete($oldPath);
             }
             $imagePath = $request->file('image')->store('destinations', 'public');
+
+            if ($imagePath === false) {
+                return response()->json(['message' => 'Gagal menyimpan gambar.'], 500);
+            }
+
             $destination->image_path = Storage::url($imagePath);
         }
 

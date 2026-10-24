@@ -41,6 +41,10 @@ class NewsController extends Controller
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('news', 'public');
+
+            if ($imagePath === false) {
+                return response()->json(['message' => 'Gagal menyimpan gambar.'], 500);
+            }
         }
 
         $news = News::create([
@@ -80,6 +84,11 @@ class NewsController extends Controller
                 Storage::disk('public')->delete($oldPath);
             }
             $imagePath = $request->file('image')->store('news', 'public');
+
+            if ($imagePath === false) {
+                return response()->json(['message' => 'Gagal menyimpan gambar.'], 500);
+            }
+
             $news->image_path = Storage::url($imagePath);
         }
 

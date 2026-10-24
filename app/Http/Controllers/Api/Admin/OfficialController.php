@@ -40,6 +40,10 @@ class OfficialController extends Controller
         $photoPath = null;
         if ($request->hasFile('photo')) {
             $photoPath = $request->file('photo')->store('officials', 'public');
+
+            if ($photoPath === false) {
+                return response()->json(['message' => 'Gagal menyimpan foto.'], 500);
+            }
         }
 
         $official = Official::create([
@@ -79,6 +83,11 @@ class OfficialController extends Controller
                 Storage::disk('public')->delete($oldPath);
             }
             $photoPath = $request->file('photo')->store('officials', 'public');
+
+            if ($photoPath === false) {
+                return response()->json(['message' => 'Gagal menyimpan foto.'], 500);
+            }
+
             $official->photo_path = Storage::url($photoPath);
         }
 

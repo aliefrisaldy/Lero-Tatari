@@ -1,5 +1,11 @@
 import { router } from '@inertiajs/react';
-import { ArrowUpDown, CirclePlus, GripVertical, Pencil, Trash2 } from 'lucide-react';
+import {
+    ArrowUpDown,
+    CirclePlus,
+    GripVertical,
+    Pencil,
+    Trash2,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import VisionMissionController from '@/actions/App/Http/Controllers/Admin/VisionMissionController';
 import { MissionFormModal } from '@/components/admin/visi-misi/mission-form-modal';
@@ -11,11 +17,14 @@ interface MissionsCardProps {
 
 export function MissionsCard({ missions }: MissionsCardProps) {
     // Salinan lokal untuk urutan live saat drag & drop
-    const [localMissions, setLocalMissions] = useState<VillageMission[]>(missions);
+    const [localMissions, setLocalMissions] =
+        useState<VillageMission[]>(missions);
     const [sortMode, setSortMode] = useState(false);
     const [dragIndex, setDragIndex] = useState<number | null>(null);
     const [modalOpen, setModalOpen] = useState(false);
-    const [editingMission, setEditingMission] = useState<VillageMission | null>(null);
+    const [editingMission, setEditingMission] = useState<VillageMission | null>(
+        null,
+    );
 
     // Sinkron ulang dari props ketika server mengembalikan data baru
     useEffect(() => {
@@ -70,7 +79,8 @@ export function MissionsCard({ missions }: MissionsCardProps) {
                         </span>
                     </div>
                     <p className="text-xs text-slate-muted">
-                        Tarik dan susun urutan prioritas untuk sinkronisasi dokumen publik portal desa.
+                        Tarik dan susun urutan prioritas untuk sinkronisasi
+                        dokumen publik portal desa.
                     </p>
                 </div>
 
@@ -78,8 +88,10 @@ export function MissionsCard({ missions }: MissionsCardProps) {
                 <button
                     type="button"
                     onClick={() => setSortMode((v) => !v)}
-                    title={sortMode ? 'Selesai menyusun' : 'Aktifkan mode susun'}
-                    className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold self-start transition-colors sm:self-center ${
+                    title={
+                        sortMode ? 'Selesai menyusun' : 'Aktifkan mode susun'
+                    }
+                    className={`inline-flex items-center gap-1.5 self-start rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors sm:self-center ${
                         sortMode
                             ? 'bg-emerald-100 text-emerald-800'
                             : 'bg-slate-100 text-slate-700 hover:bg-slate-200/80'
@@ -101,19 +113,24 @@ export function MissionsCard({ missions }: MissionsCardProps) {
                         onDragOver={(e) => e.preventDefault()}
                         onDrop={(e) => {
                             e.preventDefault();
-                            if (dragIndex === null || dragIndex === index) return;
+                            if (dragIndex === null || dragIndex === index)
+                                return;
                             reorderAndPersist(dragIndex, index);
                             setDragIndex(null);
                         }}
                         className={`group flex items-start gap-3.5 rounded-2xl border border-slate-100 bg-[#F8FAFC] p-4 transition-all ${
-                            sortMode ? 'cursor-grab border-dashed border-emerald-200 active:cursor-grabbing' : 'hover:border-emerald-200'
+                            sortMode
+                                ? 'cursor-grab border-dashed border-emerald-200 active:cursor-grabbing'
+                                : 'hover:border-emerald-200'
                         } ${dragIndex === index ? 'opacity-50' : ''}`}
                     >
                         {/* Handle drag */}
                         <div
                             title="Geser Urutan"
                             className={`shrink-0 pt-1 text-slate-400 transition-colors hover:text-slate-700 ${
-                                sortMode ? 'cursor-grab active:cursor-grabbing' : ''
+                                sortMode
+                                    ? 'cursor-grab active:cursor-grabbing'
+                                    : ''
                             }`}
                         >
                             <GripVertical className="h-4 w-4" />
@@ -164,7 +181,11 @@ export function MissionsCard({ missions }: MissionsCardProps) {
                 <span>Tambah Misi Baru</span>
             </button>
 
-            <MissionFormModal open={modalOpen} onOpenChange={setModalOpen} mission={editingMission} />
+            <MissionFormModal
+                open={modalOpen}
+                onOpenChange={setModalOpen}
+                mission={editingMission}
+            />
         </section>
     );
 }

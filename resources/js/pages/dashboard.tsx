@@ -10,13 +10,10 @@ import {
     Clock,
     Download,
     Edit3,
-    Eye,
     FileText,
-    Filter,
     Plus,
     Search,
     Trash2,
-    Upload,
     UserCheck,
     Users,
     X,
@@ -172,7 +169,9 @@ const INITIAL_OFFICIALS: Official[] = [
 ];
 
 export default function Dashboard() {
-    const { auth } = usePage().props as { auth?: { user?: { name: string; email: string } } };
+    const { auth } = usePage().props as {
+        auth?: { user?: { name: string; email: string } };
+    };
     const currentUserName = auth?.user?.name || 'Arfan, S.Pd';
 
     // State
@@ -184,7 +183,9 @@ export default function Dashboard() {
 
     // Modal state
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingOfficial, setEditingOfficial] = useState<Official | null>(null);
+    const [editingOfficial, setEditingOfficial] = useState<Official | null>(
+        null,
+    );
     const [formData, setFormData] = useState({
         name: '',
         position: '',
@@ -198,11 +199,14 @@ export default function Dashboard() {
         return officials.filter((item) => {
             const matchesSearch =
                 item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.position.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.position
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()) ||
                 item.skNumber.toLowerCase().includes(searchQuery.toLowerCase());
 
             const matchesCategory =
-                selectedCategory === 'all' || item.category === selectedCategory;
+                selectedCategory === 'all' ||
+                item.category === selectedCategory;
 
             return matchesSearch && matchesCategory;
         });
@@ -257,8 +261,8 @@ export default function Dashboard() {
                               skNumber: formData.skNumber || '-',
                               isActive: formData.isActive,
                           }
-                        : item
-                )
+                        : item,
+                ),
             );
         } else {
             // Add
@@ -327,22 +331,24 @@ export default function Dashboard() {
             <Head title="Kelola Aparat Desa - Bento Dashboard Desa Lero Tatari" />
 
             {/* ── BEGIN: TopBar ── */}
-            <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <header className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
                 {/* Title & Badge */}
                 <div className="flex items-center gap-3">
-                    <div className="lg:hidden w-10 h-10 rounded-xl bg-[#14532d] text-white flex items-center justify-center font-bold text-xs">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#14532d] text-xs font-bold text-white lg:hidden">
                         LT
                     </div>
                     <div>
                         <div className="flex items-center gap-2">
-                            <span className="inline-block w-2 h-2 rounded-full bg-[#14532d]" />
-                            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                            <span className="inline-block h-2 w-2 rounded-full bg-[#14532d]" />
+                            <span className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
                                 Panel CMS Terpadu
                             </span>
                         </div>
-                        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#0F172A] mt-0.5">
+                        <h1 className="mt-0.5 text-2xl font-bold tracking-tight text-[#0F172A] md:text-3xl">
                             Kelola Aparat Desa{' '}
-                            <span className="text-[#14532d] font-extrabold">Lero Tatari</span>
+                            <span className="font-extrabold text-[#14532d]">
+                                Lero Tatari
+                            </span>
                         </h1>
                     </div>
                 </div>
@@ -351,32 +357,34 @@ export default function Dashboard() {
                 <div className="flex items-center gap-2.5 self-end lg:self-center">
                     {/* Notification Bell */}
                     <button
-                        className="w-10 h-10 rounded-full bg-white border border-slate-200/80 text-slate-600 hover:text-[#14532d] flex items-center justify-center relative shadow-xs transition-colors"
+                        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-600 shadow-xs transition-colors hover:text-[#14532d]"
                         title="Pemberitahuan Sistem"
                     >
-                        <Bell className="w-4 h-4" />
-                        <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[#14532d] rounded-full ring-2 ring-white" />
+                        <Bell className="h-4 w-4" />
+                        <span className="absolute top-2.5 right-2.5 h-2 w-2 rounded-full bg-[#14532d] ring-2 ring-white" />
                     </button>
 
                     {/* User Profile Pill */}
-                    <div className="flex items-center gap-2.5 bg-white border border-slate-200/80 rounded-full pl-1.5 pr-4 py-1 shadow-xs">
-                        <div className="w-8 h-8 rounded-full bg-emerald-50 text-[#14532d] font-bold text-xs flex items-center justify-center overflow-hidden border border-emerald-200/80">
+                    <div className="flex items-center gap-2.5 rounded-full border border-slate-200/80 bg-white py-1 pr-4 pl-1.5 shadow-xs">
+                        <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-emerald-200/80 bg-emerald-50 text-xs font-bold text-[#14532d]">
                             <span>AF</span>
                         </div>
-                        <div className="hidden sm:block text-left">
-                            <p className="text-xs font-semibold leading-tight text-[#0F172A]">
+                        <div className="hidden text-left sm:block">
+                            <p className="text-xs leading-tight font-semibold text-[#0F172A]">
                                 {currentUserName}
                             </p>
-                            <p className="text-[10px] text-slate-500 leading-tight">Sekretaris Desa</p>
+                            <p className="text-[10px] leading-tight text-slate-500">
+                                Sekretaris Desa
+                            </p>
                         </div>
                     </div>
 
                     {/* Primary Action Button (+ Tambah Aparat) */}
                     <button
                         onClick={openAddModal}
-                        className="h-10 px-4 rounded-full bg-[#14532d] hover:bg-[#0f3f22] text-white text-xs font-semibold shadow-sm transition-all duration-200 flex items-center gap-1.5 cursor-pointer active:scale-95"
+                        className="flex h-10 cursor-pointer items-center gap-1.5 rounded-full bg-[#14532d] px-4 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#0f3f22] active:scale-95"
                     >
-                        <Plus className="w-4 h-4" />
+                        <Plus className="h-4 w-4" />
                         <span>Tambah Aparat</span>
                     </button>
                 </div>
@@ -384,74 +392,75 @@ export default function Dashboard() {
             {/* ── END: TopBar ── */}
 
             {/* ── BEGIN: BentoGridContainer ── */}
-            <main className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                
+            <main className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
                 {/* ═════════════════════════════════════════════════════════════ */}
                 {/* COLUMN 1: LEFT (Featured Village Head & History) - 3.5 cols    */}
                 {/* ═════════════════════════════════════════════════════════════ */}
-                <div className="lg:col-span-12 xl:col-span-4 flex flex-col space-y-6">
+                <div className="flex flex-col space-y-6 lg:col-span-12 xl:col-span-4">
                     {/* CARD 1: Profil Kepala Desa (VISA card aesthetic from Stitch) */}
-                    <section className="bg-white rounded-[24px] p-6 md:p-7 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.04)] border border-slate-200/80 flex flex-col justify-between relative overflow-hidden transition-all duration-300 hover:shadow-md">
+                    <section className="relative flex flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/80 bg-white p-6 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.04)] transition-all duration-300 hover:shadow-md md:p-7">
                         {/* Header label & action */}
-                        <div className="flex items-center justify-between mb-5">
+                        <div className="mb-5 flex items-center justify-between">
                             <div>
-                                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                                <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
                                     Pimpinan Utama Desa
                                 </span>
-                                <p className="text-xs text-slate-500">Periode Aktif 2021 – 2027</p>
+                                <p className="text-xs text-slate-500">
+                                    Periode Aktif 2021 – 2027
+                                </p>
                             </div>
-                            <span className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400">
-                                <Award className="w-4 h-4 text-[#14532d]" />
+                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-50 text-slate-400">
+                                <Award className="h-4 w-4 text-[#14532d]" />
                             </span>
                         </div>
 
                         {/* Deep Emerald Identity Banner */}
-                        <div className="bg-[#007A55] rounded-2xl p-5 md:p-6 text-white relative shadow-lg shadow-[#007A55]/20 overflow-hidden mb-5">
+                        <div className="relative mb-5 overflow-hidden rounded-2xl bg-[#007A55] p-5 text-white shadow-lg shadow-[#007A55]/20 md:p-6">
                             {/* Civic Badge & Status */}
-                            <div className="flex items-center justify-between relative z-10 mb-4">
-                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white/20 text-white backdrop-blur-sm">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />
+                            <div className="relative z-10 mb-4 flex items-center justify-between">
+                                <div className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-sm">
+                                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-300" />
                                     <span>Kepala Desa Definitif</span>
                                 </div>
-                                <span className="text-[11px] font-mono text-white/80">
+                                <span className="font-mono text-[11px] text-white/80">
                                     Donggala, Sulteng
                                 </span>
                             </div>
 
                             {/* Official Identity Body with Photo Frame */}
-                            <div className="relative z-10 flex items-center gap-4 mb-4">
-                                <div className="relative shrink-0 group">
-                                    <div className="w-16 h-16 rounded-2xl bg-white/15 border-2 border-white/30 flex items-center justify-center overflow-hidden shadow-inner text-white">
-                                        <Users className="w-8 h-8 opacity-80" />
+                            <div className="relative z-10 mb-4 flex items-center gap-4">
+                                <div className="group relative shrink-0">
+                                    <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border-2 border-white/30 bg-white/15 text-white shadow-inner">
+                                        <Users className="h-8 w-8 opacity-80" />
                                     </div>
                                     <button
-                                        className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white text-[#007A55] flex items-center justify-center shadow-sm hover:scale-110 transition-transform cursor-pointer"
+                                        className="absolute -right-1 -bottom-1 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-white text-[#007A55] shadow-sm transition-transform hover:scale-110"
                                         title="Ganti Foto Kades"
                                     >
-                                        <Camera className="w-3.5 h-3.5" />
+                                        <Camera className="h-3.5 w-3.5" />
                                     </button>
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <span className="text-[11px] font-medium text-emerald-100 tracking-wide block">
+                                    <span className="block text-[11px] font-medium tracking-wide text-emerald-100">
                                         KEPALA DESA
                                     </span>
-                                    <h3 className="text-base md:text-lg font-bold tracking-tight text-white mt-0.5 truncate">
+                                    <h3 className="mt-0.5 truncate text-base font-bold tracking-tight text-white md:text-lg">
                                         Mansyur S. Palalo, S.Sos.
                                     </h3>
-                                    <p className="text-xs text-white/80 font-mono mt-0.5 truncate">
+                                    <p className="mt-0.5 truncate font-mono text-xs text-white/80">
                                         SK.141/028/DPMD/2021
                                     </p>
                                 </div>
                             </div>
 
                             {/* Bottom Row: Expiry / Period */}
-                            <div className="flex items-center justify-between pt-2.5 border-t border-white/15 text-xs relative z-10">
+                            <div className="relative z-10 flex items-center justify-between border-t border-white/15 pt-2.5 text-xs">
                                 <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-emerald-200">
-                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" />
+                                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-300" />
                                     <span>Masa Jabatan Sah</span>
                                 </span>
                                 <div className="text-right">
-                                    <span className="text-[10px] uppercase text-white/60 block leading-tight">
+                                    <span className="block text-[10px] leading-tight text-white/60 uppercase">
                                         Masa Bakti
                                     </span>
                                     <span className="font-mono font-semibold text-white">
@@ -462,12 +471,14 @@ export default function Dashboard() {
                         </div>
 
                         {/* Visi Snippet & Quick Quote */}
-                        <div className="bg-slate-50/90 rounded-2xl p-4 border border-slate-100 mb-5">
-                            <p className="text-[11px] uppercase tracking-wider font-bold text-slate-400 mb-1">
+                        <div className="mb-5 rounded-2xl border border-slate-100 bg-slate-50/90 p-4">
+                            <p className="mb-1 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
                                 Visi &amp; Komitmen
                             </p>
-                            <p className="text-xs text-slate-600 italic leading-relaxed">
-                                “Melayani dengan hati, mewujudkan tata kelola maritim yang transparan, mandiri, dan berkeadilan bagi warga Lero Tatari.”
+                            <p className="text-xs leading-relaxed text-slate-600 italic">
+                                “Melayani dengan hati, mewujudkan tata kelola
+                                maritim yang transparan, mandiri, dan
+                                berkeadilan bagi warga Lero Tatari.”
                             </p>
                         </div>
 
@@ -475,77 +486,95 @@ export default function Dashboard() {
                         <div className="flex items-center gap-2 pt-1">
                             <button
                                 onClick={() => openEditModal(officials[0])}
-                                className="flex-1 py-2.5 px-4 rounded-full bg-emerald-50 text-[#14532d] hover:bg-[#14532d] hover:text-white font-semibold text-xs transition-all text-center cursor-pointer"
+                                className="flex-1 cursor-pointer rounded-full bg-emerald-50 px-4 py-2.5 text-center text-xs font-semibold text-[#14532d] transition-all hover:bg-[#14532d] hover:text-white"
                             >
                                 Perbarui Profil Kades
                             </button>
                             <button
-                                className="w-10 h-10 rounded-full border border-slate-200 text-slate-500 hover:text-[#14532d] hover:border-[#14532d] flex items-center justify-center transition-colors cursor-pointer"
+                                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:border-[#14532d] hover:text-[#14532d]"
                                 title="Unduh Salinan SK"
                             >
-                                <Download className="w-4 h-4" />
+                                <Download className="h-4 w-4" />
                             </button>
                         </div>
                     </section>
 
                     {/* CARD 2: Riwayat Perubahan Terakhir */}
-                    <section className="bg-white rounded-[24px] p-6 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.04)] border border-slate-200/80">
-                        <div className="flex items-center justify-between mb-4">
+                    <section className="rounded-[24px] border border-slate-200/80 bg-white p-6 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.04)]">
+                        <div className="mb-4 flex items-center justify-between">
                             <div>
-                                <h4 className="text-sm font-bold text-[#0F172A]">Log Perubahan Data</h4>
-                                <p className="text-xs text-slate-500">Aktivitas sistem terkini</p>
+                                <h4 className="text-sm font-bold text-[#0F172A]">
+                                    Log Perubahan Data
+                                </h4>
+                                <p className="text-xs text-slate-500">
+                                    Aktivitas sistem terkini
+                                </p>
                             </div>
-                            <span className="text-xs text-slate-400 font-medium">Terbaru</span>
+                            <span className="text-xs font-medium text-slate-400">
+                                Terbaru
+                            </span>
                         </div>
 
                         <div className="space-y-3.5">
                             {/* Entry 1 */}
-                            <div className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-slate-50 transition-colors">
-                                <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
-                                    <FileText className="w-4 h-4" />
+                            <div className="flex items-start gap-3 rounded-2xl p-2.5 transition-colors hover:bg-slate-50">
+                                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+                                    <FileText className="h-4 w-4" />
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-semibold text-[#0F172A] truncate">
+                                <div className="min-w-0 flex-1">
+                                    <p className="truncate text-xs font-semibold text-[#0F172A]">
                                         SK Kaur Keuangan Diperbarui
                                     </p>
-                                    <p className="text-[11px] text-slate-500">Oleh: Arfan, S.Pd (Sekdes)</p>
-                                    <span className="text-[10px] text-slate-400">Hari ini, 10:30 WITA</span>
+                                    <p className="text-[11px] text-slate-500">
+                                        Oleh: Arfan, S.Pd (Sekdes)
+                                    </p>
+                                    <span className="text-[10px] text-slate-400">
+                                        Hari ini, 10:30 WITA
+                                    </span>
                                 </div>
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700">
+                                <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
                                     Sukses
                                 </span>
                             </div>
 
                             {/* Entry 2 */}
-                            <div className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-slate-50 transition-colors">
-                                <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-700 flex items-center justify-center shrink-0 mt-0.5">
-                                    <Users className="w-4 h-4" />
+                            <div className="flex items-start gap-3 rounded-2xl p-2.5 transition-colors hover:bg-slate-50">
+                                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-700">
+                                    <Users className="h-4 w-4" />
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-semibold text-[#0F172A] truncate">
+                                <div className="min-w-0 flex-1">
+                                    <p className="truncate text-xs font-semibold text-[#0F172A]">
                                         Foto Profil Kadus I Diganti
                                     </p>
-                                    <p className="text-[11px] text-slate-500">Sapri. R (Kepala Dusun I)</p>
-                                    <span className="text-[10px] text-slate-400">Kemarin, 14:15 WITA</span>
+                                    <p className="text-[11px] text-slate-500">
+                                        Sapri. R (Kepala Dusun I)
+                                    </p>
+                                    <span className="text-[10px] text-slate-400">
+                                        Kemarin, 14:15 WITA
+                                    </span>
                                 </div>
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-600">
+                                <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600">
                                     Selesai
                                 </span>
                             </div>
 
                             {/* Entry 3 */}
-                            <div className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-slate-50 transition-colors">
-                                <div className="w-8 h-8 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center shrink-0 mt-0.5">
-                                    <Edit3 className="w-4 h-4" />
+                            <div className="flex items-start gap-3 rounded-2xl p-2.5 transition-colors hover:bg-slate-50">
+                                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-700">
+                                    <Edit3 className="h-4 w-4" />
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-semibold text-[#0F172A] truncate">
+                                <div className="min-w-0 flex-1">
+                                    <p className="truncate text-xs font-semibold text-[#0F172A]">
                                         Koreksi NIP Kasi Pelayanan
                                     </p>
-                                    <p className="text-[11px] text-slate-500">Siti Marlina, S.Sos.</p>
-                                    <span className="text-[10px] text-slate-400">22 Jun 2025</span>
+                                    <p className="text-[11px] text-slate-500">
+                                        Siti Marlina, S.Sos.
+                                    </p>
+                                    <span className="text-[10px] text-slate-400">
+                                        22 Jun 2025
+                                    </span>
                                 </div>
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700">
+                                <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
                                     Sukses
                                 </span>
                             </div>
@@ -556,26 +585,27 @@ export default function Dashboard() {
                 {/* ═════════════════════════════════════════════════════════════ */}
                 {/* COLUMN 2: CENTER (Central Data Table & Controls) - 5.5 cols    */}
                 {/* ═════════════════════════════════════════════════════════════ */}
-                <div className="lg:col-span-12 xl:col-span-5 flex flex-col space-y-6">
-                    <section className="bg-white rounded-[24px] p-6 md:p-7 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.04)] border border-slate-200/80 flex flex-col min-h-[680px]">
+                <div className="flex flex-col space-y-6 lg:col-span-12 xl:col-span-5">
+                    <section className="flex min-h-[680px] flex-col rounded-[24px] border border-slate-200/80 bg-white p-6 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.04)] md:p-7">
                         {/* Table Header & Quick Status Pill */}
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                             <div>
                                 <h3 className="text-lg font-bold text-[#0F172A]">
                                     Struktur &amp; Aparatur Pemerintah Desa
                                 </h3>
-                                <p className="text-xs text-slate-500 mt-0.5">
-                                    Daftar pejabat definitif dan pelaksana teknis Desa Lero Tatari
+                                <p className="mt-0.5 text-xs text-slate-500">
+                                    Daftar pejabat definitif dan pelaksana
+                                    teknis Desa Lero Tatari
                                 </p>
                             </div>
-                            <div className="inline-flex items-center gap-2 bg-emerald-50 text-[#14532d] px-3 py-1.5 rounded-full text-xs font-semibold self-start sm:self-auto border border-emerald-200/60">
-                                <span className="w-2 h-2 rounded-full bg-[#14532d]" />
+                            <div className="inline-flex items-center gap-2 self-start rounded-full border border-emerald-200/60 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-[#14532d] sm:self-auto">
+                                <span className="h-2 w-2 rounded-full bg-[#14532d]" />
                                 <span>{officials.length} Aparat Terdaftar</span>
                             </div>
                         </div>
 
                         {/* Search and Filter Controls */}
-                        <div className="flex flex-col sm:flex-row items-center gap-3 mb-5">
+                        <div className="mb-5 flex flex-col items-center gap-3 sm:flex-row">
                             {/* Search Bar */}
                             <div className="relative w-full sm:flex-1">
                                 <input
@@ -586,23 +616,26 @@ export default function Dashboard() {
                                         setCurrentPage(1);
                                     }}
                                     placeholder="Cari nama, jabatan, atau NIP..."
-                                    className="w-full bg-[#F8FAFC] border border-slate-200/80 rounded-full pl-10 pr-4 py-2 text-xs md:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#14532d]/20 focus:border-[#14532d] transition-all"
+                                    className="w-full rounded-full border border-slate-200/80 bg-[#F8FAFC] py-2 pr-4 pl-10 text-xs transition-all focus:border-[#14532d] focus:bg-white focus:ring-2 focus:ring-[#14532d]/20 focus:outline-none md:text-sm"
                                 />
-                                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" />
+                                <Search className="absolute top-2.5 left-3.5 h-4 w-4 text-slate-400" />
                                 {searchQuery && (
                                     <button
                                         onClick={() => setSearchQuery('')}
-                                        className="absolute right-3.5 top-2.5 text-slate-400 hover:text-slate-600"
+                                        className="absolute top-2.5 right-3.5 text-slate-400 hover:text-slate-600"
                                     >
-                                        <X className="w-4 h-4" />
+                                        <X className="h-4 w-4" />
                                     </button>
                                 )}
                             </div>
 
                             {/* Filter Pills */}
-                            <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+                            <div className="flex w-full items-center gap-1.5 overflow-x-auto pb-1 sm:w-auto sm:pb-0">
                                 {[
-                                    { id: 'all', label: `Semua (${officials.length})` },
+                                    {
+                                        id: 'all',
+                                        label: `Semua (${officials.length})`,
+                                    },
                                     { id: 'sekretariat', label: 'Sekretariat' },
                                     { id: 'kasi', label: 'Pelaksana Teknis' },
                                     { id: 'kadusun', label: 'Dusun' },
@@ -613,10 +646,10 @@ export default function Dashboard() {
                                             setSelectedCategory(pill.id);
                                             setCurrentPage(1);
                                         }}
-                                        className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+                                        className={`cursor-pointer rounded-full px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors ${
                                             selectedCategory === pill.id
                                                 ? 'bg-[#14532d] text-white shadow-xs'
-                                                : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                         }`}
                                     >
                                         {pill.label}
@@ -626,95 +659,113 @@ export default function Dashboard() {
                         </div>
 
                         {/* Table Container */}
-                        <div className="overflow-x-auto -mx-6 md:-mx-7 px-6 md:px-7 flex-1">
-                            <table className="w-full text-left border-collapse">
+                        <div className="-mx-6 flex-1 overflow-x-auto px-6 md:-mx-7 md:px-7">
+                            <table className="w-full border-collapse text-left">
                                 <thead>
-                                    <tr className="border-b border-slate-100 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                                        <th className="py-3 px-3">Pejabat</th>
-                                        <th className="py-3 px-3">Jabatan &amp; Bidang</th>
-                                        <th className="py-3 px-3">SK / NIP</th>
-                                        <th className="py-3 px-3">Status</th>
-                                        <th className="py-3 px-3 text-right">Aksi</th>
+                                    <tr className="border-b border-slate-100 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+                                        <th className="px-3 py-3">Pejabat</th>
+                                        <th className="px-3 py-3">
+                                            Jabatan &amp; Bidang
+                                        </th>
+                                        <th className="px-3 py-3">SK / NIP</th>
+                                        <th className="px-3 py-3">Status</th>
+                                        <th className="px-3 py-3 text-right">
+                                            Aksi
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100/80 text-xs font-medium text-slate-600">
                                     {paginatedOfficials.length > 0 ? (
                                         paginatedOfficials.map((item) => {
-                                            const badge = getCategoryBadge(item.category);
+                                            const badge = getCategoryBadge(
+                                                item.category,
+                                            );
                                             return (
                                                 <tr
                                                     key={item.id}
-                                                    className="hover:bg-slate-50/80 transition-colors group"
+                                                    className="group transition-colors hover:bg-slate-50/80"
                                                 >
                                                     {/* Pejabat */}
-                                                    <td className="py-3 px-3">
+                                                    <td className="px-3 py-3">
                                                         <div className="flex items-center gap-2.5">
                                                             <div
-                                                                className={`w-8 h-8 rounded-full ${item.initialBg} ${item.initialText} font-bold flex items-center justify-center shrink-0 text-xs`}
+                                                                className={`h-8 w-8 rounded-full ${item.initialBg} ${item.initialText} flex shrink-0 items-center justify-center text-xs font-bold`}
                                                             >
                                                                 {item.initials}
                                                             </div>
                                                             <div className="min-w-0">
-                                                                <p className="font-bold text-[#0F172A] group-hover:text-[#14532d] transition-colors truncate">
+                                                                <p className="truncate font-bold text-[#0F172A] transition-colors group-hover:text-[#14532d]">
                                                                     {item.name}
                                                                 </p>
-                                                                <p className="text-[10px] text-slate-500 truncate">
-                                                                    {item.position}
+                                                                <p className="truncate text-[10px] text-slate-500">
+                                                                    {
+                                                                        item.position
+                                                                    }
                                                                 </p>
                                                             </div>
                                                         </div>
                                                     </td>
 
                                                     {/* Jabatan & Bidang */}
-                                                    <td className="py-3 px-3">
+                                                    <td className="px-3 py-3">
                                                         <span
-                                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium border ${badge.bg}`}
+                                                            className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${badge.bg}`}
                                                         >
                                                             {badge.label}
                                                         </span>
                                                     </td>
 
                                                     {/* SK / NIP */}
-                                                    <td className="py-3 px-3 font-mono text-[11px] text-slate-500">
+                                                    <td className="px-3 py-3 font-mono text-[11px] text-slate-500">
                                                         {item.skNumber}
                                                     </td>
 
                                                     {/* Status */}
-                                                    <td className="py-3 px-3">
+                                                    <td className="px-3 py-3">
                                                         <span
-                                                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                                                            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
                                                                 item.isActive
                                                                     ? 'bg-emerald-100 text-emerald-800'
                                                                     : 'bg-slate-100 text-slate-600'
                                                             }`}
                                                         >
                                                             <span
-                                                                className={`w-1.5 h-1.5 rounded-full ${
+                                                                className={`h-1.5 w-1.5 rounded-full ${
                                                                     item.isActive
                                                                         ? 'bg-emerald-600'
                                                                         : 'bg-slate-400'
                                                                 }`}
                                                             />
-                                                            {item.isActive ? 'Aktif' : 'Non-Aktif'}
+                                                            {item.isActive
+                                                                ? 'Aktif'
+                                                                : 'Non-Aktif'}
                                                         </span>
                                                     </td>
 
                                                     {/* Aksi */}
-                                                    <td className="py-3 px-3 text-right">
+                                                    <td className="px-3 py-3 text-right">
                                                         <div className="inline-flex items-center gap-1">
                                                             <button
-                                                                onClick={() => openEditModal(item)}
-                                                                className="w-7 h-7 rounded-full hover:bg-slate-200/60 flex items-center justify-center text-slate-500 hover:text-[#14532d] transition-colors"
+                                                                onClick={() =>
+                                                                    openEditModal(
+                                                                        item,
+                                                                    )
+                                                                }
+                                                                className="flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-200/60 hover:text-[#14532d]"
                                                                 title="Ubah Data"
                                                             >
-                                                                <Edit3 className="w-3.5 h-3.5" />
+                                                                <Edit3 className="h-3.5 w-3.5" />
                                                             </button>
                                                             <button
-                                                                onClick={() => handleDeleteOfficial(item.id)}
-                                                                className="w-7 h-7 rounded-full hover:bg-red-50 flex items-center justify-center text-slate-400 hover:text-red-600 transition-colors"
+                                                                onClick={() =>
+                                                                    handleDeleteOfficial(
+                                                                        item.id,
+                                                                    )
+                                                                }
+                                                                className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
                                                                 title="Hapus Data"
                                                             >
-                                                                <Trash2 className="w-3.5 h-3.5" />
+                                                                <Trash2 className="h-3.5 w-3.5" />
                                                             </button>
                                                         </div>
                                                     </td>
@@ -723,8 +774,12 @@ export default function Dashboard() {
                                         })
                                     ) : (
                                         <tr>
-                                            <td colSpan={5} className="py-12 text-center text-slate-400">
-                                                Tidak ada pejabat yang cocok dengan pencarian Anda.
+                                            <td
+                                                colSpan={5}
+                                                className="py-12 text-center text-slate-400"
+                                            >
+                                                Tidak ada pejabat yang cocok
+                                                dengan pencarian Anda.
                                             </td>
                                         </tr>
                                     )}
@@ -733,45 +788,66 @@ export default function Dashboard() {
                         </div>
 
                         {/* Table Footer & Pagination */}
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-5 mt-auto border-t border-slate-100">
+                        <div className="mt-auto flex flex-col justify-between gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center">
                             <span className="text-xs text-slate-500">
                                 Menampilkan{' '}
                                 <strong className="text-slate-700">
-                                    {filteredOfficials.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} –{' '}
-                                    {Math.min(currentPage * itemsPerPage, filteredOfficials.length)}
+                                    {filteredOfficials.length > 0
+                                        ? (currentPage - 1) * itemsPerPage + 1
+                                        : 0}{' '}
+                                    –{' '}
+                                    {Math.min(
+                                        currentPage * itemsPerPage,
+                                        filteredOfficials.length,
+                                    )}
                                 </strong>{' '}
-                                dari <strong className="text-slate-700">{filteredOfficials.length}</strong>{' '}
+                                dari{' '}
+                                <strong className="text-slate-700">
+                                    {filteredOfficials.length}
+                                </strong>{' '}
                                 pejabat
                             </span>
 
                             {/* Pagination Buttons */}
                             <div className="flex items-center gap-1.5 self-center sm:self-auto">
                                 <button
-                                    onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                                    onClick={() =>
+                                        setCurrentPage((p) =>
+                                            Math.max(p - 1, 1),
+                                        )
+                                    }
                                     disabled={currentPage === 1}
-                                    className="w-8 h-8 rounded-full border border-slate-200 text-slate-500 hover:text-slate-800 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center transition-colors"
+                                    className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:text-slate-800 disabled:pointer-events-none disabled:opacity-30"
                                 >
-                                    <ChevronLeft className="w-4 h-4" />
+                                    <ChevronLeft className="h-4 w-4" />
                                 </button>
-                                {Array.from({ length: totalPages }).map((_, idx) => (
-                                    <button
-                                        key={idx + 1}
-                                        onClick={() => setCurrentPage(idx + 1)}
-                                        className={`w-8 h-8 rounded-full font-semibold text-xs transition-colors ${
-                                            currentPage === idx + 1
-                                                ? 'bg-[#14532d] text-white shadow-xs'
-                                                : 'hover:bg-slate-100 text-slate-600'
-                                        }`}
-                                    >
-                                        {idx + 1}
-                                    </button>
-                                ))}
+                                {Array.from({ length: totalPages }).map(
+                                    (_, idx) => (
+                                        <button
+                                            key={idx + 1}
+                                            onClick={() =>
+                                                setCurrentPage(idx + 1)
+                                            }
+                                            className={`h-8 w-8 rounded-full text-xs font-semibold transition-colors ${
+                                                currentPage === idx + 1
+                                                    ? 'bg-[#14532d] text-white shadow-xs'
+                                                    : 'text-slate-600 hover:bg-slate-100'
+                                            }`}
+                                        >
+                                            {idx + 1}
+                                        </button>
+                                    ),
+                                )}
                                 <button
-                                    onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                                    onClick={() =>
+                                        setCurrentPage((p) =>
+                                            Math.min(p + 1, totalPages),
+                                        )
+                                    }
                                     disabled={currentPage === totalPages}
-                                    className="w-8 h-8 rounded-full border border-slate-200 text-slate-500 hover:text-slate-800 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center transition-colors"
+                                    className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:text-slate-800 disabled:pointer-events-none disabled:opacity-30"
                                 >
-                                    <ChevronRight className="w-4 h-4" />
+                                    <ChevronRight className="h-4 w-4" />
                                 </button>
                             </div>
                         </div>
@@ -781,43 +857,43 @@ export default function Dashboard() {
                 {/* ═════════════════════════════════════════════════════════════ */}
                 {/* COLUMN 3: RIGHT (Summary Stats, Composition, Team) - 3.0 cols  */}
                 {/* ═════════════════════════════════════════════════════════════ */}
-                <div className="lg:col-span-12 xl:col-span-3 flex flex-col space-y-6">
+                <div className="flex flex-col space-y-6 lg:col-span-12 xl:col-span-3">
                     {/* WIDGET 1: Ringkasan Aparatur */}
-                    <section className="bg-white rounded-[24px] p-6 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.04)] border border-slate-200/80">
-                        <div className="flex items-center justify-between mb-4">
-                            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    <section className="rounded-[24px] border border-slate-200/80 bg-white p-6 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.04)]">
+                        <div className="mb-4 flex items-center justify-between">
+                            <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
                                 Ringkasan Data
                             </span>
-                            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                            <span className="h-2 w-2 rounded-full bg-emerald-500" />
                         </div>
 
                         <div className="space-y-4">
                             <div>
-                                <span className="text-3xl font-extrabold text-[#0F172A] tracking-tight">
+                                <span className="text-3xl font-extrabold tracking-tight text-[#0F172A]">
                                     {officials.length}
                                 </span>
-                                <span className="text-xs text-slate-500 ml-1.5 font-medium">
+                                <span className="ml-1.5 text-xs font-medium text-slate-500">
                                     Aparat Definitif
                                 </span>
-                                <p className="text-[11px] text-emerald-700 font-semibold mt-0.5">
+                                <p className="mt-0.5 text-[11px] font-semibold text-emerald-700">
                                     100% Struktur Terisi Lengkap
                                 </p>
                             </div>
 
-                            <div className="pt-3 border-t border-slate-100 grid grid-cols-2 gap-3 text-left">
-                                <div className="p-3 bg-slate-50 rounded-2xl">
-                                    <span className="text-[10px] text-slate-400 block font-medium">
+                            <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-3 text-left">
+                                <div className="rounded-2xl bg-slate-50 p-3">
+                                    <span className="block text-[10px] font-medium text-slate-400">
                                         Status Keaktifan
                                     </span>
-                                    <span className="text-xs font-bold text-emerald-700 mt-0.5 block">
+                                    <span className="mt-0.5 block text-xs font-bold text-emerald-700">
                                         100% Aktif
                                     </span>
                                 </div>
-                                <div className="p-3 bg-slate-50 rounded-2xl">
-                                    <span className="text-[10px] text-slate-400 block font-medium">
+                                <div className="rounded-2xl bg-slate-50 p-3">
+                                    <span className="block text-[10px] font-medium text-slate-400">
                                         Kewilayahan
                                     </span>
-                                    <span className="text-xs font-bold text-[#0F172A] mt-0.5 block">
+                                    <span className="mt-0.5 block text-xs font-bold text-[#0F172A]">
                                         4 Dusun
                                     </span>
                                 </div>
@@ -826,82 +902,106 @@ export default function Dashboard() {
                     </section>
 
                     {/* WIDGET 2: Komposisi Jabatan */}
-                    <section className="bg-white rounded-[24px] p-6 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.04)] border border-slate-200/80">
-                        <h4 className="text-sm font-bold text-[#0F172A] mb-1">
+                    <section className="rounded-[24px] border border-slate-200/80 bg-white p-6 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.04)]">
+                        <h4 className="mb-1 text-sm font-bold text-[#0F172A]">
                             Komposisi Struktur Perangkat
                         </h4>
-                        <p className="text-xs text-slate-500 mb-4">Pembagian peran tata kelola desa</p>
+                        <p className="mb-4 text-xs text-slate-500">
+                            Pembagian peran tata kelola desa
+                        </p>
 
                         <div className="space-y-3">
                             {/* Pimpinan */}
                             <div>
-                                <div className="flex justify-between text-xs mb-1">
-                                    <span className="font-semibold text-slate-700">Pimpinan Desa</span>
-                                    <span className="text-slate-500">1 Pejabat</span>
+                                <div className="mb-1 flex justify-between text-xs">
+                                    <span className="font-semibold text-slate-700">
+                                        Pimpinan Desa
+                                    </span>
+                                    <span className="text-slate-500">
+                                        1 Pejabat
+                                    </span>
                                 </div>
-                                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                    <div className="bg-[#14532d] h-full rounded-full w-[8.3%]" />
+                                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                                    <div className="h-full w-[8.3%] rounded-full bg-[#14532d]" />
                                 </div>
                             </div>
 
                             {/* Sekretariat */}
                             <div>
-                                <div className="flex justify-between text-xs mb-1">
-                                    <span className="font-semibold text-slate-700">Sekretariat Desa</span>
-                                    <span className="text-slate-500">4 Pejabat</span>
+                                <div className="mb-1 flex justify-between text-xs">
+                                    <span className="font-semibold text-slate-700">
+                                        Sekretariat Desa
+                                    </span>
+                                    <span className="text-slate-500">
+                                        4 Pejabat
+                                    </span>
                                 </div>
-                                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                    <div className="bg-blue-600 h-full rounded-full w-[33.3%]" />
+                                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                                    <div className="h-full w-[33.3%] rounded-full bg-blue-600" />
                                 </div>
                             </div>
 
                             {/* Pelaksana Teknis */}
                             <div>
-                                <div className="flex justify-between text-xs mb-1">
-                                    <span className="font-semibold text-slate-700">Pelaksana Teknis (Kasi)</span>
-                                    <span className="text-slate-500">3 Pejabat</span>
+                                <div className="mb-1 flex justify-between text-xs">
+                                    <span className="font-semibold text-slate-700">
+                                        Pelaksana Teknis (Kasi)
+                                    </span>
+                                    <span className="text-slate-500">
+                                        3 Pejabat
+                                    </span>
                                 </div>
-                                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                    <div className="bg-teal-600 h-full rounded-full w-[25%]" />
+                                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                                    <div className="h-full w-[25%] rounded-full bg-teal-600" />
                                 </div>
                             </div>
 
                             {/* Kewilayahan */}
                             <div>
-                                <div className="flex justify-between text-xs mb-1">
-                                    <span className="font-semibold text-slate-700">Kepala Dusun (Kadus)</span>
-                                    <span className="text-slate-500">4 Pejabat</span>
+                                <div className="mb-1 flex justify-between text-xs">
+                                    <span className="font-semibold text-slate-700">
+                                        Kepala Dusun (Kadus)
+                                    </span>
+                                    <span className="text-slate-500">
+                                        4 Pejabat
+                                    </span>
                                 </div>
-                                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                    <div className="bg-purple-600 h-full rounded-full w-[33.3%]" />
+                                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                                    <div className="h-full w-[33.3%] rounded-full bg-purple-600" />
                                 </div>
                             </div>
                         </div>
                     </section>
 
                     {/* WIDGET 3: Agenda & Kegiatan Resmi */}
-                    <section className="bg-white rounded-[24px] p-6 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.04)] border border-slate-200/80">
-                        <div className="flex items-center justify-between mb-4">
-                            <h4 className="text-sm font-bold text-[#0F172A]">Agenda &amp; Tugas Desa</h4>
-                            <Calendar className="w-4 h-4 text-slate-400" />
+                    <section className="rounded-[24px] border border-slate-200/80 bg-white p-6 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.04)]">
+                        <div className="mb-4 flex items-center justify-between">
+                            <h4 className="text-sm font-bold text-[#0F172A]">
+                                Agenda &amp; Tugas Desa
+                            </h4>
+                            <Calendar className="h-4 w-4 text-slate-400" />
                         </div>
 
                         <div className="space-y-3 text-xs">
-                            <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-2.5">
-                                <Clock className="w-4 h-4 text-[#14532d] shrink-0 mt-0.5" />
+                            <div className="flex items-start gap-2.5 rounded-2xl border border-slate-100 bg-slate-50 p-3">
+                                <Clock className="mt-0.5 h-4 w-4 shrink-0 text-[#14532d]" />
                                 <div>
-                                    <p className="font-bold text-[#0F172A]">Rapat Koordinasi Mingguan</p>
-                                    <p className="text-[11px] text-slate-500 mt-0.5">
+                                    <p className="font-bold text-[#0F172A]">
+                                        Rapat Koordinasi Mingguan
+                                    </p>
+                                    <p className="mt-0.5 text-[11px] text-slate-500">
                                         Setiap Senin • 09:00 WITA di Kantor Desa
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-start gap-2.5">
-                                <UserCheck className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                            <div className="flex items-start gap-2.5 rounded-2xl border border-slate-100 bg-slate-50 p-3">
+                                <UserCheck className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
                                 <div>
-                                    <p className="font-bold text-[#0F172A]">Pemutakhiran Data Penduduk</p>
-                                    <p className="text-[11px] text-slate-500 mt-0.5">
+                                    <p className="font-bold text-[#0F172A]">
+                                        Pemutakhiran Data Penduduk
+                                    </p>
+                                    <p className="mt-0.5 text-[11px] text-slate-500">
                                         Verifikasi data Prodeskel Dusun I – IV
                                     </p>
                                 </div>
@@ -913,10 +1013,13 @@ export default function Dashboard() {
             {/* ── END: BentoGridContainer ── */}
 
             {/* ── BEGIN: SimpleFooter ── */}
-            <footer className="pt-4 pb-2 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 border-t border-slate-200/80 gap-2">
-                <p>© 2025 Pemerintah Desa Lero Tatari • Sistem Informasi Tata Kelola Aparatur Desa Terpadu</p>
+            <footer className="flex flex-col items-center justify-between gap-2 border-t border-slate-200/80 pt-4 pb-2 text-xs text-slate-500 sm:flex-row">
+                <p>
+                    © 2025 Pemerintah Desa Lero Tatari • Sistem Informasi Tata
+                    Kelola Aparatur Desa Terpadu
+                </p>
                 <p className="flex items-center gap-1.5 font-medium text-slate-600">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
                     Server Desa Online &amp; Terenkripsi
                 </p>
             </footer>
@@ -924,13 +1027,15 @@ export default function Dashboard() {
 
             {/* ── Modal Dialog: Tambah / Ubah Aparat ── */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-                    <div className="bg-white rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl border border-slate-200/80 animate-in fade-in zoom-in-95 duration-200">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs">
+                    <div className="w-full max-w-lg animate-in rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xl duration-200 zoom-in-95 fade-in sm:p-8">
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                             <div>
                                 <h3 className="text-lg font-bold text-[#0F172A]">
-                                    {editingOfficial ? 'Ubah Data Pejabat' : 'Tambah Aparat Desa Baru'}
+                                    {editingOfficial
+                                        ? 'Ubah Data Pejabat'
+                                        : 'Tambah Aparat Desa Baru'}
                                 </h3>
                                 <p className="text-xs text-slate-500">
                                     {editingOfficial
@@ -940,45 +1045,58 @@ export default function Dashboard() {
                             </div>
                             <button
                                 onClick={() => setIsModalOpen(false)}
-                                className="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors"
+                                className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
                             >
-                                <X className="w-5 h-5" />
+                                <X className="h-5 w-5" />
                             </button>
                         </div>
 
                         {/* Modal Form */}
-                        <form onSubmit={handleSaveOfficial} className="mt-5 space-y-4">
+                        <form
+                            onSubmit={handleSaveOfficial}
+                            className="mt-5 space-y-4"
+                        >
                             <div>
-                                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+                                <label className="mb-1 block text-xs font-semibold text-slate-700 uppercase">
                                     Nama Lengkap &amp; Gelar
                                 </label>
                                 <input
                                     type="text"
                                     required
                                     value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            name: e.target.value,
+                                        })
+                                    }
                                     placeholder="Contoh: Arfan, S.Pd"
-                                    className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#14532d]/20 focus:border-[#14532d]"
+                                    className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-xs focus:border-[#14532d] focus:bg-white focus:ring-2 focus:ring-[#14532d]/20 focus:outline-none sm:text-sm"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+                                <label className="mb-1 block text-xs font-semibold text-slate-700 uppercase">
                                     Jabatan Resmi
                                 </label>
                                 <input
                                     type="text"
                                     required
                                     value={formData.position}
-                                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            position: e.target.value,
+                                        })
+                                    }
                                     placeholder="Contoh: SEKRETARIS DESA"
-                                    className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#14532d]/20 focus:border-[#14532d]"
+                                    className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-xs focus:border-[#14532d] focus:bg-white focus:ring-2 focus:ring-[#14532d]/20 focus:outline-none sm:text-sm"
                                 />
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 <div>
-                                    <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+                                    <label className="mb-1 block text-xs font-semibold text-slate-700 uppercase">
                                         Kelompok Bidang
                                     </label>
                                     <select
@@ -986,28 +1104,42 @@ export default function Dashboard() {
                                         onChange={(e) =>
                                             setFormData({
                                                 ...formData,
-                                                category: e.target.value as Official['category'],
+                                                category: e.target
+                                                    .value as Official['category'],
                                             })
                                         }
-                                        className="w-full h-11 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#14532d]/20 focus:border-[#14532d]"
+                                        className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs focus:border-[#14532d] focus:bg-white focus:ring-2 focus:ring-[#14532d]/20 focus:outline-none sm:text-sm"
                                     >
-                                        <option value="pimpinan">Pimpinan Desa</option>
-                                        <option value="sekretariat">Sekretariat Desa</option>
-                                        <option value="kasi">Pelaksana Teknis (Kasi)</option>
-                                        <option value="kadusun">Kewilayahan (Kadus)</option>
+                                        <option value="pimpinan">
+                                            Pimpinan Desa
+                                        </option>
+                                        <option value="sekretariat">
+                                            Sekretariat Desa
+                                        </option>
+                                        <option value="kasi">
+                                            Pelaksana Teknis (Kasi)
+                                        </option>
+                                        <option value="kadusun">
+                                            Kewilayahan (Kadus)
+                                        </option>
                                     </select>
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+                                    <label className="mb-1 block text-xs font-semibold text-slate-700 uppercase">
                                         Nomor SK / NIP
                                     </label>
                                     <input
                                         type="text"
                                         value={formData.skNumber}
-                                        onChange={(e) => setFormData({ ...formData, skNumber: e.target.value })}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                skNumber: e.target.value,
+                                            })
+                                        }
                                         placeholder="Nomor SK atau NIP"
-                                        className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#14532d]/20 focus:border-[#14532d]"
+                                        className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-xs focus:border-[#14532d] focus:bg-white focus:ring-2 focus:ring-[#14532d]/20 focus:outline-none sm:text-sm"
                                     />
                                 </div>
                             </div>
@@ -1017,28 +1149,39 @@ export default function Dashboard() {
                                     type="checkbox"
                                     id="modal-is-active"
                                     checked={formData.isActive}
-                                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                                    className="w-4 h-4 rounded text-[#14532d] focus:ring-[#14532d] accent-[#14532d]"
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            isActive: e.target.checked,
+                                        })
+                                    }
+                                    className="h-4 w-4 rounded text-[#14532d] accent-[#14532d] focus:ring-[#14532d]"
                                 />
-                                <label htmlFor="modal-is-active" className="text-xs font-medium text-slate-700">
-                                    Status Pejabat Aktif (Tampilkan di bagan dan laman publik)
+                                <label
+                                    htmlFor="modal-is-active"
+                                    className="text-xs font-medium text-slate-700"
+                                >
+                                    Status Pejabat Aktif (Tampilkan di bagan dan
+                                    laman publik)
                                 </label>
                             </div>
 
                             {/* Modal Actions */}
-                            <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
+                            <div className="flex items-center justify-end gap-2.5 border-t border-slate-100 pt-4">
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                                    className="rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-5 py-2.5 rounded-xl bg-[#14532d] hover:bg-[#0f3f22] text-white text-xs font-semibold shadow-xs transition-colors"
+                                    className="rounded-xl bg-[#14532d] px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#0f3f22]"
                                 >
-                                    {editingOfficial ? 'Simpan Perubahan' : 'Tambahkan Pejabat'}
+                                    {editingOfficial
+                                        ? 'Simpan Perubahan'
+                                        : 'Tambahkan Pejabat'}
                                 </button>
                             </div>
                         </form>

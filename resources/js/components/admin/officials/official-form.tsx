@@ -4,7 +4,13 @@ import OfficialController from '@/actions/App/Http/Controllers/Admin/OfficialCon
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import type { Official } from '@/types/official';
 
@@ -26,10 +32,12 @@ const inputClass =
 export function OfficialForm({ initialData, onClose }: OfficialFormProps) {
     return (
         <SheetContent className="overflow-y-auto rounded-card bg-white sm:max-w-md">
-            <SheetHeader className="px-6 pb-0 pt-6">
+            <SheetHeader className="px-6 pt-6 pb-0">
                 <div className="flex items-center justify-between">
                     <SheetTitle className="text-base font-bold text-slate-text">
-                        {initialData ? 'Ubah Data Pejabat' : 'Tambah Pejabat Baru'}
+                        {initialData
+                            ? 'Ubah Data Pejabat'
+                            : 'Tambah Pejabat Baru'}
                     </SheetTitle>
                     <button
                         type="button"
@@ -90,14 +98,24 @@ export function OfficialForm({ initialData, onClose }: OfficialFormProps) {
                             <Label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
                                 Kategori *
                             </Label>
-                            <Select name="category" defaultValue={initialData?.category ?? 'pimpinan'}>
+                            <Select
+                                name="category"
+                                defaultValue={
+                                    initialData?.category ?? 'pimpinan'
+                                }
+                            >
                                 <SelectTrigger className="h-11 w-full rounded-full border border-slate-200/80 bg-slate-50 text-sm focus:border-brand focus:bg-white focus:ring-2 focus:ring-brand/30">
                                     <SelectValue placeholder="Pilih kategori" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {categoryOptions.map((cat) => (
-                                        <SelectItem key={cat.value} value={cat.value}>
-                                            <span className="font-medium">{cat.label}</span>
+                                        <SelectItem
+                                            key={cat.value}
+                                            value={cat.value}
+                                        >
+                                            <span className="font-medium">
+                                                {cat.label}
+                                            </span>
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
@@ -133,7 +151,8 @@ export function OfficialForm({ initialData, onClose }: OfficialFormProps) {
                                 />
                                 {progress && (
                                     <p className="text-xs text-slate-500">
-                                        Mengunggah… {Math.round(progress.percentage ?? 0)}%
+                                        Mengunggah…{' '}
+                                        {Math.round(progress.percentage ?? 0)}%
                                     </p>
                                 )}
                                 <InputError message={errors.photo} />
@@ -142,13 +161,17 @@ export function OfficialForm({ initialData, onClose }: OfficialFormProps) {
 
                         {/* Status aktif — hidden input memastikan "0" tetap terkirim saat unchecked */}
                         <div className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50/80 p-3">
-                            <span className="text-xs font-semibold text-slate-text">Status Aktif</span>
+                            <span className="text-xs font-semibold text-slate-text">
+                                Status Aktif
+                            </span>
                             <input type="hidden" name="is_active" value="0" />
                             <input
                                 type="checkbox"
                                 name="is_active"
                                 value="1"
-                                defaultChecked={initialData ? initialData.is_active : true}
+                                defaultChecked={
+                                    initialData ? initialData.is_active : true
+                                }
                                 className="size-4 cursor-pointer accent-[#00A76F]"
                                 disabled={processing}
                             />
@@ -163,8 +186,16 @@ export function OfficialForm({ initialData, onClose }: OfficialFormProps) {
                             >
                                 Batal
                             </Button>
-                            <Button type="submit" disabled={processing} className="flex-1 rounded-full">
-                                {processing ? 'Menyimpan…' : initialData ? 'Perbarui Data' : 'Tambah Pejabat'}
+                            <Button
+                                type="submit"
+                                disabled={processing}
+                                className="flex-1 rounded-full"
+                            >
+                                {processing
+                                    ? 'Menyimpan…'
+                                    : initialData
+                                      ? 'Perbarui Data'
+                                      : 'Tambah Pejabat'}
                             </Button>
                         </div>
 
@@ -173,11 +204,20 @@ export function OfficialForm({ initialData, onClose }: OfficialFormProps) {
                                 type="button"
                                 disabled={processing}
                                 onClick={() => {
-                                    if (confirm(`Yakin ingin menghapus data aparat "${initialData.name}"?`)) {
-                                        router.delete(OfficialController.destroy.url(initialData.id), {
-                                            preserveScroll: true,
-                                            onSuccess: onClose,
-                                        });
+                                    if (
+                                        confirm(
+                                            `Yakin ingin menghapus data aparat "${initialData.name}"?`,
+                                        )
+                                    ) {
+                                        router.delete(
+                                            OfficialController.destroy.url(
+                                                initialData.id,
+                                            ),
+                                            {
+                                                preserveScroll: true,
+                                                onSuccess: onClose,
+                                            },
+                                        );
                                     }
                                 }}
                                 className="w-full pb-1 text-center text-xs font-medium text-red-500 transition-colors hover:text-red-600 disabled:opacity-50"

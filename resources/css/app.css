@@ -21,23 +21,25 @@
     --radius-card: 24px;
     --radius-inner: 18px;
 
-    --color-canvas: #F4F6F8;
+    --color-canvas: #f4f6f8;
 
-    --color-brand: #00A76F;
-    --color-brand-dark: #007A55;
+    --color-brand: #00a76f;
+    --color-brand-dark: #007a55;
     --color-brand-darker: #047857;
-    --color-brand-light: #E8F7F0;
-    --color-brand-accent: #10B981;
+    --color-brand-light: #e8f7f0;
+    --color-brand-accent: #10b981;
 
     --color-slate-text: #111827;
-    --color-slate-muted: #64748B;
-    --color-slate-border: #E2E8F0;
-    --color-slate-card: #FFFFFF;
+    --color-slate-muted: #64748b;
+    --color-slate-border: #e2e8f0;
+    --color-slate-card: #ffffff;
 
     --shadow-bento:
-        0 4px 24px -2px rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+        0 4px 24px -2px rgba(15, 23, 42, 0.04),
+        0 2px 6px -1px rgba(15, 23, 42, 0.02);
     --shadow-card-hover:
-        0 12px 32px -4px rgba(0, 167, 111, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+        0 12px 32px -4px rgba(0, 167, 111, 0.08),
+        0 4px 12px -2px rgba(15, 23, 42, 0.03);
     --shadow-pill: 0 2px 8px rgba(0, 0, 0, 0.04);
 
     --color-background: var(--background);
@@ -91,8 +93,8 @@
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: #00A76F;
-    --primary-foreground: #FFFFFF;
+    --primary: #00a76f;
+    --primary-foreground: #ffffff;
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
     --muted: oklch(0.97 0 0);
@@ -103,7 +105,7 @@
     --destructive-foreground: oklch(0.577 0.245 27.325);
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
-    --ring: #00A76F;
+    --ring: #00a76f;
     --chart-1: oklch(0.646 0.222 41.116);
     --chart-2: oklch(0.6 0.118 184.704);
     --chart-3: oklch(0.398 0.07 227.392);
@@ -165,10 +167,9 @@
     }
 }
 
-
 /* Stitch utilities: Kelola Aparat Desa */
 .bg-striped-green {
-    background-color: #E8F7F0;
+    background-color: #e8f7f0;
     background-image: repeating-linear-gradient(
         45deg,
         rgba(0, 167, 111, 0.18),
@@ -185,16 +186,16 @@
     }
 
     ::-webkit-scrollbar-track {
-        background: #F1F5F9;
+        background: #f1f5f9;
         border-radius: 9999px;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #CBD5E1;
+        background: #cbd5e1;
         border-radius: 9999px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: #94A3B8;
+        background: #94a3b8;
     }
 }

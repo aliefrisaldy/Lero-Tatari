@@ -21,7 +21,11 @@ interface MissionFormModalProps {
 const fieldClass =
     'w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:outline-none';
 
-export function MissionFormModal({ open, onOpenChange, mission }: MissionFormModalProps) {
+export function MissionFormModal({
+    open,
+    onOpenChange,
+    mission,
+}: MissionFormModalProps) {
     const isEdit = mission !== null;
 
     return (
@@ -67,7 +71,10 @@ export function MissionFormModal({ open, onOpenChange, mission }: MissionFormMod
                     {({ errors, processing }) => (
                         <>
                             <div className="space-y-1">
-                                <label htmlFor={`mission-description-${mission?.id ?? 'new'}`} className="text-xs font-semibold text-slate-700">
+                                <label
+                                    htmlFor={`mission-description-${mission?.id ?? 'new'}`}
+                                    className="text-xs font-semibold text-slate-700"
+                                >
                                     Teks Rumusan Misi
                                 </label>
                                 <textarea
@@ -94,7 +101,9 @@ export function MissionFormModal({ open, onOpenChange, mission }: MissionFormMod
                                     disabled={processing}
                                     className="rounded-full bg-[#047857] px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-[#065f46] disabled:opacity-60"
                                 >
-                                    {isEdit ? 'Simpan Perubahan' : 'Simpan Misi'}
+                                    {isEdit
+                                        ? 'Simpan Perubahan'
+                                        : 'Simpan Misi'}
                                 </button>
                             </div>
                         </>
