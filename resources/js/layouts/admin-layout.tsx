@@ -14,6 +14,7 @@ import {
 import { useState, type ReactNode } from 'react';
 import { home, logout } from '@/routes';
 import { index as officialsIndex } from '@/routes/admin/officials';
+import { index as visiMisiIndex } from '@/routes/admin/visi-misi';
 import { edit as profileEdit } from '@/routes/profile';
 import type { AppLayoutProps } from '@/types';
 
@@ -21,9 +22,11 @@ export interface AdminLayoutProps extends AppLayoutProps {
     title: string;
     /** Potongan judul yang diberi warna brand */
     accent?: string;
+    /** Subtitel kecil di bawah judul halaman */
+    subtitle?: string;
 }
 
-export default function AdminLayout({ title, accent, children }: AdminLayoutProps) {
+export default function AdminLayout({ title, accent, subtitle, children }: AdminLayoutProps) {
     const page = usePage<{ name: string; auth: { user: { name: string; role: string } | null } }>();
     const url = page.url;
     const user = page.props.auth?.user ?? null;
@@ -40,9 +43,9 @@ export default function AdminLayout({ title, accent, children }: AdminLayoutProp
         },
         {
             title: 'Kelola Visi & Misi',
-            href: officialsIndex({ query: { tab: 'visimisi' } }),
+            href: visiMisiIndex(),
             icon: Compass,
-            active: url.includes('tab=visimisi'),
+            active: url.startsWith('/admin/visi-misi'),
         },
         {
             title: 'Kelola Data Demografi',
@@ -297,6 +300,9 @@ export default function AdminLayout({ title, accent, children }: AdminLayoutProp
                                 {title}{' '}
                                 {accent && <span className="font-extrabold text-brand">{accent}</span>}
                             </h1>
+                            {subtitle && (
+                                <p className="mt-1 hidden text-xs text-slate-muted sm:block">{subtitle}</p>
+                            )}
                         </div>
 
                         {/* Right Quick Controls & Profile */}
@@ -352,8 +358,8 @@ export default function AdminLayout({ title, accent, children }: AdminLayoutProp
                     {/* BEGIN: SimpleFooter */}
                     <footer className="flex flex-col items-center justify-between gap-2 border-t border-slate-200/60 pb-4 pt-2 text-xs text-slate-400 sm:flex-row">
                         <p>
-                            © {new Date().getFullYear()} {page.props.name} • Sistem Informasi Tata Kelola Aparatur Desa
-                            Terpadu
+                            © {new Date().getFullYear()} Pemerintah Desa Lero Tatari • Sistem Informasi Tata
+                            Kelola Aparatur Desa Terpadu
                         </p>
                         <p className="flex items-center gap-1.5 font-medium text-slate-500">
                             <span className="h-2 w-2 rounded-full bg-emerald-500" />

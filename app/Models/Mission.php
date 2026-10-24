@@ -11,6 +11,7 @@ class Mission extends Model
 
     protected $fillable = [
         'title',
+        'indicator',
         'description',
         'order_index',
     ];
