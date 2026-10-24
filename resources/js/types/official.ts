@@ -3,7 +3,6 @@ export interface Official {
     name: string;
     position: string;
     category: 'pimpinan' | 'sekretariat' | 'kasi' | 'kadusun';
-    sk_nip: string | null;
     photo_path: string | null;
     order_index: number;
     is_active: boolean;
@@ -15,7 +14,6 @@ export interface OfficialFormData {
     name: string;
     position: string;
     category: 'pimpinan' | 'sekretariat' | 'kasi' | 'kadusun';
-    sk_nip: string;
     photo: File | null;
     order_index: number;
     is_active: boolean;

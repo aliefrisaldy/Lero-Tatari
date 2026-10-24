@@ -45,21 +45,21 @@ class DatabaseSeeder extends Seeder
         // 2. Aparat Desa (Sesuai Bagan Resmi PRD)
         $officials = [
             // Pimpinan
-            ['name' => 'UMURJIN', 'position' => 'KEPALA DESA', 'category' => 'pimpinan', 'sk_nip' => 'SK.141/028/DPMD/2021', 'order_index' => 1],
+            ['name' => 'UMURJIN', 'position' => 'KEPALA DESA', 'category' => 'pimpinan', 'order_index' => 1],
             // Sekretariat Desa
-            ['name' => 'ARFAN, S.Pd', 'position' => 'SEKRETARIS DESA', 'category' => 'sekretariat', 'sk_nip' => 'SK.141/04/D-LT/2021', 'order_index' => 2],
-            ['name' => 'SARIFUDIN', 'position' => 'KAUR UMUM & T.U', 'category' => 'sekretariat', 'sk_nip' => '19920814 202101', 'order_index' => 3],
-            ['name' => 'NURLAELA', 'position' => 'KAUR KEUANGAN', 'category' => 'sekretariat', 'sk_nip' => '19890412 202102', 'order_index' => 4],
-            ['name' => 'AHMAD', 'position' => 'KAUR PERENCANAAN', 'category' => 'sekretariat', 'sk_nip' => '19910105 202103', 'order_index' => 5],
+            ['name' => 'ARFAN, S.Pd', 'position' => 'SEKRETARIS DESA', 'category' => 'sekretariat', 'order_index' => 2],
+            ['name' => 'SARIFUDIN', 'position' => 'KAUR UMUM & T.U', 'category' => 'sekretariat', 'order_index' => 3],
+            ['name' => 'NURLAELA', 'position' => 'KAUR KEUANGAN', 'category' => 'sekretariat', 'order_index' => 4],
+            ['name' => 'AHMAD', 'position' => 'KAUR PERENCANAAN', 'category' => 'sekretariat', 'order_index' => 5],
             // Pelaksana Teknis
-            ['name' => 'FIRMAN', 'position' => 'KASI PEMERINTAHAN', 'category' => 'kasi', 'sk_nip' => '19871110 202104', 'order_index' => 6],
-            ['name' => 'RUSLAN', 'position' => 'KASI KESEJAHTERAAN', 'category' => 'kasi', 'sk_nip' => '19940218 202105', 'order_index' => 7],
-            ['name' => 'HASANUDIN', 'position' => 'KASI PELAYANAN', 'category' => 'kasi', 'sk_nip' => '19930724 202106', 'order_index' => 8],
+            ['name' => 'FIRMAN', 'position' => 'KASI PEMERINTAHAN', 'category' => 'kasi', 'order_index' => 6],
+            ['name' => 'RUSLAN', 'position' => 'KASI KESEJAHTERAAN', 'category' => 'kasi', 'order_index' => 7],
+            ['name' => 'HASANUDIN', 'position' => 'KASI PELAYANAN', 'category' => 'kasi', 'order_index' => 8],
             // Pelaksana Kewilayahan
-            ['name' => 'ISMAIL', 'position' => 'KEPALA DUSUN I', 'category' => 'kadusun', 'sk_nip' => '19820515 202107', 'order_index' => 9],
-            ['name' => 'MOH. TAHIR', 'position' => 'KEPALA DUSUN II', 'category' => 'kadusun', 'sk_nip' => '19850921 202108', 'order_index' => 10],
-            ['name' => 'BAHTIAR', 'position' => 'KEPALA DUSUN III', 'category' => 'kadusun', 'sk_nip' => '19870302 202109', 'order_index' => 11],
-            ['name' => 'SAMSUDIN', 'position' => 'KEPALA DUSUN IV', 'category' => 'kadusun', 'sk_nip' => '19880419 202110', 'order_index' => 12],
+            ['name' => 'ISMAIL', 'position' => 'KEPALA DUSUN I', 'category' => 'kadusun', 'order_index' => 9],
+            ['name' => 'MOH. TAHIR', 'position' => 'KEPALA DUSUN II', 'category' => 'kadusun', 'order_index' => 10],
+            ['name' => 'BAHTIAR', 'position' => 'KEPALA DUSUN III', 'category' => 'kadusun', 'order_index' => 11],
+            ['name' => 'SAMSUDIN', 'position' => 'KEPALA DUSUN IV', 'category' => 'kadusun', 'order_index' => 12],
         ];
 
         foreach ($officials as $official) {

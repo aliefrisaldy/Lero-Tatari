@@ -50,8 +50,7 @@ export function OfficialsTable({ officials, onEdit }: OfficialsTableProps) {
                 const q = search.toLowerCase();
                 return (
                     official.name.toLowerCase().includes(q) ||
-                    official.position.toLowerCase().includes(q) ||
-                    (official.sk_nip ?? '').toLowerCase().includes(q)
+                    official.position.toLowerCase().includes(q)
                 );
             }
             return true;
@@ -88,7 +87,7 @@ export function OfficialsTable({ officials, onEdit }: OfficialsTableProps) {
                 <div className="relative w-full sm:flex-1">
                     <input
                         className="w-full rounded-full border border-slate-200/80 bg-slate-50 py-2 pr-4 pl-10 text-xs transition-all focus:border-brand focus:bg-white focus:ring-2 focus:ring-brand/30 focus:outline-none md:text-sm"
-                        placeholder="Cari nama, jabatan, atau NIP..."
+                        placeholder="Cari nama atau jabatan..."
                         type="text"
                         value={search}
                         onChange={(e) => {
@@ -143,7 +142,6 @@ export function OfficialsTable({ officials, onEdit }: OfficialsTableProps) {
                         <tr className="border-b border-slate-100 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
                             <th className="px-3 py-3">Pejabat</th>
                             <th className="px-3 py-3">Jabatan &amp; Bidang</th>
-                            <th className="px-3 py-3">SK / NIP</th>
                             <th className="px-3 py-3">Status</th>
                             <th className="px-3 py-3 text-right">Aksi</th>
                         </tr>
@@ -179,7 +177,6 @@ export function OfficialsTable({ officials, onEdit }: OfficialsTableProps) {
                                             {meta.label}
                                         </span>
                                     </td>
-                                    <td className="px-3 py-3 font-mono text-[11px] text-slate-500">{official.sk_nip ?? '—'}</td>
                                     <td className="px-3 py-3">
                                         {official.is_active ? (
                                             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-800">

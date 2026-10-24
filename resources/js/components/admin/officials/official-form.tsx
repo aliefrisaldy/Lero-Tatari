@@ -105,21 +105,6 @@ export function OfficialForm({ initialData, onClose }: OfficialFormProps) {
                             <InputError message={errors.category} />
                         </div>
 
-                        <div className="space-y-1.5">
-                            <Label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
-                                SK / NIP
-                            </Label>
-                            <input
-                                className={`${inputClass} font-mono`}
-                                name="sk_nip"
-                                maxLength={64}
-                                defaultValue={initialData?.sk_nip ?? ''}
-                                placeholder="Contoh: SK.141/028/DPMD/2021"
-                                disabled={processing}
-                            />
-                            <InputError message={errors.sk_nip} />
-                        </div>
-
                         <div className="grid grid-cols-2 gap-3">
                             <div className="space-y-1.5">
                                 <Label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">

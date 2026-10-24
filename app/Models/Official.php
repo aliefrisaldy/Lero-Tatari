@@ -13,7 +13,6 @@ class Official extends Model
         'name',
         'position',
         'category',
-        'sk_nip',
         'photo_path',
         'order_index',
         'is_active',

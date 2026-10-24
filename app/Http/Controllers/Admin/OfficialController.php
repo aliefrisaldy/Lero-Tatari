@@ -41,7 +41,6 @@ class OfficialController extends Controller
             'name' => $validated['name'],
             'position' => $validated['position'],
             'category' => $validated['category'],
-            'sk_nip' => $validated['sk_nip'] ?? null,
             'photo_path' => $photoPath ? '/storage/'.$photoPath : null,
             'order_index' => $validated['order_index'] ?? 0,
             'is_active' => $request->boolean('is_active', true),
@@ -70,7 +69,6 @@ class OfficialController extends Controller
             'name' => $validated['name'],
             'position' => $validated['position'],
             'category' => $validated['category'],
-            'sk_nip' => $validated['sk_nip'] ?? null,
             'order_index' => $validated['order_index'] ?? $official->order_index,
             'is_active' => $request->has('is_active') ? $request->boolean('is_active') : $official->is_active,
         ]);
@@ -96,7 +94,7 @@ class OfficialController extends Controller
     /**
      * Validate official input.
      *
-     * @return array{name: string, position: string, category: string, sk_nip?: string|null, photo?: mixed, order_index?: int|null, is_active?: bool|null}
+     * @return array{name: string, position: string, category: string, photo?: mixed, order_index?: int|null, is_active?: bool|null}
      */
     private function validateOfficial(Request $request): array
     {
@@ -104,7 +102,6 @@ class OfficialController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'position' => ['required', 'string', 'max:255'],
             'category' => ['required', Rule::in(['pimpinan', 'sekretariat', 'kasi', 'kadusun'])],
-            'sk_nip' => ['nullable', 'string', 'max:64'],
             'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'order_index' => ['nullable', 'integer'],
             'is_active' => ['nullable', 'boolean'],
