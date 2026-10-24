@@ -86,34 +86,38 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 4. Visi & Misi
+        // 4. Visi & Misi (teks persis dari desain Stitch "Kelola Visi & Misi")
         Vision::firstOrCreate(
             ['id' => 1],
             [
-                'vision_statement' => 'Terwujudnya Desa Lero Tatari yang Mandiri, Sejahtera, Transparan, dan Berbudaya Berlandaskan Gotong Royong.',
+                'vision_statement' => 'Terwujudnya Desa Lero Tatari yang Religius, Berdaya Saing Mandiri, Maju dalam Ekonomi Maritim-Agraris, dan Transparan Berbasis Pelayanan Digital.',
                 'period' => '2024–2029',
             ]
         );
 
         $missions = [
             [
-                'title' => 'Tata Kelola Pemerintahan Bersih & Transparan',
-                'description' => 'Meningkatkan kualitas pelayanan publik melalui administrasi desa yang profesional, terbuka, dan akuntabel.',
+                'title' => 'Tata Kelola Digital',
+                'indicator' => 'SIAK & e-Desa 100%',
+                'description' => 'Modernisasi tata kelola administrasi publik desa menuju pelayanan mandiri berbasis digital yang cepat, transparan, dan akuntabel.',
                 'order_index' => 1,
             ],
             [
-                'title' => 'Pemberdayaan Ekonomi Perkebunan & Pertanian',
-                'description' => 'Optimalisasi potensi komoditas unggulan desa terutama kelapa dan jagung untuk mendongkrak kesejahteraan warga.',
+                'title' => 'Pemberdayaan Ekonomi',
+                'indicator' => 'Revitalisasi BUMDes',
+                'description' => 'Penguatan nilai ekonomi kerakyatan melalui optimalisasi BUMDes, klaster nelayan pesisir, dan sentra komoditas agrowisata lokal.',
                 'order_index' => 2,
             ],
             [
-                'title' => 'Pengembangan Infrastruktur & Sanitasi Sehat',
-                'description' => 'Memperluas akses air perpipaan layak konsumsi, jamban sehat keluarga, dan konektivitas jalur desa.',
+                'title' => 'Lingkungan Hidup',
+                'indicator' => 'Konservasi 12 Ha Mangrove',
+                'description' => 'Pelestarian ekosistem pesisir bahari dan kelautan, rehabilitasi hutan mangrove, serta mitigasi bencana lingkungan terpadu.',
                 'order_index' => 3,
             ],
             [
-                'title' => 'Peningkatan Kualitas SDM & Harmoni Sosial',
-                'description' => 'Mendorong keterlibatan pemuda, perempuan, dan tokoh masyarakat dalam pelestarian kearifan lokal serta keamanan lingkungan.',
+                'title' => 'Kesejahteraan Sosial',
+                'indicator' => 'Nol Stunting 2026',
+                'description' => 'Pemerataan layanan dasar kesehatan terpadu, penurunan angka stunting, dan beasiswa pendidikan bagi generasi muda berprestasi.',
                 'order_index' => 4,
             ],
         ];
