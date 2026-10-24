@@ -1,633 +1,1410 @@
-<!DOCTYPE html><html lang="id" style="width: 1280px; height: 1531px; overflow: hidden; position: relative;"><head>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Kelola Berita &amp; Pengumuman - Bento Dashboard Desa Lero Tatari</title>
-<!-- Google Fonts: Inter & Plus Jakarta Sans -->
-<link href="https://fonts.googleapis.com" rel="preconnect">
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<!-- Material Symbols Outlined -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<!-- Tailwind CSS v3 CDN -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<!-- Tailwind Custom Configuration -->
-<script data-purpose="tailwind-config" id="tailwind-config">
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
-          },
-          colors: {
-            canvas: '#F4F6F8',
-            brand: {
-              DEFAULT: '#00A76F',
-              dark: '#007A55',
-              darker: '#047857',
-              light: '#E8F7F0',
-              accent: '#10B981',
-            },
-            slate: {
-              text: '#111827',
-              muted: '#64748B',
-              border: '#E2E8F0',
-              card: '#FFFFFF',
+<!doctype html>
+<html
+    lang="id"
+    style="width: 1280px; height: 1531px; overflow: hidden; position: relative"
+>
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>
+            Kelola Berita &amp; Pengumuman - Bento Dashboard Desa Lero Tatari
+        </title>
+        <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link
+            crossorigin=""
+            href="https://fonts.gstatic.com"
+            rel="preconnect"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+            rel="stylesheet"
+        />
+        <!-- Material Symbols Outlined -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <!-- Tailwind CSS v3 CDN -->
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <!-- Tailwind Custom Configuration -->
+        <script data-purpose="tailwind-config" id="tailwind-config">
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: [
+                                '"Plus Jakarta Sans"',
+                                'Inter',
+                                'sans-serif',
+                            ],
+                        },
+                        colors: {
+                            canvas: '#F4F6F8',
+                            brand: {
+                                DEFAULT: '#00A76F',
+                                dark: '#007A55',
+                                darker: '#047857',
+                                light: '#E8F7F0',
+                                accent: '#10B981',
+                            },
+                            slate: {
+                                text: '#111827',
+                                muted: '#64748B',
+                                border: '#E2E8F0',
+                                card: '#FFFFFF',
+                            },
+                        },
+                        boxShadow: {
+                            bento: '0 4px 24px -2px rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.02)',
+                            'card-hover':
+                                '0 12px 32px -4px rgba(0, 167, 111, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03)',
+                            pill: '0 2px 8px rgba(0, 0, 0, 0.04)',
+                        },
+                        borderRadius: {
+                            card: '24px',
+                            inner: '18px',
+                        },
+                    },
+                },
+            };
+        </script>
+        <style data-purpose="custom-utilities">
+            ::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
             }
-          },
-          boxShadow: {
-            'bento': '0 4px 24px -2px rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.02)',
-            'card-hover': '0 12px 32px -4px rgba(0, 167, 111, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03)',
-            'pill': '0 2px 8px rgba(0, 0, 0, 0.04)',
-          },
-          borderRadius: {
-            'card': '24px',
-            'inner': '18px',
-          }
-        }
-      }
-    }
-  </script>
-<style data-purpose="custom-utilities">
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #F1F5F9;
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #CBD5E1;
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #94A3B8;
-    }
-  </style>
-<meta content="web_dashboard" name="shell-type">
-</head>
-<body class="bg-[#F4F6F8] text-[#111827] font-sans antialiased min-h-screen selection:bg-emerald-100 selection:text-emerald-900">
-<!-- BEGIN: AppLayoutContainer -->
-<div class="flex min-h-screen p-4 md:p-6 lg:p-7 gap-6 max-w-[1720px] mx-auto items-start">
-<!-- BEGIN: LeftIconSidebar -->
-<aside class="hidden lg:flex flex-col items-center justify-between w-[72px] shrink-0 sticky top-6 z-30 h-[calc(100vh-56px)]" data-purpose="left-icon-navigation">
-<!-- Top Group: Logo & Primary Menu Icons -->
-<div class="flex flex-col items-center space-y-7 w-full">
-<!-- Logo Badge -->
-<a class="w-14 h-14 rounded-2xl bg-[#00A76F] text-white flex items-center justify-center shadow-lg shadow-[#00A76F]/25 transition-transform hover:scale-105 active:scale-95 group" href="#" title="Desa Lero Tatari">
-<svg class="w-7 h-7 fill-current transition-transform group-hover:rotate-6" viewBox="0 0 24 24">
-<path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5zm0 3.2L18 8.4v4.6c0 3.73-2.58 7.23-6 8.35-3.42-1.12-6-4.62-6-8.35V8.4l6-3.2zm-1 5.3v5h2v-5h-2zm0 6v2h2v-2h-2z"></path>
-</svg>
-</a>
-<!-- Floating Icon Dock -->
-<nav class="bg-white/95 backdrop-blur-md border border-slate-100 rounded-3xl p-2.5 shadow-bento flex flex-col items-center space-y-3.5">
-<!-- Dashboard -->
-<a class="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" href="#" title="Dashboard Ringkasan">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-<path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-</a>
-<!-- Aparat Desa -->
-<a class="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" href="#" title="Aparat Desa">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-<path d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-</a>
-<!-- Visi & Misi -->
-<a class="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" href="#" title="Visi &amp; Misi Desa">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-<path d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-</a>
-<!-- Berita & Pengumuman (Active) -->
-<a class="w-11 h-11 rounded-2xl flex items-center justify-center bg-emerald-50 text-[#00A76F] shadow-sm relative transition-all" href="#" title="Berita &amp; Artikel (Aktif)">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-<path d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-<span class="absolute -right-1 w-1.5 h-4 bg-[#00A76F] rounded-full"></span>
-</a>
-<!-- Data Demografi -->
-<a class="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" href="#" title="Demografi Penduduk">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-<path d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-</a>
-<!-- Surat & Layanan -->
-<a class="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" href="#" title="Layanan Surat &amp; Pengaduan">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-<path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-</a>
-<!-- Keuangan -->
-<a class="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" href="#" title="Keuangan APBDes">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-<path d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-</a>
-</nav>
-</div>
-<!-- Bottom Settings & Collapse -->
-<div class="flex flex-col items-center space-y-3 bg-white/95 backdrop-blur-md border border-slate-100 rounded-3xl p-2 shadow-bento">
-<button class="w-10 h-10 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" title="Pengaturan Sistem" type="button">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-<path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-</button>
-<button class="w-10 h-10 rounded-2xl flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all" title="Keluar Akun" type="button">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-<path d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-</button>
-</div>
-</aside>
-<!-- END: LeftIconSidebar -->
-<!-- BEGIN: MainContentArea -->
-<div class="flex-1 flex flex-col space-y-6 max-w-full overflow-hidden min-w-0">
-<!-- BEGIN: TopBar / Header -->
-<header class="flex items-center justify-between gap-4 pb-2" data-purpose="top-navigation">
-<div class="flex items-center gap-3">
-<div class="lg:hidden w-10 h-10 rounded-xl bg-[#00A76F] text-white flex items-center justify-center font-bold shadow-sm">
-<span class="material-symbols-outlined text-xl">shield</span>
-</div>
-<div>
-<h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
-              Kelola Wisata&nbsp;<span class="text-[#00A76F] font-extrabold">Lero Tatari</span>
-</h1>
-</div>
-</div>
-<div class="flex items-center gap-3">
-<button class="w-10 h-10 rounded-full bg-white border border-slate-200/80 text-slate-600 hover:text-[#00A76F] hover:border-[#00A76F]/40 flex items-center justify-center shadow-sm transition-colors" title="Pencarian" type="button">
-<span class="material-symbols-outlined text-xl">search</span>
-</button>
-<button class="relative w-10 h-10 rounded-full bg-white border border-slate-200/80 text-slate-600 hover:text-[#00A76F] hover:border-[#00A76F]/40 flex items-center justify-center shadow-sm transition-colors" title="Notifikasi" type="button">
-<span class="material-symbols-outlined text-xl">notifications</span>
-<span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></span>
-</button>
-<div class="h-6 w-px bg-slate-200 hidden sm:block mx-0.5"></div>
-<div class="flex items-center gap-2.5 bg-white border border-slate-200/80 rounded-full pl-1.5 pr-3.5 py-1 shadow-sm hover:border-slate-300 transition-colors cursor-pointer">
-<div class="w-8 h-8 rounded-full bg-emerald-50 text-[#00A76F] font-bold text-xs flex items-center justify-center overflow-hidden border border-emerald-200">
-<span class="font-semibold text-xs text-[#007A55]">AF</span>
-</div>
-<div class="hidden md:block text-left">
-<p class="text-xs font-semibold leading-tight text-slate-900">Arfan, S.Pd</p>
-<p class="text-[10px] text-slate-500 leading-tight">Sekretaris Desa</p>
-</div>
-</div>
-</div>
-</header>
-<!-- END: TopBar -->
-<!-- BEGIN: Main Dashboard Body -->
-<main class="w-full flex flex-col space-y-6" data-purpose="bento-dashboard-content"><div class="flex flex-col w-full">
-<!-- BEGIN: Header & Management Action Strip -->
-<header class="flex flex-col xl:flex-row xl:items-end justify-between gap-6 pb-2">
-<div class="space-y-1.5 max-w-2xl">
-<div class="flex items-center gap-2">
+            ::-webkit-scrollbar-track {
+                background: #f1f5f9;
+                border-radius: 9999px;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 9999px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: #94a3b8;
+            }
+        </style>
+        <meta content="web_dashboard" name="shell-type" />
+    </head>
+    <body
+        class="min-h-screen bg-[#F4F6F8] font-sans text-[#111827] antialiased selection:bg-emerald-100 selection:text-emerald-900"
+    >
+        <!-- BEGIN: AppLayoutContainer -->
+        <div
+            class="mx-auto flex min-h-screen max-w-[1720px] items-start gap-6 p-4 md:p-6 lg:p-7"
+        >
+            <!-- BEGIN: LeftIconSidebar -->
+            <aside
+                class="sticky top-6 z-30 hidden h-[calc(100vh-56px)] w-[72px] shrink-0 flex-col items-center justify-between lg:flex"
+                data-purpose="left-icon-navigation"
+            >
+                <!-- Top Group: Logo & Primary Menu Icons -->
+                <div class="flex w-full flex-col items-center space-y-7">
+                    <!-- Logo Badge -->
+                    <a
+                        class="group flex h-14 w-14 items-center justify-center rounded-2xl bg-[#00A76F] text-white shadow-lg shadow-[#00A76F]/25 transition-transform hover:scale-105 active:scale-95"
+                        href="#"
+                        title="Desa Lero Tatari"
+                    >
+                        <svg
+                            class="h-7 w-7 fill-current transition-transform group-hover:rotate-6"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5zm0 3.2L18 8.4v4.6c0 3.73-2.58 7.23-6 8.35-3.42-1.12-6-4.62-6-8.35V8.4l6-3.2zm-1 5.3v5h2v-5h-2zm0 6v2h2v-2h-2z"
+                            ></path>
+                        </svg>
+                    </a>
+                    <!-- Floating Icon Dock -->
+                    <nav
+                        class="flex flex-col items-center space-y-3.5 rounded-3xl border border-slate-100 bg-white/95 p-2.5 shadow-bento backdrop-blur-md"
+                    >
+                        <!-- Dashboard -->
+                        <a
+                            class="flex h-11 w-11 items-center justify-center rounded-2xl text-slate-400 transition-all hover:bg-slate-50 hover:text-[#00A76F]"
+                            href="#"
+                            title="Dashboard Ringkasan"
+                        >
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                ></path>
+                            </svg>
+                        </a>
+                        <!-- Aparat Desa -->
+                        <a
+                            class="flex h-11 w-11 items-center justify-center rounded-2xl text-slate-400 transition-all hover:bg-slate-50 hover:text-[#00A76F]"
+                            href="#"
+                            title="Aparat Desa"
+                        >
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                ></path>
+                            </svg>
+                        </a>
+                        <!-- Visi & Misi -->
+                        <a
+                            class="flex h-11 w-11 items-center justify-center rounded-2xl text-slate-400 transition-all hover:bg-slate-50 hover:text-[#00A76F]"
+                            href="#"
+                            title="Visi &amp; Misi Desa"
+                        >
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                ></path>
+                            </svg>
+                        </a>
+                        <!-- Berita & Pengumuman (Active) -->
+                        <a
+                            class="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-50 text-[#00A76F] shadow-sm transition-all"
+                            href="#"
+                            title="Berita &amp; Artikel (Aktif)"
+                        >
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                ></path>
+                            </svg>
+                            <span
+                                class="absolute -right-1 h-4 w-1.5 rounded-full bg-[#00A76F]"
+                            ></span>
+                        </a>
+                        <!-- Data Demografi -->
+                        <a
+                            class="flex h-11 w-11 items-center justify-center rounded-2xl text-slate-400 transition-all hover:bg-slate-50 hover:text-[#00A76F]"
+                            href="#"
+                            title="Demografi Penduduk"
+                        >
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                ></path>
+                            </svg>
+                        </a>
+                        <!-- Surat & Layanan -->
+                        <a
+                            class="flex h-11 w-11 items-center justify-center rounded-2xl text-slate-400 transition-all hover:bg-slate-50 hover:text-[#00A76F]"
+                            href="#"
+                            title="Layanan Surat &amp; Pengaduan"
+                        >
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                ></path>
+                            </svg>
+                        </a>
+                        <!-- Keuangan -->
+                        <a
+                            class="flex h-11 w-11 items-center justify-center rounded-2xl text-slate-400 transition-all hover:bg-slate-50 hover:text-[#00A76F]"
+                            href="#"
+                            title="Keuangan APBDes"
+                        >
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                ></path>
+                            </svg>
+                        </a>
+                    </nav>
+                </div>
+                <!-- Bottom Settings & Collapse -->
+                <div
+                    class="flex flex-col items-center space-y-3 rounded-3xl border border-slate-100 bg-white/95 p-2 shadow-bento backdrop-blur-md"
+                >
+                    <button
+                        class="flex h-10 w-10 items-center justify-center rounded-2xl text-slate-400 transition-all hover:bg-slate-50 hover:text-[#00A76F]"
+                        title="Pengaturan Sistem"
+                        type="button"
+                    >
+                        <svg
+                            class="h-5 w-5"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            ></path>
+                            <path
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            ></path>
+                        </svg>
+                    </button>
+                    <button
+                        class="flex h-10 w-10 items-center justify-center rounded-2xl text-slate-400 transition-all hover:bg-red-50 hover:text-red-500"
+                        title="Keluar Akun"
+                        type="button"
+                    >
+                        <svg
+                            class="h-5 w-5"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            ></path>
+                        </svg>
+                    </button>
+                </div>
+            </aside>
+            <!-- END: LeftIconSidebar -->
+            <!-- BEGIN: MainContentArea -->
+            <div
+                class="flex max-w-full min-w-0 flex-1 flex-col space-y-6 overflow-hidden"
+            >
+                <!-- BEGIN: TopBar / Header -->
+                <header
+                    class="flex items-center justify-between gap-4 pb-2"
+                    data-purpose="top-navigation"
+                >
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#00A76F] font-bold text-white shadow-sm lg:hidden"
+                        >
+                            <span class="material-symbols-outlined text-xl"
+                                >shield</span
+                            >
+                        </div>
+                        <div>
+                            <h1
+                                class="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl"
+                            >
+                                Kelola Wisata&nbsp;<span
+                                    class="font-extrabold text-[#00A76F]"
+                                    >Lero Tatari</span
+                                >
+                            </h1>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button
+                            class="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-600 shadow-sm transition-colors hover:border-[#00A76F]/40 hover:text-[#00A76F]"
+                            title="Pencarian"
+                            type="button"
+                        >
+                            <span class="material-symbols-outlined text-xl"
+                                >search</span
+                            >
+                        </button>
+                        <button
+                            class="relative flex h-10 w-10 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-600 shadow-sm transition-colors hover:border-[#00A76F]/40 hover:text-[#00A76F]"
+                            title="Notifikasi"
+                            type="button"
+                        >
+                            <span class="material-symbols-outlined text-xl"
+                                >notifications</span
+                            >
+                            <span
+                                class="absolute top-2.5 right-2.5 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-white"
+                            ></span>
+                        </button>
+                        <div
+                            class="mx-0.5 hidden h-6 w-px bg-slate-200 sm:block"
+                        ></div>
+                        <div
+                            class="flex cursor-pointer items-center gap-2.5 rounded-full border border-slate-200/80 bg-white py-1 pr-3.5 pl-1.5 shadow-sm transition-colors hover:border-slate-300"
+                        >
+                            <div
+                                class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-emerald-200 bg-emerald-50 text-xs font-bold text-[#00A76F]"
+                            >
+                                <span
+                                    class="text-xs font-semibold text-[#007A55]"
+                                    >AF</span
+                                >
+                            </div>
+                            <div class="hidden text-left md:block">
+                                <p
+                                    class="text-xs leading-tight font-semibold text-slate-900"
+                                >
+                                    Arfan, S.Pd
+                                </p>
+                                <p
+                                    class="text-[10px] leading-tight text-slate-500"
+                                >
+                                    Sekretaris Desa
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <!-- END: TopBar -->
+                <!-- BEGIN: Main Dashboard Body -->
+                <main
+                    class="flex w-full flex-col space-y-6"
+                    data-purpose="bento-dashboard-content"
+                >
+                    <div class="flex w-full flex-col">
+                        <!-- BEGIN: Header & Management Action Strip -->
+                        <header
+                            class="flex flex-col justify-between gap-6 pb-2 xl:flex-row xl:items-end"
+                        >
+                            <div class="max-w-2xl space-y-1.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-300">•</span>
+                                </div>
+                            </div>
+                            <!-- Quick Action Toolbar -->
+                            <div class="flex flex-wrap items-center gap-3">
+                                <!-- Search Input Container -->
+                                <div
+                                    class="relative min-w-[240px] flex-1 sm:flex-initial"
+                                >
+                                    <span
+                                        class="material-symbols-outlined pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-lg text-slate-400"
+                                        >search</span
+                                    >
+                                    <input
+                                        class="font-body-sm text-body-sm w-full rounded-full border border-slate-200/90 bg-white py-2.5 pr-4 pl-10 text-slate-800 shadow-sm transition-all placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none"
+                                        placeholder="Cari destinasi"
+                                        type="text"
+                                    />
+                                </div>
+                                <!-- Add New Spot Primary Action -->
+                                <button
+                                    class="font-label-lg text-label-lg flex cursor-pointer items-center gap-2 rounded-full bg-emerald-600 px-5 py-2.5 whitespace-nowrap text-white shadow-sm transition-all hover:bg-emerald-700 active:scale-[0.98]"
+                                    type="button"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-lg"
+                                        >add_circle</span
+                                    >
+                                    <span class="">+ Tambah Objek Wisata</span>
+                                </button>
+                            </div>
+                        </header>
+                        <!-- END: Header Strip -->
+                        <!-- BEGIN: Interactive Filter Pill Bar -->
 
-<span class="text-slate-300">•</span>
+                        <!-- END: Interactive Filter Pill Bar -->
+                        <!-- BEGIN: Summary Metric Cards Row -->
+                        <section
+                            class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3"
+                        >
+                            <!-- Metric 1: Total Destinasi -->
 
-</div>
+                            <!-- Metric 2: Status Publikasi -->
 
-
-</div>
-<!-- Quick Action Toolbar -->
-<div class="flex flex-wrap items-center gap-3">
-<!-- Search Input Container -->
-<div class="relative min-w-[240px] flex-1 sm:flex-initial">
-<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg pointer-events-none">search</span>
-<input class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200/90 rounded-full font-body-sm text-body-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 shadow-sm transition-all" placeholder="Cari destinasi" type="text">
-</div>
-<!-- Add New Spot Primary Action -->
-<button class="bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white rounded-full px-5 py-2.5 font-label-lg text-label-lg shadow-sm flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap" type="button">
-<span class="material-symbols-outlined text-lg">add_circle</span>
-<span class="">+ Tambah Objek Wisata</span>
-</button>
-</div>
-</header>
-<!-- END: Header Strip -->
-<!-- BEGIN: Interactive Filter Pill Bar -->
-
-<!-- END: Interactive Filter Pill Bar -->
-<!-- BEGIN: Summary Metric Cards Row -->
-<section class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-<!-- Metric 1: Total Destinasi -->
-
-<!-- Metric 2: Status Publikasi -->
-
-<!-- Metric 3: Estimasi Pengunjung & PADes -->
-
-</section>
-<!-- END: Summary Metric Cards Row -->
-<!-- BEGIN: Main Bento Cards Grid (6 Curated Tourism Spots) -->
-<section class="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-<!-- Card 1: Pantai Pasir Putih Tatari -->
-<article class="group bg-white rounded-[24px] border border-slate-200/80 shadow-sm hover:shadow-card-hover hover:border-emerald-200 transition-all flex flex-col justify-between overflow-hidden">
-<div>
-<!-- Image Container with Badges -->
-<div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100">
-<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Pemandangan udara garis pesisir Pantai Pasir Putih Tatari dengan air laut pirus gradasi jernih, pasir karang putih bersih berkilau, perahu kayu nelayan kecil berlabuh, pohon kelapa melambai di tepi pantai, serta perbukitan hijau di kejauhan dengan pencahayaan matahari tropis keemasan lembut, sinematik dan tajam beresolusi tinggi." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3Re8MFuVo4ERchhyz4hOHStfs8GjIv3SSA3T9aWBpmq78mwDnPobeUU90oWPInJYh8dXrNalrYuESGtvPdYt3Y4ti-2X0YHrDoY1lQhRn51CI6zvsr4jyhj4Gq3n6NHX-kf7kv010hXQMxFnG7bEVGLJN_if6TsB24lkRw4kXAbLeCtZAphgRab2xJsjFdQYlmY1xNjTQ0RyAVNB3tbd6dMk-dXJuT8t8ylW55zLcHRkZ8XeyO2m7">
-<div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
-<!-- Category Badge -->
-<div class="absolute top-3 left-3">
-
-</div>
-<!-- Pricing/Status Badge -->
-<div class="absolute top-3 right-3">
-
-</div>
-</div>
-<!-- Content Body -->
-<div class="p-5 sm:p-6 space-y-3.5">
-<h3 class="font-headline-sm text-headline-sm text-slate-900 group-hover:text-emerald-700 transition-colors">
-            Pantai Pasir Putih Tatari
-          </h3>
-<p class="font-body-sm text-body-sm text-slate-600 line-clamp-2 leading-relaxed">
-            Garis pantai landai dengan air jernih berkilau, gugusan karang alami untuk snorkeling, dan pemandangan matahari terbenam spektakuler di balik tanjung barat.
-          </p>
-<!-- Meta Information -->
-<div class="space-y-2.5 pt-2 border-t border-slate-100">
-<div class="flex items-center gap-2 text-slate-600 font-body-sm text-body-sm">
-<span class="material-symbols-outlined text-emerald-600 text-base shrink-0">location_on</span>
-<span class="truncate">Dusun I Pesisir Barat (3.2 km dari Kantor Desa)</span>
-</div>
-<!-- Facility Tags -->
-<div class="flex flex-wrap gap-1.5 pt-1">
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Snorkeling</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Perahu Katir</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Gazebo</span>
-</div>
-<!-- Management Tag -->
-<div class="flex items-center justify-between text-xs text-slate-500 pt-1">
-<span class="font-medium text-slate-400">Pengelola:</span>
-<span class="font-semibold text-slate-700">Pokdarwis Teluk Tatari</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Bottom Card Action Controls -->
-<div class="px-5 sm:px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between gap-3">
-<!-- Switch Toggle -->
-<label class="inline-flex items-center gap-2 cursor-pointer select-none">
-<input checked="" class="sr-only peer" type="checkbox">
-<div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div>
-<span class="font-label-md text-label-md text-slate-600">Beranda</span>
-</label>
-<!-- Icon Buttons -->
-<div class="flex items-center gap-1">
-<a class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 transition-colors" href="#" title="Lihat Peta Publik">
-<span class="material-symbols-outlined text-lg">public</span>
-</a>
-<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-blue-700 hover:bg-blue-50 transition-colors" title="Ubah Data" type="button">
-<span class="material-symbols-outlined text-lg">edit</span>
-</button>
-<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors" title="Hapus Destinasi" type="button">
-<span class="material-symbols-outlined text-lg">delete</span>
-</button>
-</div>
-</div>
-</article>
-<!-- Card 2: Agrowisata Bukit Hijau Lero -->
-<article class="group bg-white rounded-[24px] border border-slate-200/80 shadow-sm hover:shadow-card-hover hover:border-emerald-200 transition-all flex flex-col justify-between overflow-hidden">
-<div>
-<div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100">
-<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Lanskap perkebunan cengkeh dan kelapa bertingkat di perbukitan tropis Bukit Hijau Lero dengan kabut tipis lembah, jalan setapak teratur, gardu pandang kayu estetik yang menghadap langsung ke panorama teluk laut biru berkilau di bawah naungan awan putih dramatis." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjbhKxiPGHIvJYkJpcI0To6dLXgbSwPQ8PtNvqId1m7IJpFIAJRsuqPU54TH-agr_0j_UfNx5ZzlPxYV_n8Z7kgmlY4QOeomzvBblQx-z6iGytlkPDqmaogs2O59DD62NF71xXHNgd8ZlmZfpchLb_a73eOdV6U-S9NEF1BrUkRsZl81dtwoyFT7dNn3FYzJdrCN1D6R45xs8n2_XkdGvnuvaZ9P16mm5XteqxQZJqYjzfDE4gTEZ7">
-<div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
-<div class="absolute top-3 left-3">
-
-</div>
-<div class="absolute top-3 right-3">
-<span class="px-3 py-1 rounded-full bg-emerald-600 text-white font-label-md text-label-md shadow-sm flex items-center gap-1">
-
-
-
-</span>
-</div>
-</div>
-<div class="p-5 sm:p-6 space-y-3.5">
-<h3 class="font-headline-sm text-headline-sm text-slate-900 group-hover:text-emerald-700 transition-colors">
-            Agrowisata Bukit Hijau Lero
-          </h3>
-<p class="font-body-sm text-body-sm text-slate-600 line-clamp-2 leading-relaxed">
-            Jalur trekking menyegarkan melintasi perkebunan cengkeh dan kelapa tua dengan gardu pandang 360 derajat menghadap keindahan teluk desa dan selat lepas.
-          </p>
-<div class="space-y-2.5 pt-2 border-t border-slate-100">
-<div class="flex items-center gap-2 text-slate-600 font-body-sm text-body-sm">
-<span class="material-symbols-outlined text-emerald-600 text-base shrink-0">location_on</span>
-<span class="truncate">Dusun IV Bukit Tatari (4.5 km)</span>
-</div>
-<div class="flex flex-wrap gap-1.5 pt-1">
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Gardu Pandang</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Spot Foto</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Kedai Kopi</span>
-</div>
-<div class="flex items-center justify-between text-xs text-slate-500 pt-1">
-<span class="font-medium text-slate-400">Pengelola:</span>
-<span class="font-semibold text-slate-700">Kelompok Tani Mekar Jaya</span>
-</div>
-</div>
-</div>
-</div>
-<div class="px-5 sm:px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between gap-3">
-<label class="inline-flex items-center gap-2 cursor-pointer select-none">
-<input checked="" class="sr-only peer" type="checkbox">
-<div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div>
-<span class="font-label-md text-label-md text-slate-600">Beranda</span>
-</label>
-<div class="flex items-center gap-1">
-<a class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 transition-colors" href="#" title="Lihat Peta Publik">
-<span class="material-symbols-outlined text-lg">public</span>
-</a>
-<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-blue-700 hover:bg-blue-50 transition-colors" title="Ubah Data" type="button">
-<span class="material-symbols-outlined text-lg">edit</span>
-</button>
-<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors" title="Hapus Destinasi" type="button">
-<span class="material-symbols-outlined text-lg">delete</span>
-</button>
-</div>
-</div>
-</article>
-<!-- Card 3: Kampung Budaya & Tenun Tradisional -->
-<article class="group bg-white rounded-[24px] border border-slate-200/80 shadow-sm hover:shadow-card-hover hover:border-emerald-200 transition-all flex flex-col justify-between overflow-hidden">
-<div>
-<div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100">
-<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Suasana otentik Kampung Budaya Desa Lero Tatari memperlihatkan para pengrajin wanita menenun kain tradisional dengan alat tenun gedogan kayu manual, benang warna-warni pewarna alami daun dan rempah, latar teras rumah panggung kayu ukir Sulawesi yang hangat bercahaya natural." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2Ta1q4JXaq3VgfJiY5sMw735wUGA7b0o5LtSKUtLcNvTo_XAXp7ZbSNyoe4dvUcWSC4J0HKSQXmE-r9uz6-8ld7_c-guIp5I7VIk8ZnepEfRVm1H4hiGbq3MiqINAfUWyyU36_ZFT_DmqVadXx1DqdBzo5sor-3gNP2BzDcBTLee4wobpEwhxcpEqm3bEsLWXhv4OAEZ6umEyktjmgP5LIxJgyy09kyJWb6mdiB9eus8E6OqWLqt0">
-<div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
-<div class="absolute top-3 left-3">
-
-</div>
-<div class="absolute top-3 right-3">
-
-</div>
-</div>
-<div class="p-5 sm:p-6 space-y-3.5">
-<h3 class="font-headline-sm text-headline-sm text-slate-900 group-hover:text-emerald-700 transition-colors">
-            Kampung Budaya &amp; Tenun Tradisional
-          </h3>
-<p class="font-body-sm text-body-sm text-slate-600 line-clamp-2 leading-relaxed">
-            Pusat edukasi kerajinan tenun tangan dengan pewarna alami rempah lokal serta rumah panggung kayu bersejarah yang memelihara ritus syukuran laut.
-          </p>
-<div class="space-y-2.5 pt-2 border-t border-slate-100">
-<div class="flex items-center gap-2 text-slate-600 font-body-sm text-body-sm">
-<span class="material-symbols-outlined text-emerald-600 text-base shrink-0">location_on</span>
-<span class="truncate">Dusun II Teluk Harapan (1.1 km)</span>
-</div>
-<div class="flex flex-wrap gap-1.5 pt-1">
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Kerajinan Tenun</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Rumah Adat</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Kuliner Tradisional</span>
-</div>
-<div class="flex items-center justify-between text-xs text-slate-500 pt-1">
-<span class="font-medium text-slate-400">Pengelola:</span>
-<span class="font-semibold text-slate-700">BUMDes Tatari Mandiri</span>
-</div>
-</div>
-</div>
-</div>
-<div class="px-5 sm:px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between gap-3">
-<label class="inline-flex items-center gap-2 cursor-pointer select-none">
-<input checked="" class="sr-only peer" type="checkbox">
-<div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div>
-<span class="font-label-md text-label-md text-slate-600">Beranda</span>
-</label>
-<div class="flex items-center gap-1">
-<a class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 transition-colors" href="#" title="Lihat Peta Publik">
-<span class="material-symbols-outlined text-lg">public</span>
-</a>
-<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-blue-700 hover:bg-blue-50 transition-colors" title="Ubah Data" type="button">
-<span class="material-symbols-outlined text-lg">edit</span>
-</button>
-<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors" title="Hapus Destinasi" type="button">
-<span class="material-symbols-outlined text-lg">delete</span>
-</button>
-</div>
-</div>
-</article>
-<!-- Card 4: Ekowisata Hutan Mangrove Teluk Biru -->
-<article class="group bg-white rounded-[24px] border border-slate-200/80 shadow-sm hover:shadow-card-hover hover:border-emerald-200 transition-all flex flex-col justify-between overflow-hidden">
-<div>
-<div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100">
-<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Jembatan panggung kayu ulin tertata rapi meliuk di antara rimbunnya hutan mangrove hijau lebat Teluk Biru, air pasang laut jernih memantulkan dedaunan bakau, seekor burung bangau putih hinggap di dahan, suasana tenang sejuk dan asri dengan sinar matahari menembus kanopi dedaunan." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFNwdxJf9ZJufPvl13n0Tmu5wx4mjPMF7LNGWZ3_2kYiZTsLymBwMz0mlDsFJqjlhmUbFwHPxQUuYh4Z3dzMC2jxxi2Pxi9ZRR5nACkARWfrsiVISK4boI1DPkyXSNUPFizOXdO379U-9IhYq-h1iVzh2kXAaeSLVbv-xWVUCgy_V-I3VIzNpMuvDYja2bCwFzTsgx9H0uz6s0oRAsC7LwqMWJtsjR90zCUjSEs18EIFJfeezVd2Dm">
-<div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
-<div class="absolute top-3 left-3">
-
-</div>
-<div class="absolute top-3 right-3">
-
-</div>
-</div>
-<div class="p-5 sm:p-6 space-y-3.5">
-<h3 class="font-headline-sm text-headline-sm text-slate-900 group-hover:text-emerald-700 transition-colors">
-            Ekowisata Hutan Mangrove Teluk Biru
-          </h3>
-<p class="font-body-sm text-body-sm text-slate-600 line-clamp-2 leading-relaxed">
-            Jembatan kayu edukasi pelestarian mangrove sepanjang 450 meter dengan habitat kepiting bakau dan spot bird watching burung migran pesisir.
-          </p>
-<div class="space-y-2.5 pt-2 border-t border-slate-100">
-<div class="flex items-center gap-2 text-slate-600 font-body-sm text-body-sm">
-<span class="material-symbols-outlined text-emerald-600 text-base shrink-0">location_on</span>
-<span class="truncate">Dusun I Pesisir (1.8 km)</span>
-</div>
-<div class="flex flex-wrap gap-1.5 pt-1">
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Tracking Mangrove</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Kano</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Pusat Bibit</span>
-</div>
-<div class="flex items-center justify-between text-xs text-slate-500 pt-1">
-<span class="font-medium text-slate-400">Pengelola:</span>
-<span class="font-semibold text-slate-700">Pokdarwis &amp; Sahabat Mangrove</span>
-</div>
-</div>
-</div>
-</div>
-<div class="px-5 sm:px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between gap-3">
-<label class="inline-flex items-center gap-2 cursor-pointer select-none">
-<input checked="" class="sr-only peer" type="checkbox">
-<div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div>
-<span class="font-label-md text-label-md text-slate-600">Beranda</span>
-</label>
-<div class="flex items-center gap-1">
-<a class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 transition-colors" href="#" title="Lihat Peta Publik">
-<span class="material-symbols-outlined text-lg">public</span>
-</a>
-<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-blue-700 hover:bg-blue-50 transition-colors" title="Ubah Data" type="button">
-<span class="material-symbols-outlined text-lg">edit</span>
-</button>
-<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors" title="Hapus Destinasi" type="button">
-<span class="material-symbols-outlined text-lg">delete</span>
-</button>
-</div>
-</div>
-</article>
-<!-- Card 5: Puncak Matahari Lero & Camping Ground -->
-<article class="group bg-white rounded-[24px] border border-slate-200/80 shadow-sm hover:shadow-card-hover hover:border-emerald-200 transition-all flex flex-col justify-between overflow-hidden">
-<div>
-<div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100">
-<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Tenda-tenda camping kubah warna oranye dan hijau tersusun rapi di puncak padang rumput hijau bukit Lero saat fajar merekah, latar belakang lautan awan putih bergulung dengan semburat jingga keemasan matahari terbit di cakrawala pegunungan tropis yang megah." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCIPu8c5o2ejK__ytS5UB3839a9p4NOsKu9EUiKXFe_h_Ru11l0rQTWqwJ7uSkCb_gbgdEr0L-9kuYWlMRj9QCs6ihPCHygerjIeo_7fWuIW2jE-eXn-s5DTRrg-4fMMrgei7dyhZPRlocwCEpZzxxH-2Yv93FkzogoKBBFBiU6omhxsEnYtth1Zi31BQHXqu69RQCohjmtp2IQWVu1k_lzBDbPcZx5x1OA9nhxyU9ONCjEjUEG4ce">
-<div class="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none"></div>
-<div class="absolute top-3 left-3">
-
-</div>
-<div class="absolute top-3 right-3">
-
-</div>
-</div>
-<div class="p-5 sm:p-6 space-y-3.5">
-<h3 class="font-headline-sm text-headline-sm text-slate-900 group-hover:text-emerald-700 transition-colors">
-            Puncak Matahari Lero &amp; Camping Ground
-          </h3>
-<p class="font-body-sm text-body-sm text-slate-600 line-clamp-2 leading-relaxed">
-            Area perkemahan puncak bukit berketinggian 320 mdpl dengan panorama kabut pagi hari, pemandangan bintang malam, dan sewa perlengkapan outdoor.
-          </p>
-<div class="space-y-2.5 pt-2 border-t border-slate-100">
-<div class="flex items-center gap-2 text-slate-600 font-body-sm text-body-sm">
-<span class="material-symbols-outlined text-emerald-600 text-base shrink-0">location_on</span>
-<span class="truncate">Dusun III Lembah Subur (5.0 km)</span>
-</div>
-<div class="flex flex-wrap gap-1.5 pt-1">
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Camping Ground</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Sewa Tenda</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-label-md text-[11px]">Sunset View</span>
-</div>
-<div class="flex items-center justify-between text-xs text-slate-500 pt-1">
-<span class="font-medium text-slate-400">Pengelola:</span>
-<span class="font-semibold text-slate-700">Karang Taruna Bahari</span>
-</div>
-</div>
-</div>
-</div>
-<div class="px-5 sm:px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between gap-3">
-<label class="inline-flex items-center gap-2 cursor-pointer select-none">
-<input checked="" class="sr-only peer" type="checkbox">
-<div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div>
-<span class="font-label-md text-label-md text-slate-600">Beranda</span>
-</label>
-<div class="flex items-center gap-1">
-<a class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 transition-colors" href="#" title="Lihat Peta Publik">
-<span class="material-symbols-outlined text-lg">public</span>
-</a>
-<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-blue-700 hover:bg-blue-50 transition-colors" title="Ubah Data" type="button">
-<span class="material-symbols-outlined text-lg">edit</span>
-</button>
-<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors" title="Hapus Destinasi" type="button">
-<span class="material-symbols-outlined text-lg">delete</span>
-</button>
-</div>
-</div>
-</article>
-<!-- Card 6: Sentra Kuliner Ikan Bakar & Dermaga Katir (Draft State) -->
-<article class="group bg-white rounded-[24px] border border-amber-200/90 shadow-sm hover:shadow-card-hover transition-all flex flex-col justify-between overflow-hidden relative">
-<div class="absolute top-0 inset-x-0 h-1 bg-amber-400"></div>
-<div>
-<div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100">
-<img class="w-full h-full object-cover grayscale-[20%] transition-transform duration-500 group-hover:scale-105" data-alt="Dermaga kayu pesisir dengan deretan warung kuliner tradisional beratap rumbia di tepi laut sore hari, kepulan asap aroma pembakaran ikan segar bumbu rempah kuning di atas arang batok kelapa, perahu nelayan katir bersandar anggun di tepian air laut yang tenang berkilau cahaya lembayung senja." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTHcamRy6Z7N3ryqnHrwopUvXINFwIfg1kgT-oHXnZlvP_TB53h259kYecFe94-38GXc-zXCnPSxFxVCQx4shCWH4jGCyYRdehqgx8ptVfUfc_3dSQG3hvh2VMAP62Ameq-CGVtqLIUHYHbexuN9-Yaa38MhzIVrfjcT-4C3uCpE49TDlClBN65sU1vR9snc5twaPli_nk1ZPTfu6_y117N6_AhoVzA4D_szWkwXdoQ8haGOxFcPPo">
-<div class="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent pointer-events-none"></div>
-<div class="absolute top-3 left-3">
-
-</div>
-<div class="absolute top-3 right-3">
-
-</div>
-</div>
-<div class="p-5 sm:p-6 space-y-3.5">
-<div class="flex items-center gap-2">
-<h3 class="font-headline-sm text-headline-sm text-slate-900 group-hover:text-amber-800 transition-colors">
-              Sentra Kuliner Ikan Bakar &amp; Dermaga
-            </h3>
-</div>
-<p class="font-body-sm text-body-sm text-slate-600 line-clamp-2 leading-relaxed">
-            Pusat santap boga bahari olahan tangkapan nelayan lokal segar, pasar ikan rakyat sore hari, dan persewaan perahu tradisional katir berlayar.
-          </p>
-<div class="space-y-2.5 pt-2 border-t border-slate-100">
-<div class="flex items-center gap-2 text-slate-600 font-body-sm text-body-sm">
-<span class="material-symbols-outlined text-amber-600 text-base shrink-0">location_on</span>
-<span class="truncate">Dusun II Pesisir Dermaga (0.8 km)</span>
-</div>
-<div class="flex flex-wrap gap-1.5 pt-1">
-<span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 font-label-md text-[11px]">Ikan Segar</span>
-<span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 font-label-md text-[11px]">Warung Apung</span>
-<span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 font-label-md text-[11px]">Dermaga Foto</span>
-</div>
-<div class="flex items-center justify-between text-xs text-slate-500 pt-1">
-<span class="font-medium text-slate-400">Pengelola:</span>
-<span class="font-semibold text-slate-700">Koperasi Nelayan Sejahtera</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Specific Action Buttons for Draft Spot -->
-<div class="px-5 sm:px-6 py-4 bg-amber-50/50 border-t border-amber-100 flex items-center justify-between gap-2">
-<div class="flex items-center gap-1.5">
-<button class="px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 font-label-md text-label-md flex items-center gap-1 transition-all shadow-sm" type="button">
-<span class="material-symbols-outlined text-base">visibility</span>
-<span class="">Pratinjau</span>
-</button>
-<button class="px-3 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-label-md text-label-md flex items-center gap-1 transition-all shadow-sm" type="button">
-<span class="material-symbols-outlined text-base">publish</span>
-<span class="">Terbitkan</span>
-</button>
-</div>
-<div class="flex items-center gap-1">
-<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-blue-700 hover:bg-blue-50 transition-colors" title="Ubah Data" type="button">
-<span class="material-symbols-outlined text-lg">edit</span>
-</button>
-<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors" title="Hapus Destinasi" type="button">
-<span class="material-symbols-outlined text-lg">delete</span>
-</button>
-</div>
-</div>
-</article>
-</section>
-<!-- END: Main Bento Cards Grid -->
-<!-- BEGIN: Pagination & Information Footer -->
-<footer class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 sm:px-6 rounded-[24px] border border-slate-200/80 shadow-sm">
-<div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-<p class="font-body-sm text-body-sm text-slate-600">
-        Menampilkan <span class="font-semibold text-slate-900">1 – 6</span> dari <span class="font-semibold text-slate-900">6</span> Destinasi Wisata Desa
-      </p>
-</div>
-<div class="flex items-center gap-1.5">
-<button class="w-9 h-9 rounded-full flex items-center justify-center text-slate-300 bg-slate-50 border border-slate-200/60 cursor-not-allowed" disabled="" title="Halaman Sebelumnya" type="button">
-<span class="material-symbols-outlined text-lg">chevron_left</span>
-</button>
-<button class="w-9 h-9 rounded-full font-label-md text-label-md bg-emerald-700 text-white shadow-sm flex items-center justify-center" type="button">
-        1
-      </button>
-<button class="w-9 h-9 rounded-full flex items-center justify-center text-slate-300 bg-slate-50 border border-slate-200/60 cursor-not-allowed" disabled="" title="Halaman Berikutnya" type="button">
-<span class="material-symbols-outlined text-lg">chevron_right</span>
-</button>
-</div>
-</footer>
-<!-- END: Pagination & Information Footer -->
-</div>
-<script>
-  // Simple micro-interaction for quick switch notification
-  document.querySelectorAll('input[type="checkbox"]').forEach(toggle => {
-    toggle.addEventListener('change', (e) => {
-      const cardTitle = e.target.closest('article')?.querySelector('h3')?.innerText || 'Destinasi';
-      const status = e.target.checked ? 'ditampilkan di beranda publik' : 'disembunyikan dari beranda';
-      console.log(`[Wisata Lero Tatari] Status diperbarui: "${cardTitle}" ${status}.`);
-    });
-  });
-</script></main>
-<!-- END: Bento Grid Content -->
-<!-- BEGIN: SimpleFooter -->
-<footer class="pt-4 pb-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 border-t border-slate-200/70 gap-2" data-purpose="footer-info">
-<p class="">© 2025 Pemerintah Desa Lero Tatari • Sistem Informasi Tata Kelola Aparatur Desa Terpadu</p>
-<p class="flex items-center gap-1.5 font-medium text-slate-500">
-<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Server Desa Online &amp; Terenkripsi
-        </p>
-</footer>
-<!-- END: SimpleFooter -->
-</div>
-<!-- END: MainContentArea -->
-</div>
-<!-- END: AppLayoutContainer -->
-
-
-
-
-
-
-</body></html>
+                            <!-- Metric 3: Estimasi Pengunjung & PADes -->
+                        </section>
+                        <!-- END: Summary Metric Cards Row -->
+                        <!-- BEGIN: Main Bento Cards Grid (6 Curated Tourism Spots) -->
+                        <section
+                            class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+                        >
+                            <!-- Card 1: Pantai Pasir Putih Tatari -->
+                            <article
+                                class="group flex flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/80 bg-white shadow-sm transition-all hover:border-emerald-200 hover:shadow-card-hover"
+                            >
+                                <div>
+                                    <!-- Image Container with Badges -->
+                                    <div
+                                        class="relative aspect-[16/10] w-full overflow-hidden bg-slate-100"
+                                    >
+                                        <img
+                                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                            data-alt="Pemandangan udara garis pesisir Pantai Pasir Putih Tatari dengan air laut pirus gradasi jernih, pasir karang putih bersih berkilau, perahu kayu nelayan kecil berlabuh, pohon kelapa melambai di tepi pantai, serta perbukitan hijau di kejauhan dengan pencahayaan matahari tropis keemasan lembut, sinematik dan tajam beresolusi tinggi."
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3Re8MFuVo4ERchhyz4hOHStfs8GjIv3SSA3T9aWBpmq78mwDnPobeUU90oWPInJYh8dXrNalrYuESGtvPdYt3Y4ti-2X0YHrDoY1lQhRn51CI6zvsr4jyhj4Gq3n6NHX-kf7kv010hXQMxFnG7bEVGLJN_if6TsB24lkRw4kXAbLeCtZAphgRab2xJsjFdQYlmY1xNjTQ0RyAVNB3tbd6dMk-dXJuT8t8ylW55zLcHRkZ8XeyO2m7"
+                                        />
+                                        <div
+                                            class="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent"
+                                        ></div>
+                                        <!-- Category Badge -->
+                                        <div
+                                            class="absolute top-3 left-3"
+                                        ></div>
+                                        <!-- Pricing/Status Badge -->
+                                        <div
+                                            class="absolute top-3 right-3"
+                                        ></div>
+                                    </div>
+                                    <!-- Content Body -->
+                                    <div class="space-y-3.5 p-5 sm:p-6">
+                                        <h3
+                                            class="font-headline-sm text-headline-sm text-slate-900 transition-colors group-hover:text-emerald-700"
+                                        >
+                                            Pantai Pasir Putih Tatari
+                                        </h3>
+                                        <p
+                                            class="font-body-sm text-body-sm line-clamp-2 leading-relaxed text-slate-600"
+                                        >
+                                            Garis pantai landai dengan air
+                                            jernih berkilau, gugusan karang
+                                            alami untuk snorkeling, dan
+                                            pemandangan matahari terbenam
+                                            spektakuler di balik tanjung barat.
+                                        </p>
+                                        <!-- Meta Information -->
+                                        <div
+                                            class="space-y-2.5 border-t border-slate-100 pt-2"
+                                        >
+                                            <div
+                                                class="font-body-sm text-body-sm flex items-center gap-2 text-slate-600"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined shrink-0 text-base text-emerald-600"
+                                                    >location_on</span
+                                                >
+                                                <span class="truncate"
+                                                    >Dusun I Pesisir Barat (3.2
+                                                    km dari Kantor Desa)</span
+                                                >
+                                            </div>
+                                            <!-- Facility Tags -->
+                                            <div
+                                                class="flex flex-wrap gap-1.5 pt-1"
+                                            >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Snorkeling</span
+                                                >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Perahu Katir</span
+                                                >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Gazebo</span
+                                                >
+                                            </div>
+                                            <!-- Management Tag -->
+                                            <div
+                                                class="flex items-center justify-between pt-1 text-xs text-slate-500"
+                                            >
+                                                <span
+                                                    class="font-medium text-slate-400"
+                                                    >Pengelola:</span
+                                                >
+                                                <span
+                                                    class="font-semibold text-slate-700"
+                                                    >Pokdarwis Teluk
+                                                    Tatari</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Bottom Card Action Controls -->
+                                <div
+                                    class="flex items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/70 px-5 py-4 sm:px-6"
+                                >
+                                    <!-- Switch Toggle -->
+                                    <label
+                                        class="inline-flex cursor-pointer items-center gap-2 select-none"
+                                    >
+                                        <input
+                                            checked=""
+                                            class="peer sr-only"
+                                            type="checkbox"
+                                        />
+                                        <div
+                                            class="peer relative h-5 w-9 rounded-full bg-slate-300 peer-checked:bg-emerald-600 peer-focus:outline-none after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-slate-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"
+                                        ></div>
+                                        <span
+                                            class="font-label-md text-label-md text-slate-600"
+                                            >Beranda</span
+                                        >
+                                    </label>
+                                    <!-- Icon Buttons -->
+                                    <div class="flex items-center gap-1">
+                                        <a
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-emerald-50 hover:text-emerald-700"
+                                            href="#"
+                                            title="Lihat Peta Publik"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >public</span
+                                            >
+                                        </a>
+                                        <button
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-blue-50 hover:text-blue-700"
+                                            title="Ubah Data"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >edit</span
+                                            >
+                                        </button>
+                                        <button
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                                            title="Hapus Destinasi"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >delete</span
+                                            >
+                                        </button>
+                                    </div>
+                                </div>
+                            </article>
+                            <!-- Card 2: Agrowisata Bukit Hijau Lero -->
+                            <article
+                                class="group flex flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/80 bg-white shadow-sm transition-all hover:border-emerald-200 hover:shadow-card-hover"
+                            >
+                                <div>
+                                    <div
+                                        class="relative aspect-[16/10] w-full overflow-hidden bg-slate-100"
+                                    >
+                                        <img
+                                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                            data-alt="Lanskap perkebunan cengkeh dan kelapa bertingkat di perbukitan tropis Bukit Hijau Lero dengan kabut tipis lembah, jalan setapak teratur, gardu pandang kayu estetik yang menghadap langsung ke panorama teluk laut biru berkilau di bawah naungan awan putih dramatis."
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjbhKxiPGHIvJYkJpcI0To6dLXgbSwPQ8PtNvqId1m7IJpFIAJRsuqPU54TH-agr_0j_UfNx5ZzlPxYV_n8Z7kgmlY4QOeomzvBblQx-z6iGytlkPDqmaogs2O59DD62NF71xXHNgd8ZlmZfpchLb_a73eOdV6U-S9NEF1BrUkRsZl81dtwoyFT7dNn3FYzJdrCN1D6R45xs8n2_XkdGvnuvaZ9P16mm5XteqxQZJqYjzfDE4gTEZ7"
+                                        />
+                                        <div
+                                            class="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent"
+                                        ></div>
+                                        <div
+                                            class="absolute top-3 left-3"
+                                        ></div>
+                                        <div class="absolute top-3 right-3">
+                                            <span
+                                                class="font-label-md text-label-md flex items-center gap-1 rounded-full bg-emerald-600 px-3 py-1 text-white shadow-sm"
+                                            >
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-3.5 p-5 sm:p-6">
+                                        <h3
+                                            class="font-headline-sm text-headline-sm text-slate-900 transition-colors group-hover:text-emerald-700"
+                                        >
+                                            Agrowisata Bukit Hijau Lero
+                                        </h3>
+                                        <p
+                                            class="font-body-sm text-body-sm line-clamp-2 leading-relaxed text-slate-600"
+                                        >
+                                            Jalur trekking menyegarkan melintasi
+                                            perkebunan cengkeh dan kelapa tua
+                                            dengan gardu pandang 360 derajat
+                                            menghadap keindahan teluk desa dan
+                                            selat lepas.
+                                        </p>
+                                        <div
+                                            class="space-y-2.5 border-t border-slate-100 pt-2"
+                                        >
+                                            <div
+                                                class="font-body-sm text-body-sm flex items-center gap-2 text-slate-600"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined shrink-0 text-base text-emerald-600"
+                                                    >location_on</span
+                                                >
+                                                <span class="truncate"
+                                                    >Dusun IV Bukit Tatari (4.5
+                                                    km)</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="flex flex-wrap gap-1.5 pt-1"
+                                            >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Gardu Pandang</span
+                                                >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Spot Foto</span
+                                                >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Kedai Kopi</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="flex items-center justify-between pt-1 text-xs text-slate-500"
+                                            >
+                                                <span
+                                                    class="font-medium text-slate-400"
+                                                    >Pengelola:</span
+                                                >
+                                                <span
+                                                    class="font-semibold text-slate-700"
+                                                    >Kelompok Tani Mekar
+                                                    Jaya</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/70 px-5 py-4 sm:px-6"
+                                >
+                                    <label
+                                        class="inline-flex cursor-pointer items-center gap-2 select-none"
+                                    >
+                                        <input
+                                            checked=""
+                                            class="peer sr-only"
+                                            type="checkbox"
+                                        />
+                                        <div
+                                            class="peer relative h-5 w-9 rounded-full bg-slate-300 peer-checked:bg-emerald-600 peer-focus:outline-none after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-slate-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"
+                                        ></div>
+                                        <span
+                                            class="font-label-md text-label-md text-slate-600"
+                                            >Beranda</span
+                                        >
+                                    </label>
+                                    <div class="flex items-center gap-1">
+                                        <a
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-emerald-50 hover:text-emerald-700"
+                                            href="#"
+                                            title="Lihat Peta Publik"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >public</span
+                                            >
+                                        </a>
+                                        <button
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-blue-50 hover:text-blue-700"
+                                            title="Ubah Data"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >edit</span
+                                            >
+                                        </button>
+                                        <button
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                                            title="Hapus Destinasi"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >delete</span
+                                            >
+                                        </button>
+                                    </div>
+                                </div>
+                            </article>
+                            <!-- Card 3: Kampung Budaya & Tenun Tradisional -->
+                            <article
+                                class="group flex flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/80 bg-white shadow-sm transition-all hover:border-emerald-200 hover:shadow-card-hover"
+                            >
+                                <div>
+                                    <div
+                                        class="relative aspect-[16/10] w-full overflow-hidden bg-slate-100"
+                                    >
+                                        <img
+                                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                            data-alt="Suasana otentik Kampung Budaya Desa Lero Tatari memperlihatkan para pengrajin wanita menenun kain tradisional dengan alat tenun gedogan kayu manual, benang warna-warni pewarna alami daun dan rempah, latar teras rumah panggung kayu ukir Sulawesi yang hangat bercahaya natural."
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2Ta1q4JXaq3VgfJiY5sMw735wUGA7b0o5LtSKUtLcNvTo_XAXp7ZbSNyoe4dvUcWSC4J0HKSQXmE-r9uz6-8ld7_c-guIp5I7VIk8ZnepEfRVm1H4hiGbq3MiqINAfUWyyU36_ZFT_DmqVadXx1DqdBzo5sor-3gNP2BzDcBTLee4wobpEwhxcpEqm3bEsLWXhv4OAEZ6umEyktjmgP5LIxJgyy09kyJWb6mdiB9eus8E6OqWLqt0"
+                                        />
+                                        <div
+                                            class="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent"
+                                        ></div>
+                                        <div
+                                            class="absolute top-3 left-3"
+                                        ></div>
+                                        <div
+                                            class="absolute top-3 right-3"
+                                        ></div>
+                                    </div>
+                                    <div class="space-y-3.5 p-5 sm:p-6">
+                                        <h3
+                                            class="font-headline-sm text-headline-sm text-slate-900 transition-colors group-hover:text-emerald-700"
+                                        >
+                                            Kampung Budaya &amp; Tenun
+                                            Tradisional
+                                        </h3>
+                                        <p
+                                            class="font-body-sm text-body-sm line-clamp-2 leading-relaxed text-slate-600"
+                                        >
+                                            Pusat edukasi kerajinan tenun tangan
+                                            dengan pewarna alami rempah lokal
+                                            serta rumah panggung kayu bersejarah
+                                            yang memelihara ritus syukuran laut.
+                                        </p>
+                                        <div
+                                            class="space-y-2.5 border-t border-slate-100 pt-2"
+                                        >
+                                            <div
+                                                class="font-body-sm text-body-sm flex items-center gap-2 text-slate-600"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined shrink-0 text-base text-emerald-600"
+                                                    >location_on</span
+                                                >
+                                                <span class="truncate"
+                                                    >Dusun II Teluk Harapan (1.1
+                                                    km)</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="flex flex-wrap gap-1.5 pt-1"
+                                            >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Kerajinan Tenun</span
+                                                >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Rumah Adat</span
+                                                >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Kuliner Tradisional</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="flex items-center justify-between pt-1 text-xs text-slate-500"
+                                            >
+                                                <span
+                                                    class="font-medium text-slate-400"
+                                                    >Pengelola:</span
+                                                >
+                                                <span
+                                                    class="font-semibold text-slate-700"
+                                                    >BUMDes Tatari Mandiri</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/70 px-5 py-4 sm:px-6"
+                                >
+                                    <label
+                                        class="inline-flex cursor-pointer items-center gap-2 select-none"
+                                    >
+                                        <input
+                                            checked=""
+                                            class="peer sr-only"
+                                            type="checkbox"
+                                        />
+                                        <div
+                                            class="peer relative h-5 w-9 rounded-full bg-slate-300 peer-checked:bg-emerald-600 peer-focus:outline-none after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-slate-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"
+                                        ></div>
+                                        <span
+                                            class="font-label-md text-label-md text-slate-600"
+                                            >Beranda</span
+                                        >
+                                    </label>
+                                    <div class="flex items-center gap-1">
+                                        <a
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-emerald-50 hover:text-emerald-700"
+                                            href="#"
+                                            title="Lihat Peta Publik"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >public</span
+                                            >
+                                        </a>
+                                        <button
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-blue-50 hover:text-blue-700"
+                                            title="Ubah Data"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >edit</span
+                                            >
+                                        </button>
+                                        <button
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                                            title="Hapus Destinasi"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >delete</span
+                                            >
+                                        </button>
+                                    </div>
+                                </div>
+                            </article>
+                            <!-- Card 4: Ekowisata Hutan Mangrove Teluk Biru -->
+                            <article
+                                class="group flex flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/80 bg-white shadow-sm transition-all hover:border-emerald-200 hover:shadow-card-hover"
+                            >
+                                <div>
+                                    <div
+                                        class="relative aspect-[16/10] w-full overflow-hidden bg-slate-100"
+                                    >
+                                        <img
+                                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                            data-alt="Jembatan panggung kayu ulin tertata rapi meliuk di antara rimbunnya hutan mangrove hijau lebat Teluk Biru, air pasang laut jernih memantulkan dedaunan bakau, seekor burung bangau putih hinggap di dahan, suasana tenang sejuk dan asri dengan sinar matahari menembus kanopi dedaunan."
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFNwdxJf9ZJufPvl13n0Tmu5wx4mjPMF7LNGWZ3_2kYiZTsLymBwMz0mlDsFJqjlhmUbFwHPxQUuYh4Z3dzMC2jxxi2Pxi9ZRR5nACkARWfrsiVISK4boI1DPkyXSNUPFizOXdO379U-9IhYq-h1iVzh2kXAaeSLVbv-xWVUCgy_V-I3VIzNpMuvDYja2bCwFzTsgx9H0uz6s0oRAsC7LwqMWJtsjR90zCUjSEs18EIFJfeezVd2Dm"
+                                        />
+                                        <div
+                                            class="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent"
+                                        ></div>
+                                        <div
+                                            class="absolute top-3 left-3"
+                                        ></div>
+                                        <div
+                                            class="absolute top-3 right-3"
+                                        ></div>
+                                    </div>
+                                    <div class="space-y-3.5 p-5 sm:p-6">
+                                        <h3
+                                            class="font-headline-sm text-headline-sm text-slate-900 transition-colors group-hover:text-emerald-700"
+                                        >
+                                            Ekowisata Hutan Mangrove Teluk Biru
+                                        </h3>
+                                        <p
+                                            class="font-body-sm text-body-sm line-clamp-2 leading-relaxed text-slate-600"
+                                        >
+                                            Jembatan kayu edukasi pelestarian
+                                            mangrove sepanjang 450 meter dengan
+                                            habitat kepiting bakau dan spot bird
+                                            watching burung migran pesisir.
+                                        </p>
+                                        <div
+                                            class="space-y-2.5 border-t border-slate-100 pt-2"
+                                        >
+                                            <div
+                                                class="font-body-sm text-body-sm flex items-center gap-2 text-slate-600"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined shrink-0 text-base text-emerald-600"
+                                                    >location_on</span
+                                                >
+                                                <span class="truncate"
+                                                    >Dusun I Pesisir (1.8
+                                                    km)</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="flex flex-wrap gap-1.5 pt-1"
+                                            >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Tracking Mangrove</span
+                                                >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Kano</span
+                                                >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Pusat Bibit</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="flex items-center justify-between pt-1 text-xs text-slate-500"
+                                            >
+                                                <span
+                                                    class="font-medium text-slate-400"
+                                                    >Pengelola:</span
+                                                >
+                                                <span
+                                                    class="font-semibold text-slate-700"
+                                                    >Pokdarwis &amp; Sahabat
+                                                    Mangrove</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/70 px-5 py-4 sm:px-6"
+                                >
+                                    <label
+                                        class="inline-flex cursor-pointer items-center gap-2 select-none"
+                                    >
+                                        <input
+                                            checked=""
+                                            class="peer sr-only"
+                                            type="checkbox"
+                                        />
+                                        <div
+                                            class="peer relative h-5 w-9 rounded-full bg-slate-300 peer-checked:bg-emerald-600 peer-focus:outline-none after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-slate-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"
+                                        ></div>
+                                        <span
+                                            class="font-label-md text-label-md text-slate-600"
+                                            >Beranda</span
+                                        >
+                                    </label>
+                                    <div class="flex items-center gap-1">
+                                        <a
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-emerald-50 hover:text-emerald-700"
+                                            href="#"
+                                            title="Lihat Peta Publik"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >public</span
+                                            >
+                                        </a>
+                                        <button
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-blue-50 hover:text-blue-700"
+                                            title="Ubah Data"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >edit</span
+                                            >
+                                        </button>
+                                        <button
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                                            title="Hapus Destinasi"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >delete</span
+                                            >
+                                        </button>
+                                    </div>
+                                </div>
+                            </article>
+                            <!-- Card 5: Puncak Matahari Lero & Camping Ground -->
+                            <article
+                                class="group flex flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/80 bg-white shadow-sm transition-all hover:border-emerald-200 hover:shadow-card-hover"
+                            >
+                                <div>
+                                    <div
+                                        class="relative aspect-[16/10] w-full overflow-hidden bg-slate-100"
+                                    >
+                                        <img
+                                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                            data-alt="Tenda-tenda camping kubah warna oranye dan hijau tersusun rapi di puncak padang rumput hijau bukit Lero saat fajar merekah, latar belakang lautan awan putih bergulung dengan semburat jingga keemasan matahari terbit di cakrawala pegunungan tropis yang megah."
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCIPu8c5o2ejK__ytS5UB3839a9p4NOsKu9EUiKXFe_h_Ru11l0rQTWqwJ7uSkCb_gbgdEr0L-9kuYWlMRj9QCs6ihPCHygerjIeo_7fWuIW2jE-eXn-s5DTRrg-4fMMrgei7dyhZPRlocwCEpZzxxH-2Yv93FkzogoKBBFBiU6omhxsEnYtth1Zi31BQHXqu69RQCohjmtp2IQWVu1k_lzBDbPcZx5x1OA9nhxyU9ONCjEjUEG4ce"
+                                        />
+                                        <div
+                                            class="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent"
+                                        ></div>
+                                        <div
+                                            class="absolute top-3 left-3"
+                                        ></div>
+                                        <div
+                                            class="absolute top-3 right-3"
+                                        ></div>
+                                    </div>
+                                    <div class="space-y-3.5 p-5 sm:p-6">
+                                        <h3
+                                            class="font-headline-sm text-headline-sm text-slate-900 transition-colors group-hover:text-emerald-700"
+                                        >
+                                            Puncak Matahari Lero &amp; Camping
+                                            Ground
+                                        </h3>
+                                        <p
+                                            class="font-body-sm text-body-sm line-clamp-2 leading-relaxed text-slate-600"
+                                        >
+                                            Area perkemahan puncak bukit
+                                            berketinggian 320 mdpl dengan
+                                            panorama kabut pagi hari,
+                                            pemandangan bintang malam, dan sewa
+                                            perlengkapan outdoor.
+                                        </p>
+                                        <div
+                                            class="space-y-2.5 border-t border-slate-100 pt-2"
+                                        >
+                                            <div
+                                                class="font-body-sm text-body-sm flex items-center gap-2 text-slate-600"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined shrink-0 text-base text-emerald-600"
+                                                    >location_on</span
+                                                >
+                                                <span class="truncate"
+                                                    >Dusun III Lembah Subur (5.0
+                                                    km)</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="flex flex-wrap gap-1.5 pt-1"
+                                            >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Camping Ground</span
+                                                >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Sewa Tenda</span
+                                                >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] text-slate-700"
+                                                    >Sunset View</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="flex items-center justify-between pt-1 text-xs text-slate-500"
+                                            >
+                                                <span
+                                                    class="font-medium text-slate-400"
+                                                    >Pengelola:</span
+                                                >
+                                                <span
+                                                    class="font-semibold text-slate-700"
+                                                    >Karang Taruna Bahari</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/70 px-5 py-4 sm:px-6"
+                                >
+                                    <label
+                                        class="inline-flex cursor-pointer items-center gap-2 select-none"
+                                    >
+                                        <input
+                                            checked=""
+                                            class="peer sr-only"
+                                            type="checkbox"
+                                        />
+                                        <div
+                                            class="peer relative h-5 w-9 rounded-full bg-slate-300 peer-checked:bg-emerald-600 peer-focus:outline-none after:absolute after:top-[2px] after:left-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-slate-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white"
+                                        ></div>
+                                        <span
+                                            class="font-label-md text-label-md text-slate-600"
+                                            >Beranda</span
+                                        >
+                                    </label>
+                                    <div class="flex items-center gap-1">
+                                        <a
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-emerald-50 hover:text-emerald-700"
+                                            href="#"
+                                            title="Lihat Peta Publik"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >public</span
+                                            >
+                                        </a>
+                                        <button
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-blue-50 hover:text-blue-700"
+                                            title="Ubah Data"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >edit</span
+                                            >
+                                        </button>
+                                        <button
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                                            title="Hapus Destinasi"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >delete</span
+                                            >
+                                        </button>
+                                    </div>
+                                </div>
+                            </article>
+                            <!-- Card 6: Sentra Kuliner Ikan Bakar & Dermaga Katir (Draft State) -->
+                            <article
+                                class="group relative flex flex-col justify-between overflow-hidden rounded-[24px] border border-amber-200/90 bg-white shadow-sm transition-all hover:shadow-card-hover"
+                            >
+                                <div
+                                    class="absolute inset-x-0 top-0 h-1 bg-amber-400"
+                                ></div>
+                                <div>
+                                    <div
+                                        class="relative aspect-[16/10] w-full overflow-hidden bg-slate-100"
+                                    >
+                                        <img
+                                            class="h-full w-full object-cover grayscale-[20%] transition-transform duration-500 group-hover:scale-105"
+                                            data-alt="Dermaga kayu pesisir dengan deretan warung kuliner tradisional beratap rumbia di tepi laut sore hari, kepulan asap aroma pembakaran ikan segar bumbu rempah kuning di atas arang batok kelapa, perahu nelayan katir bersandar anggun di tepian air laut yang tenang berkilau cahaya lembayung senja."
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTHcamRy6Z7N3ryqnHrwopUvXINFwIfg1kgT-oHXnZlvP_TB53h259kYecFe94-38GXc-zXCnPSxFxVCQx4shCWH4jGCyYRdehqgx8ptVfUfc_3dSQG3hvh2VMAP62Ameq-CGVtqLIUHYHbexuN9-Yaa38MhzIVrfjcT-4C3uCpE49TDlClBN65sU1vR9snc5twaPli_nk1ZPTfu6_y117N6_AhoVzA4D_szWkwXdoQ8haGOxFcPPo"
+                                        />
+                                        <div
+                                            class="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent"
+                                        ></div>
+                                        <div
+                                            class="absolute top-3 left-3"
+                                        ></div>
+                                        <div
+                                            class="absolute top-3 right-3"
+                                        ></div>
+                                    </div>
+                                    <div class="space-y-3.5 p-5 sm:p-6">
+                                        <div class="flex items-center gap-2">
+                                            <h3
+                                                class="font-headline-sm text-headline-sm text-slate-900 transition-colors group-hover:text-amber-800"
+                                            >
+                                                Sentra Kuliner Ikan Bakar &amp;
+                                                Dermaga
+                                            </h3>
+                                        </div>
+                                        <p
+                                            class="font-body-sm text-body-sm line-clamp-2 leading-relaxed text-slate-600"
+                                        >
+                                            Pusat santap boga bahari olahan
+                                            tangkapan nelayan lokal segar, pasar
+                                            ikan rakyat sore hari, dan persewaan
+                                            perahu tradisional katir berlayar.
+                                        </p>
+                                        <div
+                                            class="space-y-2.5 border-t border-slate-100 pt-2"
+                                        >
+                                            <div
+                                                class="font-body-sm text-body-sm flex items-center gap-2 text-slate-600"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined shrink-0 text-base text-amber-600"
+                                                    >location_on</span
+                                                >
+                                                <span class="truncate"
+                                                    >Dusun II Pesisir Dermaga
+                                                    (0.8 km)</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="flex flex-wrap gap-1.5 pt-1"
+                                            >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-amber-50 px-2.5 py-1 text-[11px] text-amber-800"
+                                                    >Ikan Segar</span
+                                                >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-amber-50 px-2.5 py-1 text-[11px] text-amber-800"
+                                                    >Warung Apung</span
+                                                >
+                                                <span
+                                                    class="font-label-md rounded-lg bg-amber-50 px-2.5 py-1 text-[11px] text-amber-800"
+                                                    >Dermaga Foto</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="flex items-center justify-between pt-1 text-xs text-slate-500"
+                                            >
+                                                <span
+                                                    class="font-medium text-slate-400"
+                                                    >Pengelola:</span
+                                                >
+                                                <span
+                                                    class="font-semibold text-slate-700"
+                                                    >Koperasi Nelayan
+                                                    Sejahtera</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Specific Action Buttons for Draft Spot -->
+                                <div
+                                    class="flex items-center justify-between gap-2 border-t border-amber-100 bg-amber-50/50 px-5 py-4 sm:px-6"
+                                >
+                                    <div class="flex items-center gap-1.5">
+                                        <button
+                                            class="font-label-md text-label-md flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:text-slate-900"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-base"
+                                                >visibility</span
+                                            >
+                                            <span class="">Pratinjau</span>
+                                        </button>
+                                        <button
+                                            class="font-label-md text-label-md flex items-center gap-1 rounded-full bg-emerald-600 px-3 py-1.5 text-white shadow-sm transition-all hover:bg-emerald-700"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-base"
+                                                >publish</span
+                                            >
+                                            <span class="">Terbitkan</span>
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <button
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-blue-50 hover:text-blue-700"
+                                            title="Ubah Data"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >edit</span
+                                            >
+                                        </button>
+                                        <button
+                                            class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                                            title="Hapus Destinasi"
+                                            type="button"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-lg"
+                                                >delete</span
+                                            >
+                                        </button>
+                                    </div>
+                                </div>
+                            </article>
+                        </section>
+                        <!-- END: Main Bento Cards Grid -->
+                        <!-- BEGIN: Pagination & Information Footer -->
+                        <footer
+                            class="mt-8 flex flex-col items-center justify-between gap-4 rounded-[24px] border border-slate-200/80 bg-white p-4 shadow-sm sm:flex-row sm:px-6"
+                        >
+                            <div class="flex items-center gap-2">
+                                <span
+                                    class="h-2 w-2 rounded-full bg-emerald-500"
+                                ></span>
+                                <p
+                                    class="font-body-sm text-body-sm text-slate-600"
+                                >
+                                    Menampilkan
+                                    <span class="font-semibold text-slate-900"
+                                        >1 – 6</span
+                                    >
+                                    dari
+                                    <span class="font-semibold text-slate-900"
+                                        >6</span
+                                    >
+                                    Destinasi Wisata Desa
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button
+                                    class="flex h-9 w-9 cursor-not-allowed items-center justify-center rounded-full border border-slate-200/60 bg-slate-50 text-slate-300"
+                                    disabled=""
+                                    title="Halaman Sebelumnya"
+                                    type="button"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-lg"
+                                        >chevron_left</span
+                                    >
+                                </button>
+                                <button
+                                    class="font-label-md text-label-md flex h-9 w-9 items-center justify-center rounded-full bg-emerald-700 text-white shadow-sm"
+                                    type="button"
+                                >
+                                    1
+                                </button>
+                                <button
+                                    class="flex h-9 w-9 cursor-not-allowed items-center justify-center rounded-full border border-slate-200/60 bg-slate-50 text-slate-300"
+                                    disabled=""
+                                    title="Halaman Berikutnya"
+                                    type="button"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-lg"
+                                        >chevron_right</span
+                                    >
+                                </button>
+                            </div>
+                        </footer>
+                        <!-- END: Pagination & Information Footer -->
+                    </div>
+                    <script>
+                        // Simple micro-interaction for quick switch notification
+                        document
+                            .querySelectorAll('input[type="checkbox"]')
+                            .forEach((toggle) => {
+                                toggle.addEventListener('change', (e) => {
+                                    const cardTitle =
+                                        e.target
+                                            .closest('article')
+                                            ?.querySelector('h3')?.innerText ||
+                                        'Destinasi';
+                                    const status = e.target.checked
+                                        ? 'ditampilkan di beranda publik'
+                                        : 'disembunyikan dari beranda';
+                                    console.log(
+                                        `[Wisata Lero Tatari] Status diperbarui: "${cardTitle}" ${status}.`,
+                                    );
+                                });
+                            });
+                    </script>
+                </main>
+                <!-- END: Bento Grid Content -->
+                <!-- BEGIN: SimpleFooter -->
+                <footer
+                    class="flex flex-col items-center justify-between gap-2 border-t border-slate-200/70 pt-4 pb-4 text-xs text-slate-400 sm:flex-row"
+                    data-purpose="footer-info"
+                >
+                    <p class="">
+                        © 2025 Pemerintah Desa Lero Tatari • Sistem Informasi
+                        Tata Kelola Aparatur Desa Terpadu
+                    </p>
+                    <p
+                        class="flex items-center gap-1.5 font-medium text-slate-500"
+                    >
+                        <span
+                            class="h-2 w-2 rounded-full bg-emerald-500"
+                        ></span>
+                        Server Desa Online &amp; Terenkripsi
+                    </p>
+                </footer>
+                <!-- END: SimpleFooter -->
+            </div>
+            <!-- END: MainContentArea -->
+        </div>
+        <!-- END: AppLayoutContainer -->
+    </body>
+</html>
