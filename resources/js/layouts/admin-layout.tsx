@@ -16,6 +16,7 @@ import { home, logout } from '@/routes';
 import { index as demografiIndex } from '@/routes/admin/demografi';
 import { index as officialsIndex } from '@/routes/admin/officials';
 import { index as visiMisiIndex } from '@/routes/admin/visi-misi';
+import { index as wisataIndex } from '@/routes/admin/wisata';
 import { edit as profileEdit } from '@/routes/profile';
 import type { AppLayoutProps } from '@/types';
 
@@ -70,9 +71,9 @@ export default function AdminLayout({
         },
         {
             title: 'Kelola Wisata Desa',
-            href: officialsIndex({ query: { tab: 'wisata' } }),
+            href: wisataIndex(),
             icon: Palmtree,
-            active: url.includes('tab=wisata'),
+            active: url.startsWith('/admin/wisata'),
         },
     ];
 
@@ -95,7 +96,7 @@ export default function AdminLayout({
             <div className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200/80 bg-white px-4 py-3 shadow-xs lg:hidden">
                 <div className="flex items-center gap-2.5">
                     <img
-                        src="/images/logo.svg"
+                        src="/images/logo.png"
                         alt="Logo Desa"
                         className="h-8 w-8 rounded-lg bg-[#14532d] object-contain p-1.5"
                     />
@@ -131,7 +132,7 @@ export default function AdminLayout({
                             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                                 <div className="flex items-center gap-2.5">
                                     <img
-                                        src="/images/logo.svg"
+                                        src="/images/logo.png"
                                         alt="Logo Desa"
                                         className="h-9 w-9 rounded-xl bg-[#14532d] object-contain p-1.5"
                                     />
@@ -230,7 +231,7 @@ export default function AdminLayout({
                             title="Desa Lero Tatari - Panel CMS"
                         >
                             <img
-                                src="/images/logo.svg"
+                                src="/images/logo.png"
                                 alt="Logo Desa"
                                 className="h-full w-full object-contain transition-transform group-hover:scale-110"
                             />

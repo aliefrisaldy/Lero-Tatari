@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DemographicController;
+use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\OfficialController;
 use App\Http\Controllers\Admin\VisionMissionController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,12 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('demografi', [DemographicController::class, 'index'])->name('demografi.index');
         Route::put('demografi', [DemographicController::class, 'update'])->name('demografi.update');
+
+        Route::get('wisata', [DestinationController::class, 'index'])->name('wisata.index');
+        Route::post('wisata', [DestinationController::class, 'store'])->name('wisata.store');
+        Route::put('wisata/{destination}', [DestinationController::class, 'update'])->name('wisata.update');
+        Route::delete('wisata/{destination}', [DestinationController::class, 'destroy'])->name('wisata.destroy');
+        Route::patch('wisata/{destination}/status', [DestinationController::class, 'toggleActive'])->name('wisata.status');
     });
 
     Route::redirect('officials', 'admin/officials');

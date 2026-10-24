@@ -74,7 +74,11 @@ export default function OfficialsIndex() {
 }
 
 OfficialsIndex.layout = (page: ReactNode) => (
-    <AdminLayout title="Kelola Aparat Desa" accent="Lero Tatari">
+    <AdminLayout
+        title="Kelola Aparat Desa"
+        accent="Lero Tatari"
+        subtitle="Kelola data aparat dan struktur organisasi desa"
+    >
         {page}
     </AdminLayout>
 );

@@ -42,6 +42,26 @@ test('login endpoint returns bearer token for active user', function () {
         ]);
 });
 
+test('api login reports an unknown email', function () {
+    $this->postJson('/api/auth/login', [
+        'email' => 'tidak-terdaftar@lerotatari.desa.id',
+        'password' => 'password123',
+    ])->assertUnprocessable()
+        ->assertJsonValidationErrors([
+            'email' => 'Email belum terdaftar.',
+        ]);
+});
+
+test('api login reports a wrong password', function () {
+    $this->postJson('/api/auth/login', [
+        'email' => 'admin@lerotatari.desa.id',
+        'password' => 'kata-sandi-salah',
+    ])->assertUnprocessable()
+        ->assertJsonValidationErrors([
+            'password' => 'Kata sandi salah.',
+        ]);
+});
+
 test('auth me and logout endpoints work with token', function () {
     $admin = User::where('role', 'super_admin')->first();
 

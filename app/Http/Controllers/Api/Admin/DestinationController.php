@@ -27,13 +27,7 @@ class DestinationController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            'location_url' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'is_active' => ['nullable', 'boolean'],
-        ]);
+        $validated = $this->validateDestination($request);
 
         $imagePath = null;
         if ($request->hasFile('image')) {
@@ -65,13 +59,7 @@ class DestinationController extends Controller
     {
         $destination = Destination::findOrFail($id);
 
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            'location_url' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'is_active' => ['nullable', 'boolean'],
-        ]);
+        $validated = $this->validateDestination($request);
 
         if ($request->hasFile('image')) {
             if ($destination->image_path) {
@@ -97,6 +85,30 @@ class DestinationController extends Controller
         return response()->json([
             'message' => 'Objek wisata berhasil diperbarui.',
             'destination' => $destination->fresh(),
+        ]);
+    }
+
+    /**
+     * Validate the destination payload.
+     *
+     * @return array<string, mixed>
+     */
+    private function validateDestination(Request $request): array
+    {
+        return $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'location_url' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'is_active' => ['nullable', 'boolean'],
+        ], [
+            'title.required' => 'Nama destinasi wajib diisi.',
+            'title.max' => 'Nama destinasi tidak boleh lebih dari 255 karakter.',
+            'description.required' => 'Deskripsi destinasi wajib diisi.',
+            'image.image' => 'Berkas yang dipilih harus berupa gambar.',
+            'image.mimes' => 'Format gambar harus JPG, PNG, atau WEBP.',
+            'image.max' => 'Ukuran gambar terlalu besar. Maksimal 2 MB.',
+            'image.uploaded' => 'Gambar gagal diunggah. Pastikan ukurannya tidak melebihi 2 MB.',
         ]);
     }
 

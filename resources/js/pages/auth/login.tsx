@@ -90,10 +90,19 @@ export default function Login({ status, canResetPassword }: Props) {
                                                 tabIndex={1}
                                                 autoComplete="email"
                                                 placeholder="admin@lerotatari.desa.id"
-                                                className="h-[46px] w-full rounded-xl border border-transparent bg-[#F1F3F5] py-2.5 pr-4 pl-10 text-[13px] text-[#0F172A] transition-all duration-200 outline-none placeholder:text-[#94A3B8] focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-[#14532d]/15"
+                                                aria-invalid={Boolean(
+                                                    errors.email,
+                                                )}
+                                                aria-describedby={
+                                                    errors.email
+                                                        ? 'admin-email-error'
+                                                        : undefined
+                                                }
+                                                className="h-[46px] w-full rounded-xl border border-transparent bg-[#F1F3F5] py-2.5 pr-4 pl-10 text-[13px] text-[#0F172A] transition-all duration-200 outline-none placeholder:text-[#94A3B8] focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-[#14532d]/15 aria-invalid:border-red-300 aria-invalid:bg-red-50/40"
                                             />
                                         </div>
                                         <InputError
+                                            id="admin-email-error"
                                             message={errors.email}
                                             className="mt-1 text-[12px]"
                                         />
@@ -121,7 +130,15 @@ export default function Login({ status, canResetPassword }: Props) {
                                                 tabIndex={2}
                                                 autoComplete="current-password"
                                                 placeholder="••••••••••••"
-                                                className="h-[46px] w-full rounded-xl border border-transparent bg-[#F1F3F5] py-2.5 pr-10 pl-10 text-[13px] text-[#0F172A] transition-all duration-200 outline-none placeholder:text-[#94A3B8] focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-[#14532d]/15"
+                                                aria-invalid={Boolean(
+                                                    errors.password,
+                                                )}
+                                                aria-describedby={
+                                                    errors.password
+                                                        ? 'admin-password-error'
+                                                        : undefined
+                                                }
+                                                className="h-[46px] w-full rounded-xl border border-transparent bg-[#F1F3F5] py-2.5 pr-10 pl-10 text-[13px] text-[#0F172A] transition-all duration-200 outline-none placeholder:text-[#94A3B8] focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-[#14532d]/15 aria-invalid:border-red-300 aria-invalid:bg-red-50/40"
                                             />
                                             <button
                                                 type="button"
@@ -142,6 +159,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                             </button>
                                         </div>
                                         <InputError
+                                            id="admin-password-error"
                                             message={errors.password}
                                             className="mt-1 text-[12px]"
                                         />

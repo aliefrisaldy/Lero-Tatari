@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard, home } from '@/routes';
 import { index as officialsIndex } from '@/routes/admin/officials';
+import { index as wisataIndex } from '@/routes/admin/wisata';
 import type { NavItem } from '@/types';
 
 // Item navigasi sidebar sesuai modul PRD
@@ -48,7 +49,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Kelola Wisata',
-        href: '/dashboard?tab=wisata',
+        href: wisataIndex(),
         icon: Palmtree,
     },
 ];
