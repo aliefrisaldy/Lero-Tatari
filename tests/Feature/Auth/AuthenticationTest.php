@@ -45,12 +45,41 @@ test('users with two factor enabled are redirected to two factor challenge', fun
 test('users can not authenticate with invalid password', function () {
     $user = User::factory()->create();
 
-    $this->post(route('login.store'), [
+    $response = $this->post(route('login.store'), [
         'email' => $user->email,
         'password' => 'wrong-password',
     ]);
 
     $this->assertGuest();
+    $response->assertSessionHasErrors([
+        'password' => 'Kata sandi salah. Periksa kembali kata sandi Anda.',
+    ]);
+});
+
+test('users can not authenticate with unknown email', function () {
+    $response = $this->post(route('login.store'), [
+        'email' => 'tidak-terdaftar@lerotatari.desa.id',
+        'password' => 'password',
+    ]);
+
+    $this->assertGuest();
+    $response->assertSessionHasErrors([
+        'email' => 'Email belum terdaftar. Periksa kembali alamat email Anda.',
+    ]);
+});
+
+test('inactive users can not authenticate', function () {
+    $user = User::factory()->create(['status' => 'inactive']);
+
+    $response = $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertGuest();
+    $response->assertSessionHasErrors([
+        'email' => 'Akun ini dinonaktifkan. Silakan hubungi Super Admin.',
+    ]);
 });
 
 test('users can logout', function () {

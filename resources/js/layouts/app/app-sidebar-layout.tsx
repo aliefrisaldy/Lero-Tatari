@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { home, logout } from '@/routes';
+import { index as wisataIndex } from '@/routes/admin/wisata';
 import type { AppLayoutProps } from '@/types';
 
 export default function AppSidebarLayout({ children }: AppLayoutProps) {
@@ -52,9 +53,9 @@ export default function AppSidebarLayout({ children }: AppLayoutProps) {
         {
             title: 'Kelola Wisata Desa',
             shortTitle: 'Wisata Desa',
-            href: '/officials?tab=wisata',
+            href: wisataIndex(),
             icon: Palmtree,
-            active: url.includes('tab=wisata'),
+            active: url.startsWith('/admin/wisata'),
         },
     ];
 

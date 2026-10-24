@@ -97,10 +97,12 @@ export default function Login({ status, canResetPassword }: Props) {
                                                 tabIndex={1}
                                                 autoComplete="email"
                                                 placeholder="admin@lerotatari.desa.id"
-                                                className="w-full h-[46px] pl-10 pr-4 py-2.5 bg-[#F1F3F5] text-[13px] text-[#0F172A] placeholder:text-[#94A3B8] rounded-xl border border-transparent focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-[#14532d]/15 transition-all duration-200 outline-none"
+                                                aria-invalid={Boolean(errors.email)}
+                                                aria-describedby={errors.email ? 'admin-email-error' : undefined}
+                                                className="w-full h-[46px] pl-10 pr-4 py-2.5 bg-[#F1F3F5] text-[13px] text-[#0F172A] placeholder:text-[#94A3B8] rounded-xl border border-transparent focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-[#14532d]/15 transition-all duration-200 outline-none aria-invalid:border-red-300 aria-invalid:bg-red-50/40"
                                             />
                                         </div>
-                                        <InputError message={errors.email} className="mt-1 text-[12px]" />
+                                        <InputError id="admin-email-error" message={errors.email} className="mt-1 text-[12px]" />
                                     </div>
 
                                     {/* Password Input */}
@@ -121,7 +123,9 @@ export default function Login({ status, canResetPassword }: Props) {
                                                 tabIndex={2}
                                                 autoComplete="current-password"
                                                 placeholder="••••••••••••"
-                                                className="w-full h-[46px] pl-10 pr-10 py-2.5 bg-[#F1F3F5] text-[13px] text-[#0F172A] placeholder:text-[#94A3B8] rounded-xl border border-transparent focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-[#14532d]/15 transition-all duration-200 outline-none"
+                                                aria-invalid={Boolean(errors.password)}
+                                                aria-describedby={errors.password ? 'admin-password-error' : undefined}
+                                                className="w-full h-[46px] pl-10 pr-10 py-2.5 bg-[#F1F3F5] text-[13px] text-[#0F172A] placeholder:text-[#94A3B8] rounded-xl border border-transparent focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-[#14532d]/15 transition-all duration-200 outline-none aria-invalid:border-red-300 aria-invalid:bg-red-50/40"
                                             />
                                             <button
                                                 type="button"
@@ -137,7 +141,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                                 )}
                                             </button>
                                         </div>
-                                        <InputError message={errors.password} className="mt-1 text-[12px]" />
+                                        <InputError id="admin-password-error" message={errors.password} className="mt-1 text-[12px]" />
                                     </div>
                                 </div>
 

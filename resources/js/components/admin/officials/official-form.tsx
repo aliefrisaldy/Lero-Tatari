@@ -1,8 +1,17 @@
+import { useState } from 'react';
 import { Form, router } from '@inertiajs/react';
-import { X } from 'lucide-react';
+import { AlertTriangle, Trash2 } from 'lucide-react';
 import OfficialController from '@/actions/App/Http/Controllers/Admin/OfficialController';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -24,22 +33,32 @@ const inputClass =
     'w-full rounded-full border border-slate-200/80 bg-slate-50 px-4 py-2.5 text-sm transition-all focus:border-brand focus:bg-white focus:ring-2 focus:ring-brand/30 focus:outline-none';
 
 export function OfficialForm({ initialData, onClose }: OfficialFormProps) {
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDelete = () => {
+        if (!initialData || isDeleting) {
+            return;
+        }
+
+        setIsDeleting(true);
+
+        router.delete(OfficialController.destroy.url(initialData.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                setIsDeleteOpen(false);
+                onClose();
+            },
+            onFinish: () => setIsDeleting(false),
+        });
+    };
+
     return (
         <SheetContent className="overflow-y-auto rounded-card bg-white sm:max-w-md">
-            <SheetHeader className="px-6 pb-0 pt-6">
-                <div className="flex items-center justify-between">
-                    <SheetTitle className="text-base font-bold text-slate-text">
-                        {initialData ? 'Ubah Data Pejabat' : 'Tambah Pejabat Baru'}
-                    </SheetTitle>
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        title="Tutup"
-                        className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-700"
-                    >
-                        <X className="size-4" />
-                    </button>
-                </div>
+            <SheetHeader className="px-6 pb-0 pt-6 pr-14">
+                <SheetTitle className="text-base font-bold text-slate-text">
+                    {initialData ? 'Ubah Data Pejabat' : 'Tambah Pejabat Baru'}
+                </SheetTitle>
             </SheetHeader>
 
             <Form
@@ -169,25 +188,76 @@ export function OfficialForm({ initialData, onClose }: OfficialFormProps) {
                         </div>
 
                         {initialData && (
-                            <button
-                                type="button"
-                                disabled={processing}
-                                onClick={() => {
-                                    if (confirm(`Yakin ingin menghapus data aparat "${initialData.name}"?`)) {
-                                        router.delete(OfficialController.destroy.url(initialData.id), {
-                                            preserveScroll: true,
-                                            onSuccess: onClose,
-                                        });
-                                    }
-                                }}
-                                className="w-full pb-1 text-center text-xs font-medium text-red-500 transition-colors hover:text-red-600 disabled:opacity-50"
-                            >
-                                Hapus Data Pejabat Ini
-                            </button>
+                            <div className="border-t border-slate-100 pt-4">
+                                <button
+                                    type="button"
+                                    disabled={processing}
+                                    onClick={() => setIsDeleteOpen(true)}
+                                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-red-100 bg-red-50/60 px-4 py-3 text-xs font-semibold text-red-600 transition-all hover:border-red-200 hover:bg-red-50 hover:text-red-700 focus-visible:ring-2 focus-visible:ring-red-200 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    <Trash2 className="size-4" />
+                                    Hapus Data Pejabat Ini
+                                </button>
+                                <p className="mt-2 text-center text-[11px] text-slate-400">
+                                    Data yang dihapus tidak dapat dikembalikan.
+                                </p>
+                            </div>
                         )}
                     </>
                 )}
             </Form>
+
+            {initialData && (
+                <Dialog
+                    open={isDeleteOpen}
+                    onOpenChange={(open) => {
+                        if (!isDeleting) {
+                            setIsDeleteOpen(open);
+                        }
+                    }}
+                >
+                    <DialogContent
+                        overlayClassName="z-[60]"
+                        className="z-[60] rounded-card border-slate-100 bg-white sm:max-w-md"
+                    >
+                        <DialogHeader className="items-center text-center sm:text-center">
+                            <div className="mx-auto mb-1 flex size-12 items-center justify-center rounded-full bg-red-50 text-red-600">
+                                <AlertTriangle className="size-5" />
+                            </div>
+                            <DialogTitle className="text-lg font-bold text-slate-text">
+                                Hapus data pejabat?
+                            </DialogTitle>
+                            <DialogDescription className="text-sm leading-relaxed text-slate-500">
+                                Data{' '}
+                                <span className="font-semibold text-slate-700">
+                                    {initialData.name}
+                                </span>{' '}
+                                akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter className="gap-2 sm:justify-center">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setIsDeleteOpen(false)}
+                                disabled={isDeleting}
+                                className="rounded-full"
+                            >
+                                Batal
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                onClick={handleDelete}
+                                disabled={isDeleting}
+                                className="rounded-full"
+                            >
+                                {isDeleting ? 'Menghapus...' : 'Hapus pejabat'}
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            )}
         </SheetContent>
     );
 }

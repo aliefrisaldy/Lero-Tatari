@@ -4,15 +4,19 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\LoginRateLimiter;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -41,6 +45,45 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::createUsersUsing(CreateNewUser::class);
+
+        Fortify::authenticateUsing(function (Request $request): User {
+            $request->validate([
+                'email' => ['required', 'string', 'email'],
+                'password' => ['required', 'string'],
+            ]);
+
+            $email = $request->string('email')->toString();
+            $password = $request->string('password')->toString();
+            $limiter = app(LoginRateLimiter::class);
+
+            $user = User::where('email', $email)->first();
+
+            if (! $user) {
+                $limiter->increment($request);
+
+                throw ValidationException::withMessages([
+                    'email' => 'Email belum terdaftar. Periksa kembali alamat email Anda.',
+                ]);
+            }
+
+            if (! Hash::check($password, $user->password)) {
+                $limiter->increment($request);
+
+                throw ValidationException::withMessages([
+                    'password' => 'Kata sandi salah. Periksa kembali kata sandi Anda.',
+                ]);
+            }
+
+            if ($user->status !== 'active') {
+                $limiter->increment($request);
+
+                throw ValidationException::withMessages([
+                    'email' => 'Akun ini dinonaktifkan. Silakan hubungi Super Admin.',
+                ]);
+            }
+
+            return $user;
+        });
     }
 
     /**
