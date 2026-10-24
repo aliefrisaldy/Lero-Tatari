@@ -114,12 +114,18 @@ test('admin demographics update succeeds', function () {
         'male_inhabitants' => 860,
         'female_inhabitants' => 840,
         'total_families' => 525,
-        'coconut_land_area' => '140 Ha',
-        'coconut_production' => '700 Ton/Ha',
-        'corn_land_area' => '60 Ha',
-        'corn_production' => '35 Ton/Ha',
+        'population_growth_rate' => 0.83,
+        'sd_graduates' => 122,
+        'sltp_graduates' => 110,
+        'slta_graduates' => 226,
+        'higher_education_graduates' => 65,
+        'coconut_land_area' => 140,
+        'coconut_production' => 700,
+        'corn_land_area' => 60,
+        'corn_production' => 35,
         'piped_water_families' => 450,
         'healthy_wc_families' => 400,
+        'brick_houses' => 384,
     ]);
 
     $response->assertOk()

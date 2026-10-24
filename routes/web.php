@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DemographicController;
 use App\Http\Controllers\Admin\OfficialController;
 use App\Http\Controllers\Admin\VisionMissionController;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,9 @@ Route::middleware(['auth'])->group(function () {
         Route::put('misi/{mission}', [VisionMissionController::class, 'updateMission'])->name('misi.update');
         Route::delete('misi/{mission}', [VisionMissionController::class, 'destroyMission'])->name('misi.destroy');
         Route::post('misi-reorder', [VisionMissionController::class, 'reorderMission'])->name('misi.reorder');
+
+        Route::get('demografi', [DemographicController::class, 'index'])->name('demografi.index');
+        Route::put('demografi', [DemographicController::class, 'update'])->name('demografi.update');
     });
 
     Route::redirect('officials', 'admin/officials');

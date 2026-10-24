@@ -77,12 +77,18 @@ class DatabaseSeeder extends Seeder
                 'male_inhabitants' => 855,
                 'female_inhabitants' => 839,
                 'total_families' => 523,
-                'coconut_land_area' => '139 Ha',
-                'coconut_production' => '690 Ton/Ha',
-                'corn_land_area' => '57 Ha',
-                'corn_production' => '34.2 Ton/Ha',
+                'population_growth_rate' => 0.83,
+                'sd_graduates' => 122,
+                'sltp_graduates' => 110,
+                'slta_graduates' => 226,
+                'higher_education_graduates' => 65,
+                'coconut_land_area' => 139,
+                'coconut_production' => 690,
+                'corn_land_area' => 57,
+                'corn_production' => 34.2,
                 'piped_water_families' => 445,
                 'healthy_wc_families' => 392,
+                'brick_houses' => 384,
             ]
         );
 
