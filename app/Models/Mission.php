@@ -10,8 +10,6 @@ class Mission extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'indicator',
         'description',
         'order_index',
     ];

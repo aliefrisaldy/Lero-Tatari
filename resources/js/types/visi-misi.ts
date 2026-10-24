@@ -6,8 +6,6 @@ export interface VillageVision {
 
 export interface VillageMission {
     id: number;
-    title: string;
-    indicator: string | null;
     description: string;
     order_index: number;
 }

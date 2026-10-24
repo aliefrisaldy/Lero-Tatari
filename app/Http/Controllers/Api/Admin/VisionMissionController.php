@@ -56,13 +56,11 @@ class VisionMissionController extends Controller
     public function storeMission(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'order_index' => ['nullable', 'integer'],
         ]);
 
         $mission = Mission::create([
-            'title' => $validated['title'],
             'description' => $validated['description'],
             'order_index' => $validated['order_index'] ?? (Mission::max('order_index') + 1),
         ]);
@@ -81,7 +79,6 @@ class VisionMissionController extends Controller
         $mission = Mission::findOrFail($id);
 
         $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'order_index' => ['nullable', 'integer'],
         ]);

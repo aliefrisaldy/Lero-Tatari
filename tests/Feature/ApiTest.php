@@ -95,7 +95,6 @@ test('admin vision & missions management succeeds', function () {
 
     // Add mission
     $missionRes = $this->actingAs($admin, 'sanctum')->postJson('/api/admin/missions', [
-        'title' => 'Misi Pengetesan',
         'description' => 'Misi pengujian otomatis.',
         'order_index' => 99,
     ]);

@@ -125,19 +125,8 @@ export function MissionsCard({ missions }: MissionsCardProps) {
                         </div>
 
                         {/* Konten teks misi */}
-                        <div className="min-w-0 flex-1 space-y-1.5">
-                            <div className="flex flex-wrap items-center gap-2">
-                                <span className="rounded-full border border-slate-200/80 bg-white px-2.5 py-0.5 text-[11px] font-semibold text-slate-800">
-                                    {mission.title}
-                                </span>
-                                <span className="text-[11px] font-medium text-slate-500">
-                                    Indikator:{' '}
-                                    <strong className="font-semibold text-emerald-700">
-                                        {mission.indicator ?? 'Belum ditetapkan'}
-                                    </strong>
-                                </span>
-                            </div>
-                            <p className="text-xs leading-relaxed font-normal text-slate-700">
+                        <div className="min-w-0 flex-1">
+                            <p className="text-sm leading-relaxed font-semibold text-slate-800">
                                 {mission.description}
                             </p>
                         </div>

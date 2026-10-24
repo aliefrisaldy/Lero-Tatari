@@ -67,43 +67,13 @@ export function MissionFormModal({ open, onOpenChange, mission }: MissionFormMod
                     {({ errors, processing }) => (
                         <>
                             <div className="space-y-1">
-                                <label htmlFor={`mission-title-${mission?.id ?? 'new'}`} className="text-xs font-semibold text-slate-700">
-                                    Kategori Bidang
-                                </label>
-                                <input
-                                    id={`mission-title-${mission?.id ?? 'new'}`}
-                                    name="title"
-                                    type="text"
-                                    defaultValue={mission?.title ?? ''}
-                                    placeholder="Contoh: Infrastruktur & Konektivitas"
-                                    className={fieldClass}
-                                />
-                                <InputError message={errors.title} />
-                            </div>
-
-                            <div className="space-y-1">
-                                <label htmlFor={`mission-indicator-${mission?.id ?? 'new'}`} className="text-xs font-semibold text-slate-700">
-                                    Indikator Capaian Utama
-                                </label>
-                                <input
-                                    id={`mission-indicator-${mission?.id ?? 'new'}`}
-                                    name="indicator"
-                                    type="text"
-                                    defaultValue={mission?.indicator ?? ''}
-                                    placeholder="Contoh: 100% Jalan Lingkungan Paving"
-                                    className={fieldClass}
-                                />
-                                <InputError message={errors.indicator} />
-                            </div>
-
-                            <div className="space-y-1">
                                 <label htmlFor={`mission-description-${mission?.id ?? 'new'}`} className="text-xs font-semibold text-slate-700">
                                     Teks Rumusan Misi
                                 </label>
                                 <textarea
                                     id={`mission-description-${mission?.id ?? 'new'}`}
                                     name="description"
-                                    rows={3}
+                                    rows={4}
                                     defaultValue={mission?.description ?? ''}
                                     placeholder="Tuliskan rumusan butir misi selengkapnya..."
                                     className={`${fieldClass} resize-none p-3`}

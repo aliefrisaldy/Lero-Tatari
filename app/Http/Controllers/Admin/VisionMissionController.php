@@ -123,18 +123,12 @@ class VisionMissionController extends Controller
     /**
      * Validate mission input fields.
      *
-     * @return array{title: string, indicator: string|null, description: string}
+     * @return array{description: string}
      */
     private function validateMission(Request $request): array
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:100'],
-            'indicator' => ['nullable', 'string', 'max:150'],
+        return $request->validate([
             'description' => ['required', 'string', 'max:500'],
         ]);
-
-        $validated['indicator'] = $validated['indicator'] ?? null;
-
-        return $validated;
     }
 }

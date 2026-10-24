@@ -97,26 +97,18 @@ class DatabaseSeeder extends Seeder
 
         $missions = [
             [
-                'title' => 'Tata Kelola Digital',
-                'indicator' => 'SIAK & e-Desa 100%',
                 'description' => 'Modernisasi tata kelola administrasi publik desa menuju pelayanan mandiri berbasis digital yang cepat, transparan, dan akuntabel.',
                 'order_index' => 1,
             ],
             [
-                'title' => 'Pemberdayaan Ekonomi',
-                'indicator' => 'Revitalisasi BUMDes',
                 'description' => 'Penguatan nilai ekonomi kerakyatan melalui optimalisasi BUMDes, klaster nelayan pesisir, dan sentra komoditas agrowisata lokal.',
                 'order_index' => 2,
             ],
             [
-                'title' => 'Lingkungan Hidup',
-                'indicator' => 'Konservasi 12 Ha Mangrove',
                 'description' => 'Pelestarian ekosistem pesisir bahari dan kelautan, rehabilitasi hutan mangrove, serta mitigasi bencana lingkungan terpadu.',
                 'order_index' => 3,
             ],
             [
-                'title' => 'Kesejahteraan Sosial',
-                'indicator' => 'Nol Stunting 2026',
                 'description' => 'Pemerataan layanan dasar kesehatan terpadu, penurunan angka stunting, dan beasiswa pendidikan bagi generasi muda berprestasi.',
                 'order_index' => 4,
             ],
@@ -124,7 +116,7 @@ class DatabaseSeeder extends Seeder
 
         foreach ($missions as $mission) {
             Mission::firstOrCreate(
-                ['title' => $mission['title']],
+                ['description' => $mission['description']],
                 $mission
             );
         }
