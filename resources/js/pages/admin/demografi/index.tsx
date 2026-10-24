@@ -289,6 +289,9 @@ export default function DemografiIndex() {
         (section) => section.key === editingSection,
     );
     const ActiveIcon = activeSection?.icon;
+    const isWideSection =
+        activeSection?.key === 'kependudukan' ||
+        activeSection?.key === 'komoditas';
 
     return (
         <>
@@ -331,9 +334,7 @@ export default function DemografiIndex() {
             >
                 <DialogContent
                     className={`max-h-[90vh] space-y-4 overflow-y-auto rounded-3xl border border-slate-100 bg-white p-6 text-slate-800 shadow-xl [&>button]:hidden ${
-                        activeSection?.key === 'komoditas'
-                            ? 'max-w-2xl'
-                            : 'max-w-lg'
+                        isWideSection ? 'max-w-2xl' : 'max-w-lg'
                     }`}
                     overlayClassName="bg-slate-900/40 backdrop-blur-sm"
                 >
@@ -374,8 +375,7 @@ export default function DemografiIndex() {
 
                                         <div
                                             className={
-                                                activeSection.key ===
-                                                'komoditas'
+                                                isWideSection
                                                     ? 'grid grid-cols-1 gap-3.5 sm:grid-cols-2'
                                                     : 'space-y-3.5'
                                             }
