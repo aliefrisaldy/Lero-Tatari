@@ -50,6 +50,7 @@ export default defineConfig({
             'resources/js/components/ui/*',
             'resources/js/routes/**',
             'resources/js/wayfinder/**',
+            'stitch/**',
         ],
         options: {
             denyWarnings: true,
@@ -65,6 +66,7 @@ export default defineConfig({
         htmlWhitespaceSensitivity: 'css',
         ignorePatterns: [
             '.github/**',
+            'stitch/**',
             'composer.json',
             'resources/js/components/ui/*',
             'resources/views/mail/*',

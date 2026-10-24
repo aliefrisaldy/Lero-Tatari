@@ -8,6 +8,7 @@ import {
     Newspaper,
     Palmtree,
     Settings,
+    UserCog,
     Users,
     X,
 } from 'lucide-react';
@@ -15,6 +16,7 @@ import { useState } from 'react';
 import { home, logout } from '@/routes';
 import { index as demografiIndex } from '@/routes/admin/demografi';
 import { index as officialsIndex } from '@/routes/admin/officials';
+import { index as usersIndex } from '@/routes/admin/users';
 import { index as visiMisiIndex } from '@/routes/admin/visi-misi';
 import { index as wisataIndex } from '@/routes/admin/wisata';
 import { edit as profileEdit } from '@/routes/profile';
@@ -75,6 +77,16 @@ export default function AdminLayout({
             icon: Palmtree,
             active: url.startsWith('/admin/wisata'),
         },
+        ...(user?.role === 'super_admin'
+            ? [
+                  {
+                      title: 'Kelola Pengguna',
+                      href: usersIndex(),
+                      icon: UserCog,
+                      active: url.startsWith('/admin/users'),
+                  },
+              ]
+            : []),
     ];
 
     const initials = (user?.name ?? 'LT')
@@ -290,19 +302,6 @@ export default function AdminLayout({
                             </div>
                         </div>
 
-                        {/* Pengaturan */}
-                        <div className="group relative">
-                            <Link
-                                href={profileEdit()}
-                                className="flex h-10 w-10 items-center justify-center rounded-2xl text-slate-400 transition-all hover:bg-slate-50 hover:text-[#14532d]"
-                            >
-                                <Settings className="h-4 w-4 stroke-[1.8]" />
-                            </Link>
-                            <div className="pointer-events-none absolute top-1/2 left-full z-50 -translate-y-1/2 rounded-lg bg-[#0F172A] px-2.5 py-1.5 text-[11px] font-medium whitespace-nowrap text-white opacity-0 shadow-md transition-opacity group-hover:opacity-100">
-                                Pengaturan Akun
-                                <div className="absolute top-1/2 -left-1 h-2 w-2 -translate-y-1/2 rotate-45 bg-[#0F172A]" />
-                            </div>
-                        </div>
 
                         {/* Keluar */}
                         <div className="group relative">

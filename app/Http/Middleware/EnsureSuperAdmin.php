@@ -18,9 +18,13 @@ class EnsureSuperAdmin
         $user = $request->user();
 
         if (! $user || $user->role !== 'super_admin') {
-            return response()->json([
-                'message' => 'Akses ditolak. Fitur ini hanya untuk Super Admin.',
-            ], 403);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Akses ditolak. Fitur ini hanya untuk Super Admin.',
+                ], 403);
+            }
+
+            abort(403, 'Akses ditolak. Fitur ini hanya untuk Super Admin.');
         }
 
         return $next($request);

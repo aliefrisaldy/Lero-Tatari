@@ -1,0 +1,327 @@
+<!DOCTYPE html><html lang="id" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Sistem Informasi Desa Lero Tatari</title>
+<!-- Google Fonts: Inter & Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Configuration -->
+<script data-purpose="tailwind-config" id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-error-container": "#93000a",
+          "outline-variant": "#c0c9be",
+          "primary-container": "#14532d",
+          "surface": "#f7f9fb",
+          "secondary": "#565e74",
+          "on-tertiary-container": "#6acb7e",
+          "surface-bright": "#f7f9fb",
+          "secondary-fixed-dim": "#bec6e0",
+          "on-primary-container": "#87c695",
+          "on-primary-fixed-variant": "#12512c",
+          "surface-container": "#eceef0",
+          "surface-container-high": "#e6e8ea",
+          "inverse-primary": "#96d5a3",
+          "on-background": "#191c1e",
+          "inverse-surface": "#2d3133",
+          "primary-fixed": "#b1f2be",
+          "tertiary-fixed": "#95f8a7",
+          "surface-dim": "#d8dadc",
+          "on-tertiary": "#ffffff",
+          "on-tertiary-fixed-variant": "#005323",
+          "inverse-on-surface": "#eff1f3",
+          "on-secondary-fixed": "#131b2e",
+          "surface-variant": "#e0e3e5",
+          "on-secondary-fixed-variant": "#3f465c",
+          "surface-container-lowest": "#ffffff",
+          "on-surface-variant": "#404941",
+          "tertiary-container": "#005424",
+          "on-secondary-container": "#5c647a",
+          "on-tertiary-fixed": "#00210a",
+          "surface-tint": "#2e6a41",
+          "secondary-fixed": "#dae2fd",
+          "background": "#f7f9fb",
+          "on-primary": "#ffffff",
+          "primary-fixed-dim": "#96d5a3",
+          "on-primary-fixed": "#00210d",
+          "on-secondary": "#ffffff",
+          "tertiary": "#003a17",
+          "error": "#ba1a1a",
+          "surface-container-highest": "#e0e3e5",
+          "secondary-container": "#dae2fd",
+          "surface-container-low": "#f2f4f6",
+          "primary": "#003b1b",
+          "on-surface": "#191c1e",
+          "tertiary-fixed-dim": "#79db8d",
+          "error-container": "#ffdad6",
+          "outline": "#717970",
+          "on-error": "#ffffff"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "margin": "2rem",
+          "space-sm": "0.5rem",
+          "space-lg": "1.5rem",
+          "margin-mobile": "1rem",
+          "space-xs": "0.25rem",
+          "space-md": "1rem",
+          "space-xl": "2.5rem",
+          "gutter-mobile": "1rem",
+          "gutter": "1.5rem"
+        },
+        "fontFamily": {
+          "headline-lg": ["Plus Jakarta Sans"],
+          "body-lg": ["Inter"],
+          "display": ["Plus Jakarta Sans"],
+          "label-md": ["Inter"],
+          "headline-lg-mobile": ["Plus Jakarta Sans"],
+          "headline-md": ["Plus Jakarta Sans"],
+          "body-sm": ["Inter"],
+          "label-lg": ["Inter"],
+          "body-md": ["Inter"],
+          "display-mobile": ["Plus Jakarta Sans"],
+          "stat-counter": ["Plus Jakarta Sans"],
+          "headline-sm": ["Plus Jakarta Sans"]
+        },
+        "fontSize": {
+          "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+          "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+          "display": ["48px", {"lineHeight": "56px", "fontWeight": "700"}],
+          "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+          "headline-lg-mobile": ["26px", {"lineHeight": "34px", "fontWeight": "700"}],
+          "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+          "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+          "label-lg": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+          "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+          "display-mobile": ["36px", {"lineHeight": "44px", "fontWeight": "700"}],
+          "stat-counter": ["40px", {"lineHeight": "44px", "fontWeight": "800"}],
+          "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+        }
+      }
+    }
+  };
+</script>
+<style>
+  @layer base {
+    html {
+      overscroll-behavior: none;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+  }
+</style>
+<meta content="web_dashboard" name="shell-type">
+</head>
+<body class="bg-[#F4F5F7] text-on-surface font-body-md antialiased min-h-screen selection:bg-emerald-100 selection:text-emerald-900">
+<!-- BEGIN: AppLayoutContainer -->
+<div class="flex min-h-screen p-4 md:p-6 lg:p-7 gap-6 max-w-[1720px] mx-auto items-start">
+<!-- BEGIN: LeftIconSidebar -->
+<aside class="hidden lg:flex flex-col items-center justify-between w-[72px] shrink-0 sticky top-6 z-30 h-[calc(100vh-56px)]" data-purpose="left-icon-navigation">
+<!-- Top Group: Logo & Primary Menu Icons -->
+<div class="flex flex-col items-center space-y-7 w-full">
+<!-- Logo Badge -->
+<a class="w-14 h-14 rounded-2xl bg-[#00A76F] text-white flex items-center justify-center shadow-lg shadow-[#00A76F]/25 transition-transform hover:scale-105 active:scale-95 group" href="#" title="Desa Lero Tatari">
+<svg class="w-7 h-7 fill-current transition-transform group-hover:rotate-6" viewBox="0 0 24 24">
+<path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5zm0 3.2L18 8.4v4.6c0 3.73-2.58 7.23-6 8.35-3.42-1.12-6-4.62-6-8.35V8.4l6-3.2zm-1 5.3v5h2v-5h-2zm0 6v2h2v-2h-2z"></path>
+</svg>
+</a>
+<!-- Floating Icon Dock -->
+<nav class="bg-white border border-slate-100 rounded-3xl p-2.5 shadow-sm flex flex-col items-center space-y-3.5" data-active-classes="bg-emerald-50 text-[#00A76F] shadow-sm relative" data-purpose="primary-dock-nav">
+<!-- Dashboard -->
+<a class="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" data-path="dashboard-ringkasan" href="#" title="Dashboard Ringkasan">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+<!-- Aparat Desa -->
+<a class="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" data-path="kelola-aparat-desa" href="#" title="Aparat Desa">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+<!-- Visi & Misi -->
+<a class="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" data-path="visi-misi-desa" href="#" title="Visi &amp; Misi Desa">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+<!-- Data Demografi -->
+<a class="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" data-path="kelola-data-demografi-desa" href="#" title="Data Demografi">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+<!-- Berita & Pengumuman -->
+<a class="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" data-path="berita-pengumuman" href="#" title="Berita &amp; Pengumuman">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+<!-- Layanan Surat & Aspirasi/Pengaduan Warga (Active for Aspirasi) -->
+<a class="w-11 h-11 rounded-2xl flex items-center justify-center bg-emerald-50 text-[#00A76F] shadow-sm relative transition-all group" data-path="kelola-aspirasi-pengaduan-warga" href="#" title="Kelola Aspirasi &amp; Pengaduan Warga">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="absolute -right-1 w-1.5 h-4 bg-[#00A76F] rounded-full"></span>
+</a>
+<!-- Keuangan -->
+<a class="w-11 h-11 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" data-path="keuangan-apbdes" href="#" title="Keuangan APBDes">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+</nav>
+</div>
+<!-- Bottom Settings & Collapse -->
+<div class="flex flex-col items-center space-y-3 bg-white border border-slate-100 rounded-3xl p-2 shadow-sm">
+<button class="w-10 h-10 rounded-2xl flex items-center justify-center text-slate-400 hover:text-[#00A76F] hover:bg-slate-50 transition-all" title="Pengaturan Sistem" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<button class="w-10 h-10 rounded-2xl flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all" title="Keluar Akun" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</aside>
+<!-- END: LeftIconSidebar -->
+<!-- BEGIN: MainContentArea -->
+<div class="flex-1 flex flex-col space-y-6 max-w-full overflow-hidden min-w-0">
+<!-- BEGIN: TopBar / Header -->
+<header class="flex items-center justify-between gap-4 pb-1" data-purpose="top-navigation">
+<div class="flex items-center gap-3">
+<div class="lg:hidden w-10 h-10 rounded-xl bg-[#00A76F] text-white flex items-center justify-center font-bold shadow-sm">
+<span class="material-symbols-outlined text-xl">shield</span>
+</div>
+<div class="hidden sm:flex items-center gap-2 text-slate-400 text-xs font-medium">
+<span class="text-slate-700 font-semibold">Desa Lero Tatari</span>
+<span class="text-slate-300">/</span>
+<span class="text-emerald-700 font-medium">Tata Kelola Pelayanan Warga</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-600 hover:text-[#00A76F] hover:border-[#00A76F]/40 flex items-center justify-center shadow-sm transition-colors" title="Pencarian" type="button">
+<span class="material-symbols-outlined text-xl">search</span>
+</button>
+<button class="relative w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-600 hover:text-[#00A76F] hover:border-[#00A76F]/40 flex items-center justify-center shadow-sm transition-colors" title="Notifikasi" type="button">
+<span class="material-symbols-outlined text-xl">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+</button>
+<div class="h-6 w-px bg-slate-200 hidden sm:block mx-0.5"></div>
+<div class="flex items-center gap-2.5 bg-white border border-slate-200 rounded-full pl-1.5 pr-3.5 py-1 shadow-sm hover:border-slate-300 transition-colors cursor-pointer">
+<div class="w-8 h-8 rounded-full bg-emerald-50 text-[#00A76F] font-bold text-xs flex items-center justify-center overflow-hidden border border-emerald-200">
+<span class="font-semibold text-xs text-[#007A55]">AF</span>
+</div>
+<div class="hidden md:block text-left">
+<p class="text-xs font-semibold leading-tight text-slate-900">Arfan, S.Pd</p>
+<p class="text-[10px] text-slate-500 leading-tight">Sekretaris Desa</p>
+</div>
+</div>
+</div>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: Main Dashboard Body -->
+<main class="w-full flex flex-col space-y-6" data-purpose="bento-dashboard-content"><div class="flex flex-col w-full space-y-6">
+<!-- Top Header & Action Banner -->
+
+<!-- Top Metric Bento Cards -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Card 1: Total Admin Accounts -->
+
+<!-- Card 2: Active Sessions -->
+
+<!-- Card 3: Security Metric -->
+
+</section>
+<!-- Bottom Main Bento Card: User Directory & Access Management -->
+<section class="bg-surface-container-lowest rounded-2xl shadow-sm flex flex-col overflow-hidden">
+<!-- Card Controls Header -->
+<div class="p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-surface-container-low/40"><div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 w-full"><div class="flex flex-wrap items-center gap-3 flex-1"><div class="relative w-full sm:w-72"><span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span><input class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 text-slate-800 placeholder:text-slate-400 rounded-full text-xs outline-none focus:bg-white focus:border-emerald-500 transition-all" placeholder="Cari nama atau email..." type="text"></div><div class="inline-flex p-1 bg-slate-100 rounded-full text-xs font-medium"><button class="px-3 py-1.5 rounded-full bg-white text-emerald-800 font-semibold shadow-sm transition-colors" type="button">Semua (8)</button><button class="px-3 py-1.5 rounded-full text-slate-500 hover:text-slate-800 transition-colors" type="button">Super Admin (2)</button><button class="px-3 py-1.5 rounded-full text-slate-500 hover:text-slate-800 transition-colors" type="button">Operator (6)</button></div></div><div class="flex items-center gap-3 shrink-0"><button class="inline-flex items-center gap-2 px-3.5 py-2 bg-white border border-slate-200 text-slate-600 hover:text-slate-900 rounded-full text-xs font-medium shadow-sm transition-all" type="button"><span class="material-symbols-outlined text-base text-slate-400">sort</span><span class="">Urutkan: <strong class="text-slate-800 font-semibold">Terakhir Aktif</strong></span><span class="material-symbols-outlined text-base text-slate-400">expand_more</span></button><button class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-full shadow-sm transition-all" type="button"><span class="material-symbols-outlined text-base">add</span><span class="">Tambah User Baru</span></button></div></div></div>
+<!-- Responsive Table -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[960px]">
+<thead>
+<tr class="bg-surface-container-low text-secondary font-label-md text-label-md uppercase tracking-wider">
+<th class="py-3.5 px-6 font-semibold">Pengguna</th>
+<th class="py-3.5 px-6 font-semibold">Email &amp; Kontak</th>
+<th class="py-3.5 px-6 font-semibold">Role / Peran</th>
+<th class="py-3.5 px-6 font-semibold">Status Akses</th>
+<th class="py-3.5 px-6 font-semibold">Terakhir Aktif</th>
+<th class="py-3.5 px-6 font-semibold text-right">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-sm text-body-sm"><tr class="hover:bg-slate-50/70 transition-colors"><td class="py-5 px-6"><div class="flex items-center gap-3.5"><div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-bold shrink-0">MP</div><div><p class="text-sm font-semibold text-slate-900">Mansyur S. Palalo, S.Sos.</p><p class="text-xs text-slate-400">Kepala Desa</p></div></div></td><td class="py-5 px-6"><p class="text-xs font-medium text-slate-800">mansyur.palalo@lerotatari.id</p><p class="text-xs text-slate-400 mt-0.5">+62 812-4211-9890</p></td><td class="py-5 px-6"><span class="inline-flex items-center px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-medium">Super Admin</span></td><td class="py-5 px-6"><label class="inline-flex items-center gap-2.5 cursor-pointer select-none"><input checked="" class="sr-only peer" type="checkbox"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div><span class="text-xs text-slate-600 font-medium">Aktif</span></label></td><td class="py-5 px-6 text-xs text-slate-600 font-medium">Hari ini, 09:15 WITA</td><td class="py-5 px-6 text-right"><div class="flex items-center justify-end gap-1 text-slate-400"><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Edit Pengguna" type="button"><span class="material-symbols-outlined text-lg">edit</span></button><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Reset Sandi" type="button"><span class="material-symbols-outlined text-lg">key</span></button><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Menu Opsi" type="button"><span class="material-symbols-outlined text-lg">more_vert</span></button></div></td></tr><tr class="hover:bg-slate-50/70 transition-colors bg-emerald-50/30"><td class="py-5 px-6"><div class="flex items-center gap-3.5"><div class="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shrink-0">AF</div><div><div class="flex items-center gap-2"><p class="text-sm font-semibold text-slate-900">Arfan, S.Pd</p><span class="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded text-[10px] font-bold">Anda</span></div><p class="text-xs text-slate-400">Sekretaris Desa</p></div></div></td><td class="py-5 px-6"><p class="text-xs font-medium text-slate-800">arfan.sekdes@lerotatari.id</p><p class="text-xs text-slate-400 mt-0.5">+62 852-9901-2244</p></td><td class="py-5 px-6"><span class="inline-flex items-center px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-medium">Super Admin</span></td><td class="py-5 px-6"><label class="inline-flex items-center gap-2.5 cursor-pointer select-none"><input checked="" class="sr-only peer" type="checkbox"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div><span class="text-xs text-slate-600 font-medium">Aktif</span></label></td><td class="py-5 px-6"><div class="flex items-center gap-1.5 text-xs font-semibold text-emerald-600"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Online sekarang</div></td><td class="py-5 px-6 text-right"><div class="flex items-center justify-end gap-1 text-slate-400"><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Edit Pengguna" type="button"><span class="material-symbols-outlined text-lg">edit</span></button><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Reset Sandi" type="button"><span class="material-symbols-outlined text-lg">key</span></button><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Menu Opsi" type="button"><span class="material-symbols-outlined text-lg">more_vert</span></button></div></td></tr><tr class="hover:bg-slate-50/70 transition-colors"><td class="py-5 px-6"><div class="flex items-center gap-3.5"><div class="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold shrink-0">NA</div><div><p class="text-sm font-semibold text-slate-900">Nur Aisyah, S.A.P.</p><p class="text-xs text-slate-400">Kaur Umum &amp; Tata Usaha</p></div></div></td><td class="py-5 px-6"><p class="text-xs font-medium text-slate-800">nur.aisyah@lerotatari.id</p><p class="text-xs text-slate-400 mt-0.5">+62 821-8890-4100</p></td><td class="py-5 px-6"><span class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-medium">Operator</span></td><td class="py-5 px-6"><label class="inline-flex items-center gap-2.5 cursor-pointer select-none"><input checked="" class="sr-only peer" type="checkbox"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div><span class="text-xs text-slate-600 font-medium">Aktif</span></label></td><td class="py-5 px-6 text-xs text-slate-600 font-medium">2 jam lalu</td><td class="py-5 px-6 text-right"><div class="flex items-center justify-end gap-1 text-slate-400"><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Edit Pengguna" type="button"><span class="material-symbols-outlined text-lg">edit</span></button><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Reset Sandi" type="button"><span class="material-symbols-outlined text-lg">key</span></button><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Menu Opsi" type="button"><span class="material-symbols-outlined text-lg">more_vert</span></button></div></td></tr><tr class="hover:bg-slate-50/70 transition-colors"><td class="py-5 px-6"><div class="flex items-center gap-3.5"><div class="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold shrink-0">SM</div><div><p class="text-sm font-semibold text-slate-900">Siti Marlina, S.Sos.</p><p class="text-xs text-slate-400">Kasi Pelayanan</p></div></div></td><td class="py-5 px-6"><p class="text-xs font-medium text-slate-800">siti.marlina@lerotatari.id</p><p class="text-xs text-slate-400 mt-0.5">+62 813-5561-3912</p></td><td class="py-5 px-6"><span class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-medium">Operator</span></td><td class="py-5 px-6"><label class="inline-flex items-center gap-2.5 cursor-pointer select-none"><input checked="" class="sr-only peer" type="checkbox"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div><span class="text-xs text-slate-600 font-medium">Aktif</span></label></td><td class="py-5 px-6 text-xs text-slate-600 font-medium">Hari ini, 08:30 WITA</td><td class="py-5 px-6 text-right"><div class="flex items-center justify-end gap-1 text-slate-400"><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Edit Pengguna" type="button"><span class="material-symbols-outlined text-lg">edit</span></button><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Reset Sandi" type="button"><span class="material-symbols-outlined text-lg">key</span></button><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Menu Opsi" type="button"><span class="material-symbols-outlined text-lg">more_vert</span></button></div></td></tr><tr class="hover:bg-slate-50/70 transition-colors"><td class="py-5 px-6"><div class="flex items-center gap-3.5"><div class="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold shrink-0">HT</div><div><p class="text-sm font-semibold text-slate-900">Hendrik Tahir, S.E.</p><p class="text-xs text-slate-400">Kaur Keuangan</p></div></div></td><td class="py-5 px-6"><p class="text-xs font-medium text-slate-800">hendrik.tahir@lerotatari.id</p><p class="text-xs text-slate-400 mt-0.5">+62 822-9011-4770</p></td><td class="py-5 px-6"><span class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-medium">Operator</span></td><td class="py-5 px-6"><label class="inline-flex items-center gap-2.5 cursor-pointer select-none"><input checked="" class="sr-only peer" type="checkbox"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div><span class="text-xs text-slate-600 font-medium">Aktif</span></label></td><td class="py-5 px-6 text-xs text-slate-600 font-medium">Kemarin, 16:45 WITA</td><td class="py-5 px-6 text-right"><div class="flex items-center justify-end gap-1 text-slate-400"><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Edit Pengguna" type="button"><span class="material-symbols-outlined text-lg">edit</span></button><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Reset Sandi" type="button"><span class="material-symbols-outlined text-lg">key</span></button><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Menu Opsi" type="button"><span class="material-symbols-outlined text-lg">more_vert</span></button></div></td></tr><tr class="hover:bg-slate-50/70 transition-colors"><td class="py-5 px-6"><div class="flex items-center gap-3.5"><div class="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold shrink-0">ZR</div><div><p class="text-sm font-semibold text-slate-900">Zulfikar R., S.T.</p><p class="text-xs text-slate-400">Kaur Perencanaan</p></div></div></td><td class="py-5 px-6"><p class="text-xs font-medium text-slate-800">zulfikar.st@lerotatari.id</p><p class="text-xs text-slate-400 mt-0.5">+62 853-4011-8921</p></td><td class="py-5 px-6"><span class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-medium">Operator</span></td><td class="py-5 px-6"><label class="inline-flex items-center gap-2.5 cursor-pointer select-none"><input checked="" class="sr-only peer" type="checkbox"><div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div><span class="text-xs text-slate-600 font-medium">Aktif</span></label></td><td class="py-5 px-6 text-xs text-slate-600 font-medium">3 hari lalu</td><td class="py-5 px-6 text-right"><div class="flex items-center justify-end gap-1 text-slate-400"><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Edit Pengguna" type="button"><span class="material-symbols-outlined text-lg">edit</span></button><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Reset Sandi" type="button"><span class="material-symbols-outlined text-lg">key</span></button><button class="p-1.5 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Menu Opsi" type="button"><span class="material-symbols-outlined text-lg">more_vert</span></button></div></td></tr></tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="p-6 bg-surface-container-low/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="font-body-sm text-body-sm text-secondary">
+        Menampilkan <strong>1 – 6</strong> dari <strong>8</strong> Pengguna Terdaftar
+      </div>
+<div class="inline-flex items-center gap-1.5 font-label-md text-label-md">
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest text-secondary hover:text-on-surface shadow-sm disabled:opacity-50 transition-colors" disabled="" type="button">
+          Sebelumnya
+        </button>
+<button class="w-8 h-8 rounded-full bg-primary-container text-on-primary font-bold shadow-sm flex items-center justify-center" type="button">
+          1
+        </button>
+<button class="w-8 h-8 rounded-full bg-surface-container-lowest text-secondary hover:text-on-surface shadow-sm flex items-center justify-center transition-colors" type="button">
+          2
+        </button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest text-secondary hover:text-on-surface shadow-sm transition-colors" type="button">
+          Selanjutnya
+        </button>
+</div>
+</div>
+</section>
+<!-- Bottom Security Advisory Card -->
+<div class="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-slate-100/60 text-slate-500 text-xs font-normal"><span class="material-symbols-outlined text-sm text-slate-400">shield</span><span class="">Aktivitas perubahan status akun dan reset password dicatat secara otomatis dalam audit log terenkripsi.</span></div>
+</div>
+</main>
+<!-- END: Main Dashboard Body -->
+<!-- BEGIN: SimpleFooter -->
+<footer class="pt-4 pb-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 border-t border-slate-200/70 gap-2" data-purpose="footer-info">
+<p class="">© 2025 Pemerintah Desa Lero Tatari • Sistem Informasi Tata Kelola Aparatur Desa Terpadu</p>
+<p class="flex items-center gap-1.5 font-medium text-slate-500">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Server Desa Online &amp; Terenkripsi
+</p>
+</footer>
+<!-- END: SimpleFooter -->
+</div>
+<!-- END: MainContentArea -->
+</div>
+<!-- END: AppLayoutContainer -->
+
+
+</body></html>
