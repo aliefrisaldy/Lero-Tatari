@@ -25,6 +25,7 @@ jobs:
           php-version: '8.3'
           tools: composer:v2
           coverage: none
+          extensions: pdo_sqlite, sqlite3
 
       - name: Setup Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -33,6 +34,9 @@ jobs:
 
       - name: Setup Application
         run: composer setup
+
+      - name: Seed Database
+        run: php artisan db:seed --force
 
       - name: Run CI Checks
         run: composer ci:check
