@@ -1,10 +1,11 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import {
     BarChart3,
     Compass,
     Globe,
     Newspaper,
     Palmtree,
+    UserCog,
     Users,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
@@ -23,11 +24,12 @@ import {
 import { dashboard, home } from '@/routes';
 import { index as beritaIndex } from '@/routes/admin/berita';
 import { index as officialsIndex } from '@/routes/admin/officials';
+import { index as usersIndex } from '@/routes/admin/users';
 import { index as wisataIndex } from '@/routes/admin/wisata';
 import type { NavItem } from '@/types';
 
 // Item navigasi sidebar sesuai modul PRD
-const mainNavItems: NavItem[] = [
+const baseNavItems: NavItem[] = [
     {
         title: 'Pengelolaan Aparat',
         href: officialsIndex(),
@@ -64,6 +66,23 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { auth } = usePage<{
+        auth: { user: { role: string } | null };
+    }>().props;
+
+    const mainNavItems: NavItem[] = [
+        ...baseNavItems,
+        ...(auth?.user?.role === 'super_admin'
+            ? [
+                  {
+                      title: 'Kelola Pengguna',
+                      href: usersIndex(),
+                      icon: UserCog,
+                  },
+              ]
+            : []),
+    ];
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>

@@ -4,10 +4,13 @@ use App\Http\Controllers\Admin\DemographicController;
 use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\OfficialController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VisionMissionController;
+use App\Http\Controllers\HomeController;
+use App\Http\Middleware\EnsureSuperAdmin;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::get('/', HomeController::class)->name('home');
 
 Route::middleware(['auth'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
@@ -39,6 +42,15 @@ Route::middleware(['auth'])->group(function () {
         Route::put('berita/{news}', [NewsController::class, 'update'])->name('berita.update');
         Route::delete('berita/{news}', [NewsController::class, 'destroy'])->name('berita.destroy');
         Route::patch('berita/{news}/status', [NewsController::class, 'toggleStatus'])->name('berita.status');
+
+        Route::middleware(EnsureSuperAdmin::class)->group(function () {
+            Route::get('users', [UserController::class, 'index'])->name('users.index');
+            Route::post('users', [UserController::class, 'store'])->name('users.store');
+            Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
+            Route::patch('users/{user}/status', [UserController::class, 'updateStatus'])->name('users.status');
+            Route::patch('users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+            Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+        });
     });
 
     Route::redirect('officials', 'admin/officials');
