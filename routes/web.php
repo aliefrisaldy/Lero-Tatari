@@ -5,10 +5,11 @@ use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\OfficialController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VisionMissionController;
+use App\Http\Controllers\HomeController;
 use App\Http\Middleware\EnsureSuperAdmin;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::get('/', HomeController::class)->name('home');
 
 Route::middleware(['auth'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');

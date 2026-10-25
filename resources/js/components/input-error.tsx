@@ -1,17 +1,61 @@
 import type { HTMLAttributes } from 'react';
+import { AlertCircle, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 export default function InputError({
     message,
     className = '',
+    dismissible = true,
     ...props
-}: HTMLAttributes<HTMLParagraphElement> & { message?: string }) {
-    return message ? (
-        <p
+}: HTMLAttributes<HTMLDivElement> & {
+    message?: string;
+    dismissible?: boolean;
+}) {
+    const [dismissed, setDismissed] = useState(false);
+
+    // Reset dismissed state whenever the message changes
+    useEffect(() => {
+        setDismissed(false);
+    }, [message]);
+
+    if (!message || dismissed) {
+        return null;
+    }
+
+    return (
+        <div
+            role="alert"
             {...props}
-            className={cn('text-sm text-red-600 dark:text-red-400', className)}
+            className={cn(
+                'slide-in-from-top-1.5 relative mt-2 flex animate-in items-start gap-2.5 rounded-xl border border-rose-200/90 bg-white/98 p-2.5 text-[12px] font-medium text-rose-900 shadow-[0_8px_24px_-4px_rgba(225,29,72,0.12),0_2px_8px_rgba(0,0,0,0.04)] backdrop-blur-md transition-all duration-200 fade-in dark:border-rose-900/60 dark:bg-rose-950/90 dark:text-rose-100',
+                className,
+            )}
         >
-            {message}
-        </p>
-    ) : null;
+            {/* Subtle notch/arrow pointing up to the input field */}
+            <div className="absolute -top-1 left-4 h-2 w-2 rotate-45 border-t border-l border-rose-200/90 bg-white dark:border-rose-900/60 dark:bg-rose-950" />
+
+            {/* Danger alert icon */}
+            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-rose-600 ring-1 ring-rose-200/80 dark:bg-rose-900/50 dark:text-rose-300 dark:ring-rose-800/60">
+                <AlertCircle className="h-3.5 w-3.5" />
+            </div>
+
+            {/* Error message text */}
+            <div className="flex-1 pt-0.5 leading-relaxed text-rose-800 dark:text-rose-200">
+                {message}
+            </div>
+
+            {/* Dismiss button */}
+            {dismissible && (
+                <button
+                    type="button"
+                    onClick={() => setDismissed(true)}
+                    className="cursor-pointer rounded-md p-0.5 text-rose-400 transition-colors hover:bg-rose-50 hover:text-rose-700 dark:text-rose-400 dark:hover:bg-rose-900/40 dark:hover:text-rose-200"
+                    aria-label="Tutup notifikasi error input"
+                >
+                    <X className="h-3.5 w-3.5" />
+                </button>
+            )}
+        </div>
+    );
 }

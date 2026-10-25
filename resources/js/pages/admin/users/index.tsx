@@ -1,4 +1,4 @@
-import { Form, Head, router, usePage } from "@inertiajs/react";
+import { Form, Head, router, usePage } from '@inertiajs/react';
 import {
     BadgeCheck,
     Eye,
@@ -14,11 +14,11 @@ import {
     UserRoundCheck,
     UserRoundX,
     Users,
-} from "lucide-react";
-import { useMemo, useState, type ReactNode } from "react";
-import UserController from "@/actions/App/Http/Controllers/Admin/UserController";
-import InputError from "@/components/input-error";
-import { Button } from "@/components/ui/button";
+} from 'lucide-react';
+import { useMemo, useState, type ReactNode } from 'react';
+import UserController from '@/actions/App/Http/Controllers/Admin/UserController';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -26,73 +26,73 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
     Sheet,
     SheetContent,
     SheetDescription,
     SheetHeader,
     SheetTitle,
-} from "@/components/ui/sheet";
-import AdminLayout from "@/layouts/admin-layout";
-import type { AdminUser, UsersPageProps, UserRole } from "@/types/user";
+} from '@/components/ui/sheet';
+import AdminLayout from '@/layouts/admin-layout';
+import type { AdminUser, UsersPageProps, UserRole } from '@/types/user';
 
-type RoleFilter = "all" | UserRole;
+type RoleFilter = 'all' | UserRole;
 
 const inputClass =
-    "w-full rounded-2xl border border-slate-200/80 bg-slate-50 px-4 py-2.5 text-sm text-slate-text transition-all placeholder:text-slate-400 focus:border-brand focus:bg-white focus:ring-2 focus:ring-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60";
+    'w-full rounded-2xl border border-slate-200/80 bg-slate-50 px-4 py-2.5 text-sm text-slate-text transition-all placeholder:text-slate-400 focus:border-brand focus:bg-white focus:ring-2 focus:ring-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60';
 
 const roleMeta: Record<
     UserRole,
     { label: string; badge: string; avatar: string }
 > = {
     super_admin: {
-        label: "Super Admin",
-        badge: "bg-emerald-50 text-emerald-700 border-emerald-200",
-        avatar: "bg-brand-light text-brand",
+        label: 'Super Admin',
+        badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        avatar: 'bg-brand-light text-brand',
     },
     operator: {
-        label: "Operator",
-        badge: "bg-slate-100 text-slate-600 border-slate-200",
-        avatar: "bg-blue-50 text-blue-700",
+        label: 'Operator',
+        badge: 'bg-slate-100 text-slate-600 border-slate-200',
+        avatar: 'bg-blue-50 text-blue-700',
     },
 };
 
 function initials(name: string): string {
     return name
-        .split(" ")
+        .split(' ')
         .filter(Boolean)
         .slice(0, 2)
         .map((part) => part[0])
-        .join("")
+        .join('')
         .toUpperCase();
 }
 
 function formatLastLogin(value: string | null): string {
     if (!value) {
-        return "Belum pernah masuk";
+        return 'Belum pernah masuk';
     }
 
     const date = new Date(value);
 
     if (Number.isNaN(date.getTime())) {
-        return "Belum pernah masuk";
+        return 'Belum pernah masuk';
     }
 
-    return new Intl.DateTimeFormat("id-ID", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
+    return new Intl.DateTimeFormat('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
     }).format(date);
 }
 
@@ -119,21 +119,21 @@ function StatusSwitch({
             <span
                 aria-hidden
                 className={`relative h-5 w-9 rounded-full transition-colors ${
-                    checked ? "bg-brand" : "bg-slate-300"
-                } ${disabled ? "opacity-40" : ""}`}
+                    checked ? 'bg-brand' : 'bg-slate-300'
+                } ${disabled ? 'opacity-40' : ''}`}
             >
                 <span
                     className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${
-                        checked ? "translate-x-4" : ""
+                        checked ? 'translate-x-4' : ''
                     }`}
                 />
             </span>
             <span
                 className={`text-xs font-semibold ${
-                    checked ? "text-emerald-700" : "text-slate-500"
+                    checked ? 'text-emerald-700' : 'text-slate-500'
                 }`}
             >
-                {checked ? "Aktif" : "Nonaktif"}
+                {checked ? 'Aktif' : 'Nonaktif'}
             </span>
         </label>
     );
@@ -155,7 +155,7 @@ function PasswordField({
             <input
                 className={`${inputClass} pr-11`}
                 name={name}
-                type={visible ? "text" : "password"}
+                type={visible ? 'text' : 'password'}
                 required={required}
                 autoComplete="new-password"
                 disabled={disabled}
@@ -165,7 +165,7 @@ function PasswordField({
                 tabIndex={-1}
                 onClick={() => setVisible((prev) => !prev)}
                 aria-label={
-                    visible ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"
+                    visible ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'
                 }
                 className="absolute inset-y-0 right-0 flex items-center px-3.5 text-slate-400 transition-colors hover:text-slate-600 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={disabled}
@@ -217,8 +217,8 @@ export default function UsersIndex() {
     const { users, auth } = usePage<UsersPageProps>().props;
     const currentUserId = auth?.user?.id;
 
-    const [query, setQuery] = useState("");
-    const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
+    const [query, setQuery] = useState('');
+    const [roleFilter, setRoleFilter] = useState<RoleFilter>('all');
     const [formOpen, setFormOpen] = useState(false);
     const [editing, setEditing] = useState<AdminUser | null>(null);
     const [resetTarget, setResetTarget] = useState<AdminUser | null>(null);
@@ -227,19 +227,19 @@ export default function UsersIndex() {
     const [togglingId, setTogglingId] = useState<number | null>(null);
 
     const superAdminCount = users.filter(
-        (user) => user.role === "super_admin",
+        (user) => user.role === 'super_admin',
     ).length;
     const operatorCount = users.filter(
-        (user) => user.role === "operator",
+        (user) => user.role === 'operator',
     ).length;
-    const activeCount = users.filter((user) => user.status === "active").length;
+    const activeCount = users.filter((user) => user.status === 'active').length;
     const inactiveCount = users.length - activeCount;
 
     const filtered = useMemo(() => {
         const q = query.trim().toLowerCase();
 
         return users.filter((user) => {
-            if (roleFilter !== "all" && user.role !== roleFilter) {
+            if (roleFilter !== 'all' && user.role !== roleFilter) {
                 return false;
             }
 
@@ -274,7 +274,7 @@ export default function UsersIndex() {
         router.patch(
             UserController.updateStatus.url(user.id),
             {
-                status: user.status === "active" ? "inactive" : "active",
+                status: user.status === 'active' ? 'inactive' : 'active',
             },
             {
                 preserveScroll: true,
@@ -300,13 +300,13 @@ export default function UsersIndex() {
 
     const filters: Array<{ value: RoleFilter; label: string; count: number }> =
         [
-            { value: "all", label: "Semua", count: users.length },
+            { value: 'all', label: 'Semua', count: users.length },
             {
-                value: "super_admin",
-                label: "Super Admin",
+                value: 'super_admin',
+                label: 'Super Admin',
                 count: superAdminCount,
             },
-            { value: "operator", label: "Operator", count: operatorCount },
+            { value: 'operator', label: 'Operator', count: operatorCount },
         ];
 
     return (
@@ -392,8 +392,8 @@ export default function UsersIndex() {
                                         }
                                         className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
                                             active
-                                                ? "bg-white text-brand-dark shadow-sm"
-                                                : "text-slate-500 hover:text-slate-800"
+                                                ? 'bg-white text-brand-dark shadow-sm'
+                                                : 'text-slate-500 hover:text-slate-800'
                                         }`}
                                     >
                                         {filter.label} ({filter.count})
@@ -436,15 +436,15 @@ export default function UsersIndex() {
                                 {filtered.map((user) => {
                                     const isSelf = user.id === currentUserId;
                                     const meta = roleMeta[user.role];
-                                    const isActive = user.status === "active";
+                                    const isActive = user.status === 'active';
 
                                     return (
                                         <tr
                                             key={user.id}
                                             className={`transition-colors hover:bg-slate-50/70 ${
                                                 isSelf
-                                                    ? "bg-brand-light/40"
-                                                    : ""
+                                                    ? 'bg-brand-light/40'
+                                                    : ''
                                             }`}
                                         >
                                             <td className="px-6 py-4">
@@ -552,18 +552,18 @@ export default function UsersIndex() {
 
                     <div className="flex flex-col items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/50 px-6 py-4 sm:flex-row">
                         <p className="text-xs text-slate-muted">
-                            Menampilkan{" "}
+                            Menampilkan{' '}
                             <strong className="text-slate-text">
                                 {filtered.length}
-                            </strong>{" "}
-                            dari{" "}
+                            </strong>{' '}
+                            dari{' '}
                             <strong className="text-slate-text">
                                 {users.length}
-                            </strong>{" "}
+                            </strong>{' '}
                             pengguna terdaftar
                         </p>
                         <p className="text-xs text-slate-muted">
-                            {activeCount} aktif &middot; {inactiveCount}{" "}
+                            {activeCount} aktif &middot; {inactiveCount}{' '}
                             nonaktif
                         </p>
                     </div>
@@ -591,17 +591,17 @@ export default function UsersIndex() {
                 <SheetContent className="overflow-y-auto rounded-card bg-white sm:max-w-lg">
                     <SheetHeader className="px-6 pt-6 pr-14 pb-0">
                         <SheetTitle className="text-base font-bold text-slate-text">
-                            {editing ? "Ubah Data Pengguna" : "Tambah Pengguna"}
+                            {editing ? 'Ubah Data Pengguna' : 'Tambah Pengguna'}
                         </SheetTitle>
                         <SheetDescription className="text-xs text-slate-muted">
                             {editing
-                                ? "Perbarui identitas dan hak akses akun ini."
-                                : "Buat akun baru untuk aparat desa yang membutuhkan akses panel."}
+                                ? 'Perbarui identitas dan hak akses akun ini.'
+                                : 'Buat akun baru untuk aparat desa yang membutuhkan akses panel.'}
                         </SheetDescription>
                     </SheetHeader>
 
                     <Form
-                        key={editing?.id ?? "new"}
+                        key={editing?.id ?? 'new'}
                         {...(editing
                             ? UserController.update.form(editing.id)
                             : UserController.store.form())}
@@ -620,7 +620,7 @@ export default function UsersIndex() {
                                         name="name"
                                         required
                                         maxLength={255}
-                                        defaultValue={editing?.name ?? ""}
+                                        defaultValue={editing?.name ?? ''}
                                         placeholder="Contoh: Arfan, S.Pd"
                                         disabled={processing}
                                     />
@@ -637,7 +637,7 @@ export default function UsersIndex() {
                                         type="email"
                                         required
                                         maxLength={255}
-                                        defaultValue={editing?.email ?? ""}
+                                        defaultValue={editing?.email ?? ''}
                                         placeholder="nama@lerotatari.id"
                                         disabled={processing}
                                     />
@@ -755,7 +755,7 @@ export default function UsersIndex() {
                                                 defaultChecked={
                                                     editing
                                                         ? editing.status ===
-                                                          "active"
+                                                          'active'
                                                         : true
                                                 }
                                                 className="size-4 cursor-pointer accent-[#00A76F]"
@@ -789,10 +789,10 @@ export default function UsersIndex() {
                                         className="flex-1 rounded-full bg-brand hover:bg-brand-dark"
                                     >
                                         {processing
-                                            ? "Menyimpan..."
+                                            ? 'Menyimpan...'
                                             : editing
-                                              ? "Perbarui Pengguna"
-                                              : "Tambah Pengguna"}
+                                              ? 'Perbarui Pengguna'
+                                              : 'Tambah Pengguna'}
                                     </Button>
                                 </div>
                             </>
@@ -815,7 +815,7 @@ export default function UsersIndex() {
                             Reset kata sandi
                         </DialogTitle>
                         <DialogDescription className="text-sm text-slate-muted">
-                            Buat kata sandi baru untuk{" "}
+                            Buat kata sandi baru untuk{' '}
                             <span className="font-semibold text-slate-700">
                                 {resetTarget?.name}
                             </span>
@@ -879,8 +879,8 @@ export default function UsersIndex() {
                                             className="rounded-full bg-brand hover:bg-brand-dark"
                                         >
                                             {processing
-                                                ? "Menyimpan..."
-                                                : "Simpan Sandi Baru"}
+                                                ? 'Menyimpan...'
+                                                : 'Simpan Sandi Baru'}
                                         </Button>
                                     </DialogFooter>
                                 </>
@@ -907,10 +907,10 @@ export default function UsersIndex() {
                             Hapus pengguna ini?
                         </DialogTitle>
                         <DialogDescription className="text-sm leading-relaxed text-slate-muted">
-                            Akun{" "}
+                            Akun{' '}
                             <span className="font-semibold text-slate-700">
                                 {deleteTarget?.name}
-                            </span>{" "}
+                            </span>{' '}
                             akan dihapus permanen dan tidak dapat masuk lagi ke
                             panel desa.
                         </DialogDescription>
@@ -932,7 +932,7 @@ export default function UsersIndex() {
                             disabled={deleting}
                             className="rounded-full"
                         >
-                            {deleting ? "Menghapus..." : "Hapus Pengguna"}
+                            {deleting ? 'Menghapus...' : 'Hapus Pengguna'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

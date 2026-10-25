@@ -2,6 +2,7 @@ import { Form, Head, Link } from '@inertiajs/react';
 import { ArrowLeft, ArrowRight, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { useState } from 'react';
 import InputError from '@/components/input-error';
+import FloatingNotification from '@/components/floating-notification';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Spinner } from '@/components/ui/spinner';
 import { home } from '@/routes';
@@ -15,6 +16,9 @@ type Props = {
 
 export default function Login({ status, canResetPassword }: Props) {
     const [showPassword, setShowPassword] = useState(false);
+    // Dinaikkan setiap respons login selesai supaya alert yang sudah ditutup
+    // (dismiss) bisa muncul lagi saat pesan errornya identik.
+    const [attempt, setAttempt] = useState(0);
 
     return (
         <div className="flex min-h-screen flex-col justify-between bg-[#F8FAFC] p-6 font-['Plus_Jakarta_Sans',Inter,sans-serif] text-[#0F172A] antialiased selection:bg-[#b1f2be] selection:text-[#00210d] sm:p-8 lg:p-10">
@@ -59,17 +63,24 @@ export default function Login({ status, canResetPassword }: Props) {
                         melanjutkan.
                     </p>
 
-                    {/* Status Message */}
-                    {status && (
-                        <div className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-center text-[13px] font-medium text-[#14532d]">
-                            {status}
-                        </div>
-                    )}
-
                     {/* ── Login Form ── */}
-                    <Form {...store.form()} resetOnSuccess={['password']}>
+                    <Form
+                        {...store.form()}
+                        resetOnSuccess={['password']}
+                        onFinish={() => setAttempt((n) => n + 1)}
+                    >
                         {({ processing, errors }) => (
                             <div>
+                                {status && (
+                                    <FloatingNotification
+                                        type="info"
+                                        position="top-right"
+                                        title="Status Autentikasi"
+                                        message={status}
+                                        duration={5000}
+                                    />
+                                )}
+
                                 <div className="space-y-4">
                                     {/* Email Input */}
                                     <div>
@@ -98,13 +109,13 @@ export default function Login({ status, canResetPassword }: Props) {
                                                         ? 'admin-email-error'
                                                         : undefined
                                                 }
-                                                className="h-[46px] w-full rounded-xl border border-transparent bg-[#F1F3F5] py-2.5 pr-4 pl-10 text-[13px] text-[#0F172A] transition-all duration-200 outline-none placeholder:text-[#94A3B8] focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-[#14532d]/15 aria-invalid:border-red-300 aria-invalid:bg-red-50/40"
+                                                className="h-[46px] w-full rounded-xl border border-transparent bg-[#F1F3F5] py-2.5 pr-4 pl-10 text-[13px] text-[#0F172A] transition-all duration-200 outline-none placeholder:text-[#94A3B8] focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-[#14532d]/15 aria-invalid:border-rose-400/80 aria-invalid:bg-rose-50/30 aria-invalid:ring-2 aria-invalid:ring-rose-500/10"
                                             />
                                         </div>
                                         <InputError
+                                            key={`admin-email-error-${attempt}`}
                                             id="admin-email-error"
                                             message={errors.email}
-                                            className="mt-1 text-[12px]"
                                         />
                                     </div>
 
@@ -138,7 +149,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                                         ? 'admin-password-error'
                                                         : undefined
                                                 }
-                                                className="h-[46px] w-full rounded-xl border border-transparent bg-[#F1F3F5] py-2.5 pr-10 pl-10 text-[13px] text-[#0F172A] transition-all duration-200 outline-none placeholder:text-[#94A3B8] focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-[#14532d]/15 aria-invalid:border-red-300 aria-invalid:bg-red-50/40"
+                                                className="h-[46px] w-full rounded-xl border border-transparent bg-[#F1F3F5] py-2.5 pr-10 pl-10 text-[13px] text-[#0F172A] transition-all duration-200 outline-none placeholder:text-[#94A3B8] focus:border-slate-300 focus:bg-white focus:ring-2 focus:ring-[#14532d]/15 aria-invalid:border-rose-400/80 aria-invalid:bg-rose-50/30 aria-invalid:ring-2 aria-invalid:ring-rose-500/10"
                                             />
                                             <button
                                                 type="button"
@@ -159,9 +170,9 @@ export default function Login({ status, canResetPassword }: Props) {
                                             </button>
                                         </div>
                                         <InputError
+                                            key={`admin-password-error-${attempt}`}
                                             id="admin-password-error"
                                             message={errors.password}
-                                            className="mt-1 text-[12px]"
                                         />
                                     </div>
                                 </div>
