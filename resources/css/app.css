@@ -223,6 +223,15 @@
     text-decoration: underline;
 }
 
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
 @media (min-width: 1024px) {
     ::-webkit-scrollbar {
         width: 5px;

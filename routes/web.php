@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DemographicController;
 use App\Http\Controllers\Admin\DestinationController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\OfficialController;
 use App\Http\Controllers\Admin\UserController;
@@ -36,6 +37,13 @@ Route::middleware(['auth'])->group(function () {
         Route::put('wisata/{destination}', [DestinationController::class, 'update'])->name('wisata.update');
         Route::delete('wisata/{destination}', [DestinationController::class, 'destroy'])->name('wisata.destroy');
         Route::patch('wisata/{destination}/status', [DestinationController::class, 'toggleActive'])->name('wisata.status');
+
+        Route::get('galeri', [GalleryController::class, 'index'])->name('galeri.index');
+        Route::post('galeri', [GalleryController::class, 'store'])->name('galeri.store');
+        Route::put('galeri/{gallery}', [GalleryController::class, 'update'])->name('galeri.update');
+        Route::patch('galeri/{gallery}/status', [GalleryController::class, 'toggleActive'])->name('galeri.status');
+        Route::post('galeri/reorder', [GalleryController::class, 'reorder'])->name('galeri.reorder');
+        Route::delete('galeri/{gallery}', [GalleryController::class, 'destroy'])->name('galeri.destroy');
 
         Route::get('berita', [NewsController::class, 'index'])->name('berita.index');
         Route::post('berita', [NewsController::class, 'store'])->name('berita.store');

@@ -3,6 +3,7 @@ import {
     BarChart3,
     Compass,
     Globe,
+    Images,
     LogOut,
     Menu,
     Newspaper,
@@ -16,6 +17,7 @@ import { useState } from 'react';
 import { home, logout } from '@/routes';
 import { index as beritaIndex } from '@/routes/admin/berita';
 import { index as demografiIndex } from '@/routes/admin/demografi';
+import { index as galeriIndex } from '@/routes/admin/galeri';
 import { index as officialsIndex } from '@/routes/admin/officials';
 import { index as usersIndex } from '@/routes/admin/users';
 import { index as visiMisiIndex } from '@/routes/admin/visi-misi';
@@ -77,6 +79,12 @@ export default function AdminLayout({
             href: wisataIndex(),
             icon: Palmtree,
             active: url.startsWith('/admin/wisata'),
+        },
+        {
+            title: 'Kelola Galeri Desa',
+            href: galeriIndex(),
+            icon: Images,
+            active: url.startsWith('/admin/galeri'),
         },
         ...(user?.role === 'super_admin'
             ? [

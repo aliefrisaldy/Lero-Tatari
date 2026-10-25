@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Demographic;
 use App\Models\Destination;
+use App\Models\Gallery;
 use App\Models\Mission;
 use App\Models\News;
 use App\Models\Official;
@@ -62,6 +63,17 @@ class HomeController extends Controller
                     'description' => $destination->description,
                     'image_url' => $this->imageUrl($destination->image_path),
                     'location_url' => $destination->location_url,
+                ]),
+            'galleries' => Gallery::query()
+                ->where('is_active', true)
+                ->orderBy('order_index')
+                ->orderBy('id')
+                ->get(['id', 'title', 'captured_at', 'image_path'])
+                ->map(fn (Gallery $gallery): array => [
+                    'id' => $gallery->id,
+                    'title' => $gallery->title,
+                    'captured_at' => $gallery->captured_at?->translatedFormat('j F Y'),
+                    'image_url' => $this->imageUrl($gallery->image_path),
                 ]),
         ]);
     }

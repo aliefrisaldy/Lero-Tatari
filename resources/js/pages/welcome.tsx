@@ -7,6 +7,8 @@ import {
     Award,
     Calendar,
     CheckCircle2,
+    ChevronLeft,
+    ChevronRight,
     Compass,
     ExternalLink,
     GraduationCap,
@@ -33,7 +35,7 @@ import {
     Users,
     Waves,
 } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { dashboard, login } from "@/routes";
 
 type Official = {
@@ -78,6 +80,13 @@ type Destination = {
     location_url: string | null;
 };
 
+type GalleryItem = {
+    id: number;
+    title: string;
+    captured_at: string | null;
+    image_url: string | null;
+};
+
 type Props = {
     officials: Official[];
     vision: { vision_statement: string; period: string | null } | null;
@@ -85,6 +94,7 @@ type Props = {
     demographic: Demographic | null;
     news: NewsItem[];
     destinations: Destination[];
+    galleries: GalleryItem[];
 };
 
 const VILLAGE = "Desa Lero Tatari";
@@ -177,32 +187,32 @@ const STITCH_DESTINATIONS_FALLBACK = [
 ];
 
 // Fallback high-fidelity gallery matching Stitch design
-const STITCH_GALLERY = [
+const STITCH_GALLERY: GalleryItem[] = [
     {
+        id: 1,
         title: "Musrenbangdes Penetapan RKPDes",
-        category: "Musyawarah Warga",
-        span: "sm:col-span-1 lg:col-span-4 aspect-[4/5] sm:aspect-auto sm:h-72",
+        captured_at: "10 Januari 2024",
         image_url:
             "https://lh3.googleusercontent.com/aida-public/AB6AXuAB2uMyrj0K8lTLRtJqpUO2Lh0wIsmX_8Bbb0HA1Hz89z0Cfspmg_EKY5-VO5kxda8M5dlwytnSV2vu7eOjr6IZd-jMyp7v9bCPngVO5aTqNH5__kSKKuSMOCczM85_mvPUXmYvQviHhWpT65cbxT3_qJhdjsqPvNh9m8cv2PBD3aovtAo-I7laPH84JYtg_nRGIzyR5cBaois-wQPxVZ2cz9AdJDqNF75fV3cze3MrwiLcBqRQWlIT",
     },
     {
+        id: 2,
         title: "Parade Perahu Hias Nelayan Teluk Tatari",
-        category: "Pesta Bahari",
-        span: "sm:col-span-1 lg:col-span-8 aspect-[16/10] sm:aspect-auto sm:h-72",
+        captured_at: "17 Agustus 2024",
         image_url:
             "https://lh3.googleusercontent.com/aida-public/AB6AXuBYE6vM7WGhhBlPOAYCjtxk2oiOMxf9FIyOXSIaNrwA-UfTFwjgqKycNBGr57-P2txe0pxL_PKp5VkABAHrVvVAlToirke4qt-ERCO5tK8_VWoWroG-pZrM7IfBCgonAkG9tPwuTh41QgkJpr2NPcbbWhujp3cpRJbatEL_lTssDpLkC2Xs6MUQlCw2nmhsRrPJ0FSeOXfIzAoJ-bt1CF-LBUQAmnH7CHKT5LwOaDGEVcUUT3O688An",
     },
     {
+        id: 3,
         title: "Turnamen Olahraga Pemuda Desa Lero Tatari",
-        category: "Semangat Pemuda",
-        span: "sm:col-span-1 lg:col-span-7 aspect-[16/10] sm:aspect-auto sm:h-80",
+        captured_at: "02 September 2024",
         image_url:
             "https://lh3.googleusercontent.com/aida-public/AB6AXuDEDJZ5JIIFjsAJmjzNxYaS6BMrU-c18aFn8XSyIBRO92-fuwVrMWGjQAS4Q69mWj3y9A4LDTbwkSYDTz7QK5bD_e8yKPGBSmnzcyGCaLBeFwiJr5UhVqF2X7MjLywXlL8lKTahIhphDMw6u0TjFVXdJwWepodMUk3vqpRl4-eU2QIh3Fx1_ULDD8ijuzbfULZMflUOvm3or1WucY9mJltR_w6L197jtRZvIfC8_o4XDnHvfqWiEg6D",
     },
     {
+        id: 4,
         title: "Lokakarya Digital & Kewirausahaan Karang Taruna",
-        category: "Pelatihan Kreatif",
-        span: "sm:col-span-1 lg:col-span-5 aspect-[4/3] sm:aspect-auto sm:h-80",
+        captured_at: "21 Oktober 2024",
         image_url:
             "https://lh3.googleusercontent.com/aida-public/AB6AXuA2_ArbYlq3-QVMQF5cOmEGJ7LuvzTR2EiRZ-T9-qzf8fyjBODz8HP2CrN8dIHswuLLoXJewFtmb7GoYnM17zixYhg36S7IgipTxdhNXs1TwZMYRwGQM5zMf_TN8XCJ8kKNnc7VIMEmN8OEorm6r12yRZYJCoelLL4dbN8WqKgAF65AEeS1Xhw5zcLlfSRwb02iWNHtqJ3GhE2vpE5CqDa1-nolOYCqJLxfnHG7-aoSG9sfXIU2TLTX",
     },
@@ -215,9 +225,73 @@ export default function Welcome({
     demographic,
     news = [],
     destinations = [],
+    galleries = [],
 }: Props) {
     const { auth } = usePage().props;
     const rootRef = useRef<HTMLDivElement>(null);
+    const galleryTrackRef = useRef<HTMLDivElement>(null);
+
+    // Galeri aktif dari database; fallback ke mockup Stitch bila kosong.
+    const galleryItems: GalleryItem[] =
+        galleries.length > 0 ? galleries : STITCH_GALLERY;
+
+    const scrollGallery = (direction: "left" | "right") => {
+        const track = galleryTrackRef.current;
+
+        if (!track) {
+            return;
+        }
+
+        const card = track.querySelector<HTMLElement>("[data-gallery-card]");
+        const step = card ? card.offsetWidth + 20 : 360;
+
+        track.scrollBy({
+            left: direction === "left" ? -step : step,
+            behavior: "smooth",
+        });
+    };
+
+    // Active navbar section (scroll-spy highlight)
+    const [activeSection, setActiveSection] = useState("beranda");
+
+    useEffect(() => {
+        const sectionIds = [
+            "beranda",
+            "profil",
+            "sejarah",
+            "aparat",
+            "data",
+            "berita",
+            "wisata",
+            "galeri",
+        ];
+
+        const sections = sectionIds
+            .map((id) => document.getElementById(id))
+            .filter((el): el is HTMLElement => el !== null);
+
+        if (sections.length === 0) {
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        setActiveSection(entry.target.id);
+                    }
+                }
+            },
+            {
+                rootMargin: "-45% 0px -50% 0px",
+                threshold: 0,
+            },
+        );
+
+        sections.forEach((section) => observer.observe(section));
+
+        return () => observer.disconnect();
+    }, []);
 
     // Filter officials according to hierarchy & exact position matching
     const findOfficial = (match: string) =>
@@ -592,54 +666,33 @@ export default function Welcome({
 
                     {/* Nav Links */}
                     <nav className="hidden items-center gap-1 md:flex">
-                        <a
-                            className="rounded-full bg-slate-100 px-4 py-1.5 text-xs font-bold text-slate-900 shadow-2xs transition-all hover:bg-slate-200 sm:text-sm"
-                            href="#beranda"
-                        >
-                            Beranda
-                        </a>
-                        <a
-                            className="rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-emerald-800 sm:text-sm"
-                            href="#profil"
-                        >
-                            Profil
-                        </a>
-                        <a
-                            className="rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-emerald-800 sm:text-sm"
-                            href="#sejarah"
-                        >
-                            Sejarah
-                        </a>
-                        <a
-                            className="rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-emerald-800 sm:text-sm"
-                            href="#aparat"
-                        >
-                            Aparat
-                        </a>
-                        <a
-                            className="rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-emerald-800 sm:text-sm"
-                            href="#data"
-                        >
-                            Data
-                        </a>
-                        <a
-                            className="rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-emerald-800 sm:text-sm"
-                            href="#berita"
-                        >
-                            Berita
-                        </a>
-                        <a
-                            className="rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-emerald-800 sm:text-sm"
-                            href="#wisata"
-                        >
-                            Wisata
-                        </a>
-                        <a
-                            className="rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-emerald-800 sm:text-sm"
-                            href="#galeri"
-                        >
-                            Galeri
-                        </a>
+                        {[
+                            { id: "beranda", label: "Beranda" },
+                            { id: "profil", label: "Profil" },
+                            { id: "sejarah", label: "Sejarah" },
+                            { id: "aparat", label: "Aparat" },
+                            { id: "data", label: "Data" },
+                            { id: "berita", label: "Berita" },
+                            { id: "wisata", label: "Wisata" },
+                            { id: "galeri", label: "Galeri" },
+                        ].map((item) => {
+                            const isActive = activeSection === item.id;
+
+                            return (
+                                <a
+                                    key={item.id}
+                                    className={
+                                        isActive
+                                            ? "rounded-full bg-emerald-800 px-4 py-1.5 text-xs font-bold text-white shadow-2xs transition-all sm:text-sm"
+                                            : "rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-emerald-800 sm:text-sm"
+                                    }
+                                    href={`#${item.id}`}
+                                    aria-current={isActive ? "true" : undefined}
+                                >
+                                    {item.label}
+                                </a>
+                            );
+                        })}
                     </nav>
 
                     {/* Action Button */}
@@ -2979,28 +3032,52 @@ export default function Welcome({
                                 <span className="h-2.5 w-2.5 rounded-full bg-emerald-700"></span>
                                 <span>Dokumentasi Resmi Lero Tatari</span>
                             </div>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => scrollGallery("left")}
+                                    aria-label="Geser galeri ke kiri"
+                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:bg-emerald-700 hover:text-white"
+                                >
+                                    <ChevronLeft className="h-5 w-5" />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => scrollGallery("right")}
+                                    aria-label="Geser galeri ke kanan"
+                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:bg-emerald-700 hover:text-white"
+                                >
+                                    <ChevronRight className="h-5 w-5" />
+                                </button>
+                            </div>
                         </div>
 
-                        {/* Uniform Grid of 4 Events (Matching Stitch lines 452-454) */}
-                        <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-12">
-                            {STITCH_GALLERY.map((galeri) => (
+                        {/* Horizontal scrollable gallery (cards + prev/next) */}
+                        <div
+                            ref={galleryTrackRef}
+                            className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-6 px-6 pb-2 lg:-mx-8 lg:scroll-px-8 lg:px-8"
+                        >
+                            {galleryItems.map((galeri) => (
                                 <div
-                                    key={galeri.title}
+                                    key={galeri.id}
+                                    data-gallery-card
                                     data-gsap-card
                                     data-interactive-card
-                                    className={`flex flex-col gap-5 ${galeri.span}`}
+                                    className="w-72 shrink-0 snap-start sm:w-80 lg:w-96"
                                 >
-                                    <div className="group relative h-full w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-2xs">
+                                    <div className="group relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-2xs">
                                         <img
                                             alt={galeri.title}
                                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                            src={galeri.image_url}
+                                            src={galeri.image_url ?? undefined}
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent">
                                             <div className="absolute right-4 bottom-4 left-4 text-white">
-                                                <span className="rounded-full bg-emerald-800/80 px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase">
-                                                    {galeri.category}
-                                                </span>
+                                                {galeri.captured_at && (
+                                                    <span className="rounded-full bg-emerald-800/80 px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase">
+                                                        {galeri.captured_at}
+                                                    </span>
+                                                )}
                                                 <p className="font-['Plus_Jakarta_Sans',sans-serif] mt-1 text-sm font-bold">
                                                     {galeri.title}
                                                 </p>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\DemographicController;
 use App\Http\Controllers\Api\Admin\DestinationController;
+use App\Http\Controllers\Api\Admin\GalleryController;
 use App\Http\Controllers\Api\Admin\NewsController;
 use App\Http\Controllers\Api\Admin\OfficialController;
 use App\Http\Controllers\Api\Admin\UserController;
@@ -69,6 +70,12 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
     Route::post('/destinations', [DestinationController::class, 'store']);
     Route::match(['put', 'post'], '/destinations/{id}', [DestinationController::class, 'update']);
     Route::delete('/destinations/{id}', [DestinationController::class, 'destroy']);
+
+    // 5b. Gallery
+    Route::get('/galleries', [GalleryController::class, 'index']);
+    Route::post('/galleries', [GalleryController::class, 'store']);
+    Route::match(['put', 'post'], '/galleries/{id}', [GalleryController::class, 'update']);
+    Route::delete('/galleries/{id}', [GalleryController::class, 'destroy']);
 
     // 6. Users (Super Admin Only)
     Route::middleware(EnsureSuperAdmin::class)->group(function () {

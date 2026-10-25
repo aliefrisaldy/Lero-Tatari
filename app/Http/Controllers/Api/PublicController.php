@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Demographic;
 use App\Models\Destination;
+use App\Models\Gallery;
 use App\Models\Mission;
 use App\Models\News;
 use App\Models\Official;
@@ -38,6 +39,11 @@ class PublicController extends Controller
             ->latest('id')
             ->get();
 
+        $galleries = Gallery::where('is_active', true)
+            ->orderBy('order_index')
+            ->orderBy('id')
+            ->get();
+
         return response()->json([
             'officials' => $officials,
             'vision' => $vision,
@@ -45,6 +51,7 @@ class PublicController extends Controller
             'demographics' => $demographics,
             'news' => $news,
             'destinations' => $destinations,
+            'galleries' => $galleries,
         ]);
     }
 

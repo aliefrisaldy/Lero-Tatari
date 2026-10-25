@@ -5,6 +5,7 @@ import {
     Globe,
     Newspaper,
     Palmtree,
+    Images,
     UserCog,
     Users,
 } from 'lucide-react';
@@ -23,6 +24,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard, home } from '@/routes';
 import { index as beritaIndex } from '@/routes/admin/berita';
+import { index as galeriIndex } from '@/routes/admin/galeri';
 import { index as officialsIndex } from '@/routes/admin/officials';
 import { index as usersIndex } from '@/routes/admin/users';
 import { index as wisataIndex } from '@/routes/admin/wisata';
@@ -54,6 +56,11 @@ const baseNavItems: NavItem[] = [
         title: 'Kelola Wisata',
         href: wisataIndex(),
         icon: Palmtree,
+    },
+    {
+        title: 'Kelola Galeri',
+        href: galeriIndex(),
+        icon: Images,
     },
 ];
 
