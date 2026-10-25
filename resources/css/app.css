@@ -167,7 +167,7 @@
     }
 }
 
-/* Stitch utilities: Kelola Aparat Desa */
+/* Utilities: Kelola Aparat Desa */
 .bg-striped-green {
     background-color: #e8f7f0;
     background-image: repeating-linear-gradient(
@@ -177,6 +177,50 @@
         transparent 4px,
         transparent 9px
     );
+}
+
+/* Render konten berita berformat HTML di halaman detail. */
+.news-content {
+    color: #334155;
+    hyphens: auto;
+    overflow-wrap: break-word;
+}
+
+.news-content > *:first-child {
+    margin-top: 0;
+}
+
+.news-content ol,
+.news-content ul {
+    padding-left: 1.5rem;
+}
+
+.news-content ol {
+    list-style: decimal;
+}
+
+.news-content ul {
+    list-style: disc;
+}
+
+.news-content li + li {
+    margin-top: 0.375rem;
+}
+
+.news-content ol + *,
+.news-content ul + * {
+    margin-top: 0.75rem;
+}
+
+.news-content strong,
+.news-content b {
+    color: #111827;
+    font-weight: 600;
+}
+
+.news-content a {
+    color: #00a76f;
+    text-decoration: underline;
 }
 
 @media (min-width: 1024px) {

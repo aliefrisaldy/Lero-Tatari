@@ -13,6 +13,10 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { home, logout } from '@/routes';
+import { index as beritaIndex } from '@/routes/admin/berita';
+import { index as demografiIndex } from '@/routes/admin/demografi';
+import { index as officialsIndex } from '@/routes/admin/officials';
+import { index as visiMisiIndex } from '@/routes/admin/visi-misi';
 import { index as wisataIndex } from '@/routes/admin/wisata';
 import type { AppLayoutProps } from '@/types';
 
@@ -25,30 +29,30 @@ export default function AppSidebarLayout({ children }: AppLayoutProps) {
         {
             title: 'Pengelolaan Aparat',
             shortTitle: 'Aparat Desa',
-            href: '/officials',
+            href: officialsIndex(),
             icon: Users,
-            active: url === '/officials' || url.startsWith('/officials'),
+            active: url.startsWith('/admin/officials'),
         },
         {
             title: 'Kelola Visi & Misi',
             shortTitle: 'Visi & Misi',
-            href: '/officials?tab=visimisi',
+            href: visiMisiIndex(),
             icon: Compass,
-            active: url.includes('tab=visimisi'),
+            active: url.startsWith('/admin/visi-misi'),
         },
         {
             title: 'Kelola Data Demografi',
             shortTitle: 'Demografi',
-            href: '/officials?tab=demografi',
+            href: demografiIndex(),
             icon: BarChart3,
-            active: url.includes('tab=demografi'),
+            active: url.startsWith('/admin/demografi'),
         },
         {
             title: 'Kelola Berita',
             shortTitle: 'Berita & Pengumuman',
-            href: '/officials?tab=berita',
+            href: beritaIndex(),
             icon: Newspaper,
-            active: url.includes('tab=berita'),
+            active: url.startsWith('/admin/berita'),
         },
         {
             title: 'Kelola Wisata Desa',

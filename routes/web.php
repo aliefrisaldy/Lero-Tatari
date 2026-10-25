@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DemographicController;
 use App\Http\Controllers\Admin\DestinationController;
+use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\OfficialController;
 use App\Http\Controllers\Admin\VisionMissionController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,12 @@ Route::middleware(['auth'])->group(function () {
         Route::put('wisata/{destination}', [DestinationController::class, 'update'])->name('wisata.update');
         Route::delete('wisata/{destination}', [DestinationController::class, 'destroy'])->name('wisata.destroy');
         Route::patch('wisata/{destination}/status', [DestinationController::class, 'toggleActive'])->name('wisata.status');
+
+        Route::get('berita', [NewsController::class, 'index'])->name('berita.index');
+        Route::post('berita', [NewsController::class, 'store'])->name('berita.store');
+        Route::put('berita/{news}', [NewsController::class, 'update'])->name('berita.update');
+        Route::delete('berita/{news}', [NewsController::class, 'destroy'])->name('berita.destroy');
+        Route::patch('berita/{news}/status', [NewsController::class, 'toggleStatus'])->name('berita.status');
     });
 
     Route::redirect('officials', 'admin/officials');

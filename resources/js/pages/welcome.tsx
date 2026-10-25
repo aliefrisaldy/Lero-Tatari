@@ -55,7 +55,7 @@ export default function Welcome() {
                                     Desa Lero Tatari
                                 </span>
                                 <span className="block text-xs text-neutral-500 dark:text-neutral-400">
-                                    Kabupaten Polewali Mandar
+                                    Kabupaten Donggala
                                 </span>
                             </div>
                         </div>
@@ -175,7 +175,7 @@ export default function Welcome() {
                                         </h4>
                                         <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                                             Jl. Poros Desa Lero Tatari,
-                                            Kecamatan Tatari
+                                            Kecamatan Sindue
                                         </p>
                                     </div>
                                 </div>

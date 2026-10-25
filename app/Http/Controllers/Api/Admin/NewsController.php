@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\News;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -92,7 +93,6 @@ class NewsController extends Controller
             $news->image_path = Storage::url($imagePath);
         }
 
-        $wasDraft = $news->status === 'draft';
         $willBePublished = $validated['status'] === 'published';
 
         $news->title = $validated['title'];
@@ -100,8 +100,10 @@ class NewsController extends Controller
         $news->content = $validated['content'];
         $news->status = $validated['status'];
 
-        if ($wasDraft && $willBePublished && ! $news->published_at) {
-            $news->published_at = now();
+        if ($willBePublished) {
+            $news->published_at ??= Carbon::now();
+        } else {
+            $news->published_at = null;
         }
 
         $news->save();

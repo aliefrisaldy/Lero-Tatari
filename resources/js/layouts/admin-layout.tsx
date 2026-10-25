@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { home, logout } from '@/routes';
+import { index as beritaIndex } from '@/routes/admin/berita';
 import { index as demografiIndex } from '@/routes/admin/demografi';
 import { index as officialsIndex } from '@/routes/admin/officials';
 import { index as visiMisiIndex } from '@/routes/admin/visi-misi';
@@ -65,9 +66,9 @@ export default function AdminLayout({
         },
         {
             title: 'Kelola Berita',
-            href: officialsIndex({ query: { tab: 'berita' } }),
+            href: beritaIndex(),
             icon: Newspaper,
-            active: url.includes('tab=berita'),
+            active: url.startsWith('/admin/berita'),
         },
         {
             title: 'Kelola Wisata Desa',
