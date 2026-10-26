@@ -240,7 +240,7 @@ export default function AdminLayout({
             <div className="mx-auto flex min-h-screen max-w-[1720px] items-start gap-6 p-4 md:p-6 lg:p-7">
                 {/* ── BEGIN: Floating Left Icon Sidebar (Stitch Design) ── */}
                 <aside
-                    className="sticky top-6 z-30 hidden w-[72px] shrink-0 flex-col items-center justify-between select-none lg:flex"
+                    className="sticky top-6 z-30 hidden w-[72px] shrink-0 flex-col items-center select-none lg:flex"
                     style={{ height: 'calc(100vh - 48px)' }}
                 >
                     {/* Top Group: Logo & Primary Menu Icons */}
@@ -294,38 +294,6 @@ export default function AdminLayout({
                             })}
                         </nav>
                     </div>
-
-                    {/* Bottom Controls Dock (Lihat Website, Settings, Logout) */}
-                    <div className="flex flex-col items-center space-y-2.5 rounded-3xl border border-slate-200/80 bg-white/95 p-2 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.06)] backdrop-blur-md">
-                        {/* Lihat Website */}
-                        <div className="group relative">
-                            <Link
-                                href={home()}
-                                className="flex h-10 w-10 items-center justify-center rounded-2xl text-slate-400 transition-all hover:bg-slate-50 hover:text-[#14532d]"
-                            >
-                                <Globe className="h-4 w-4 stroke-[1.8]" />
-                            </Link>
-                            <div className="pointer-events-none absolute top-1/2 left-full z-50 -translate-y-1/2 rounded-lg bg-[#0F172A] px-2.5 py-1.5 text-[11px] font-medium whitespace-nowrap text-white opacity-0 shadow-md transition-opacity group-hover:opacity-100">
-                                Lihat Website Publik
-                                <div className="absolute top-1/2 -left-1 h-2 w-2 -translate-y-1/2 rotate-45 bg-[#0F172A]" />
-                            </div>
-                        </div>
-
-                        {/* Keluar */}
-                        <div className="group relative">
-                            <Link
-                                href={logout()}
-                                as="button"
-                                className="flex h-10 w-10 items-center justify-center rounded-2xl text-slate-400 transition-all hover:bg-red-50 hover:text-red-600"
-                            >
-                                <LogOut className="h-4 w-4 stroke-[1.8]" />
-                            </Link>
-                            <div className="pointer-events-none absolute top-1/2 left-full z-50 -translate-y-1/2 rounded-lg bg-[#0F172A] px-2.5 py-1.5 text-[11px] font-medium whitespace-nowrap text-white opacity-0 shadow-md transition-opacity group-hover:opacity-100">
-                                Keluar Akun
-                                <div className="absolute top-1/2 -left-1 h-2 w-2 -translate-y-1/2 rotate-45 bg-[#0F172A]" />
-                            </div>
-                        </div>
-                    </div>
                 </aside>
                 {/* ── END: Floating Left Icon Sidebar ── */}
 
@@ -351,45 +319,24 @@ export default function AdminLayout({
 
                         {/* Right Quick Controls & Profile */}
                         <div className="flex items-center gap-2.5 self-end lg:self-center">
-                            <button
-                                type="button"
-                                title="Pencarian Cepat"
-                                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-600 shadow-sm transition-colors hover:text-brand"
+                            <Link
+                                href={home()}
+                                title="Lihat Website Publik"
+                                aria-label="Lihat Website Publik"
+                                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-600 shadow-sm transition-colors hover:border-brand/30 hover:text-brand"
                             >
-                                <svg
-                                    className="size-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                    />
-                                </svg>
-                            </button>
-                            <button
-                                type="button"
-                                title="Pemberitahuan Sistem"
-                                className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-600 shadow-sm transition-colors hover:text-brand"
+                                <Globe className="size-4" />
+                            </Link>
+                            <Link
+                                href={logout()}
+                                as="button"
+                                method="post"
+                                title="Keluar Akun"
+                                aria-label="Keluar Akun"
+                                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-600 shadow-sm transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                             >
-                                <svg
-                                    className="size-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                    />
-                                </svg>
-                                <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-brand ring-2 ring-white" />
-                            </button>
+                                <LogOut className="size-4" />
+                            </Link>
                             {user && (
                                 <div className="flex items-center gap-2.5 rounded-full border border-slate-200/80 bg-white py-1 pr-3.5 pl-1.5 shadow-sm">
                                     <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-brand/20 bg-brand-light text-xs font-bold text-brand">

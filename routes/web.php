@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', HomeController::class)->name('home');
 
 Route::middleware(['auth'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
-
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('officials', [OfficialController::class, 'index'])->name('officials.index');
         Route::post('officials', [OfficialController::class, 'store'])->name('officials.store');
@@ -61,6 +59,8 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
+    Route::redirect('dashboard', 'admin/officials');
+    Route::redirect('official', 'admin/officials');
     Route::redirect('officials', 'admin/officials');
 });
 

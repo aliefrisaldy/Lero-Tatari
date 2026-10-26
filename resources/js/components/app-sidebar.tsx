@@ -22,7 +22,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, home } from '@/routes';
+import { home } from '@/routes';
 import { index as beritaIndex } from '@/routes/admin/berita';
 import { index as galeriIndex } from '@/routes/admin/galeri';
 import { index as officialsIndex } from '@/routes/admin/officials';
@@ -39,12 +39,12 @@ const baseNavItems: NavItem[] = [
     },
     {
         title: 'Visi & Misi',
-        href: '/dashboard?tab=visimisi',
+        href: '/admin/visi-misi',
         icon: Compass,
     },
     {
         title: 'Data Demografi',
-        href: '/dashboard?tab=demografi',
+        href: '/admin/demografi',
         icon: BarChart3,
     },
     {
@@ -96,7 +96,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={officialsIndex()} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

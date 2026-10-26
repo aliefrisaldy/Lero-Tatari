@@ -44,7 +44,6 @@ class HomeController extends Controller
             'news' => News::query()
                 ->where('status', 'published')
                 ->orderByDesc('published_at')
-                ->take(3)
                 ->get(['id', 'title', 'category', 'content', 'image_path', 'published_at'])
                 ->map(fn (News $article): array => [
                     'id' => $article->id,
@@ -57,8 +56,9 @@ class HomeController extends Controller
             'destinations' => Destination::query()
                 ->where('is_active', true)
                 ->latest('id')
-                ->get(['title', 'description', 'image_path', 'location_url'])
+                ->get(['id', 'title', 'description', 'image_path', 'location_url'])
                 ->map(fn (Destination $destination): array => [
+                    'id' => $destination->id,
                     'title' => $destination->title,
                     'description' => $destination->description,
                     'image_url' => $this->imageUrl($destination->image_path),
