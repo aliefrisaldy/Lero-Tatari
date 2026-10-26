@@ -218,6 +218,48 @@
     font-weight: 600;
 }
 
+/*
+ * Editor berita (contentEditable) memakai class "content-editor", bukan
+ * "news-content". Tanpa aturan di bawah ini, marker list (angka / bulatan)
+ * tidak muncul karena Tailwind preflight me-reset list-style: none.
+ */
+.content-editor ol,
+.content-editor ul {
+    padding-left: 1.5rem;
+    list-style-position: outside;
+}
+
+.content-editor ol {
+    list-style: decimal;
+}
+
+.content-editor ul {
+    list-style: disc;
+}
+
+.content-editor li + li {
+    margin-top: 0.375rem;
+}
+
+.content-editor ol,
+.content-editor ul {
+    margin-block: 0.5rem;
+}
+
+.content-editor p + ol,
+.content-editor p + ul,
+.content-editor div + ol,
+.content-editor div + ul {
+    margin-top: 0.5rem;
+}
+
+/* Selaras dengan .news-content: elemen pertama editor tidak diberi
+ * jarak atas, supaya nomor/bulatan daftar lurus dengan baris pertama
+ * dan tidak tampak turun satu tingkat dari teks biasa. */
+.content-editor > *:first-child {
+    margin-top: 0;
+}
+
 .news-content a {
     color: #00a76f;
     text-decoration: underline;

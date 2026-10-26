@@ -24,6 +24,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { DestinationDetailDialog } from '@/components/admin/wisata/destination-detail-dialog';
 import {
     Sheet,
     SheetContent,
@@ -63,6 +64,7 @@ export default function WisataIndex() {
     const [deleting, setDeleting] = useState<Destination | null>(null);
     const [deletingBusy, setDeletingBusy] = useState(false);
     const [togglingId, setTogglingId] = useState<number | null>(null);
+    const [detail, setDetail] = useState<Destination | null>(null);
 
     const activeCount = destinations.filter(
         (destination) => destination.is_active,
@@ -339,7 +341,16 @@ export default function WisataIndex() {
 
                                     <div className="flex flex-1 flex-col p-5">
                                         <h3 className="line-clamp-2 text-base leading-snug font-bold text-slate-text">
-                                            {destination.title}
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setDetail(destination)
+                                                }
+                                                title={`Lihat detail ${destination.title}`}
+                                                className="cursor-pointer text-left transition-colors hover:text-brand-dark focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none"
+                                            >
+                                                {destination.title}
+                                            </button>
                                         </h3>
                                         <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate-500">
                                             {destination.description}
@@ -482,6 +493,16 @@ export default function WisataIndex() {
                     />
                 )}
             </Sheet>
+
+            <DestinationDetailDialog
+                item={detail}
+                open={Boolean(detail)}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        setDetail(null);
+                    }
+                }}
+            />
 
             <Dialog
                 open={Boolean(deleting)}

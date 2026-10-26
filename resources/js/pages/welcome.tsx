@@ -1,6 +1,6 @@
-import { Head, Link, usePage } from "@inertiajs/react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Head, Link, usePage } from '@inertiajs/react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
     Activity,
     ArrowRight,
@@ -33,10 +33,13 @@ import {
     TrendingUp,
     UserCheck,
     Users,
-    Waves,
-} from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { dashboard, login } from "@/routes";
+} from 'lucide-react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
+import { dashboard, login } from '@/routes';
+import { NewsDetailDialog } from '@/components/admin/news/news-detail-dialog';
+import { DestinationDetailDialog } from '@/components/admin/wisata/destination-detail-dialog';
+import type { News } from '@/types/news';
+import type { Destination } from '@/types/destination';
 
 type Official = {
     name: string;
@@ -64,20 +67,14 @@ type Demographic = {
     brick_houses: number;
 };
 
-type NewsItem = {
-    id: number;
-    title: string;
-    category: string | null;
-    excerpt: string;
-    image_url: string | null;
-    published_at: string | null;
-};
-
-type Destination = {
-    title: string;
-    description: string;
-    image_url: string | null;
-    location_url: string | null;
+type Props = {
+    officials: Official[];
+    vision: { vision_statement: string; period: string | null } | null;
+    missions: { id: number; description: string }[];
+    demographic: Demographic | null;
+    news: News[];
+    destinations: Destination[];
+    galleries: GalleryItem[];
 };
 
 type GalleryItem = {
@@ -87,102 +84,149 @@ type GalleryItem = {
     image_url: string | null;
 };
 
-type Props = {
-    officials: Official[];
-    vision: { vision_statement: string; period: string | null } | null;
-    missions: { id: number; description: string }[];
-    demographic: Demographic | null;
-    news: NewsItem[];
-    destinations: Destination[];
-    galleries: GalleryItem[];
-};
+const VILLAGE = 'Desa Lero Tatari';
+const REGION = 'Kec Sindue, Kab Donggala';
 
-const VILLAGE = "Desa Lero Tatari";
-const REGION = "Kec Sindue, Kab Donggala";
-
-const numberFormat = new Intl.NumberFormat("id-ID");
+const numberFormat = new Intl.NumberFormat('id-ID');
 
 function formatNumber(value: number | string | null | undefined): string {
-    if (value === null || value === undefined || value === "") {
-        return "—";
+    if (value === null || value === undefined || value === '') {
+        return '—';
     }
     return numberFormat.format(Number(value));
 }
 
 function formatDecimal(value: number | string | null | undefined): string {
-    if (value === null || value === undefined || value === "") {
-        return "—";
+    if (value === null || value === undefined || value === '') {
+        return '—';
     }
-    return Number(value).toLocaleString("id-ID", {
+    return Number(value).toLocaleString('id-ID', {
         maximumFractionDigits: 2,
     });
 }
 
+const dateFormatter = new Intl.DateTimeFormat('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+});
+
+function formatDate(value: string | null): string {
+    if (!value) {
+        return '—';
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return '—';
+    }
+
+    return dateFormatter.format(date);
+}
+
+/** Buang tag HTML dari konten berita untuk pratinjau kartu. */
+function excerptOf(html: string): string {
+    const template = document.createElement('template');
+
+    template.innerHTML = html;
+
+    return (template.content.textContent ?? '').replace(/\s+/gu, ' ').trim();
+}
+
 // Fallback high-fidelity articles matching Stitch design
-const STITCH_NEWS_FALLBACK = [
+const STITCH_NEWS_FALLBACK: News[] = [
     {
         id: 1,
-        title: "Penyaluran BLT Dana Desa Tahap III Tahun Anggaran Berjalan Sukses Terlaksana",
-        category: "Pelayanan Warga",
-        excerpt:
-            "Sebanyak 94 Keluarga Penerima Manfaat (KPM) telah menerima penyaluran bantuan langsung tunai dengan tertib dan transparan di Balai Desa Lero Tatari.",
-        image_url:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuBccxru2TdfYnnVlo0qcnNS_NlafvfzagwBOom_V33QNuScXU9UUi3aFkYzJtVfZyUInYvrdiZRhGKLWhyaDPb40UEJg6x1oefHKyFtmzFWqP_H1RBUAs3_vWCGnwBR8DU2v1tw1r3pltjwkpiCuP56ip1SEQysTXUkk7jfnqpbdisI4I4MUSPUe2LY6cDOeMjfDqUySVRyUfo6QxgGZJZfkOct0gadpY6PsUE05UqeyFyAz0JjwX7D",
-        published_at: "24 Mei 2024",
+        user_id: 0,
+        title: 'Penyaluran BLT Dana Desa Tahap III Tahun Anggaran Berjalan Sukses Terlaksana',
+        category: 'Pelayanan Warga',
+        content:
+            'Sebanyak 94 Keluarga Penerima Manfaat (KPM) telah menerima penyaluran bantuan langsung tunai dengan tertib dan transparan di Balai Desa Lero Tatari.',
+        image_path:
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuBccxru2TdfYnnVlo0qcnNS_NlafvfzagwBOom_V33QNuScXU9UUi3aFkYzJtVfZyUInYvrdiZRhGKLWhyaDPb40UEJg6x1oefHKyFtmzFWqP_H1RBUAs3_vWCGnwBR8DU2v1tw1r3pltjwkpiCuP56ip1SEQysTXUkk7jfnqpbdisI4I4MUSPUe2LY6cDOeMjfDqUySVRyUfo6QxgGZJZfkOct0gadpY6PsUE05UqeyFyAz0JjwX7D',
+        status: 'published',
+        published_at: '2024-05-24',
+        author: null,
+        created_at: '2024-05-24',
+        updated_at: '2024-05-24',
     },
     {
         id: 2,
-        title: "Pelatihan Diversifikasi Olahan Hasil Tangkap Nelayan Pesisir Lero Tatari",
-        category: "Pemberdayaan UMKM",
-        excerpt:
-            "Dinas Perikanan bersama BUMDes melatih puluhan ibu rumah tangga pesisir untuk memproduksi abon ikan dan dendeng cakalang higienis siap ekspor antardaerah.",
-        image_url:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuAc34y-V2NF90NUf-lGKN1bsU3yMDNmR_0fs-1Y36lc644TcZCGoJMxmU2UmLz53WbT9K63rFmwkHXpytskWLZ61q9vizily9R6gUjMpcGKQsBdBf3MEx3YntAiDKKtj4XcI5_6hm6JkhdZ5r748MRP0DYlYM1huNFDUZmDbtfmz14Y9d_KOazJGjyslvmvUCJOS_3WMlKvlBtmg0nBU6CPYrcPHoe9DM9wwk1zv-3EWC3maMhyEyHn",
-        published_at: "18 Mei 2024",
+        user_id: 0,
+        title: 'Pelatihan Diversifikasi Olahan Hasil Tangkap Nelayan Pesisir Lero Tatari',
+        category: 'Pemberdayaan UMKM',
+        content:
+            'Dinas Perikanan bersama BUMDes melatih puluhan ibu rumah tangga pesisir untuk memproduksi abon ikan dan dendeng cakalang higienis siap ekspor antardaerah.',
+        image_path:
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuAc34y-V2NF90NUf-lGKN1bsU3yMDNmR_0fs-1Y36lc644TcZCGoJMxmU2UmLz53WbT9K63rFmwkHXpytskWLZ61q9vizily9R6gUjMpcGKQsBdBf3MEx3YntAiDKKtj4XcI5_6hm6JkhdZ5r748MRP0DYlYM1huNFDUZmDbtfmz14Y9d_KOazJGjyslvmvUCJOS_3WMlKvlBtmg0nBU6CPYrcPHoe9DM9wwk1zv-3EWC3maMhyEyHn',
+        status: 'published',
+        published_at: '2024-05-18',
+        author: null,
+        created_at: '2024-05-18',
+        updated_at: '2024-05-18',
     },
     {
         id: 3,
-        title: "Gotong Royong Perbaikan Saluran Irigasi Pertanian Menyambut Musim Tanam",
-        category: "Pembangunan",
-        excerpt:
-            "Warga Dusun II dan Poktan Subur Makmur menuntaskan normalisasi aliran irigasi 1.200 meter demi menjamin ketersediaan air 80 hektar lahan padi sawah.",
-        image_url:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuDEDJZ5JIIFjsAJmjzNxYaS6BMrU-c18aFn8XSyIBRO92-fuwVrMWGjQAS4Q69mWj3y9A4LDTbwkSYDTz7QK5bD_e8yKPGBSmnzcyGCaLBeFwiJr5UhVqF2X7MjLywXlL8lKTahIhphDMw6u0TjFVXdJwWepodMUk3vqpRl4-eU2QIh3Fx1_ULDD8ijuzbfULZMflUOvm3or1WucY9mJltR_w6L197jtRZvIfC8_o4XDnHvfqWiEg6D",
-        published_at: "12 Mei 2024",
+        user_id: 0,
+        title: 'Gotong Royong Perbaikan Saluran Irigasi Pertanian Menyambut Musim Tanam',
+        category: 'Pembangunan',
+        content:
+            'Warga Dusun II dan Poktan Subur Makmur menuntaskan normalisasi aliran irigasi 1.200 meter demi menjamin ketersediaan air 80 hektar lahan padi sawah.',
+        image_path:
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuDEDJZ5JIIFjsAJmjzNxYaS6BMrU-c18aFn8XSyIBRO92-fuwVrMWGjQAS4Q69mWj3y9A4LDTbwkSYDTz7QK5bD_e8yKPGBSmnzcyGCaLBeFwiJr5UhVqF2X7MjLywXlL8lKTahIhphDMw6u0TjFVXdJwWepodMUk3vqpRl4-eU2QIh3Fx1_ULDD8ijuzbfULZMflUOvm3or1WucY9mJltR_w6L197jtRZvIfC8_o4XDnHvfqWiEg6D',
+        status: 'published',
+        published_at: '2024-05-12',
+        author: null,
+        created_at: '2024-05-12',
+        updated_at: '2024-05-12',
     },
 ];
 
 // Fallback high-fidelity destinations matching Stitch design
-const STITCH_DESTINATIONS_FALLBACK = [
+type LandingDestination = Destination & {
+    category?: string;
+};
+
+const STITCH_DESTINATIONS_FALLBACK: LandingDestination[] = [
     {
-        title: "Pantai Pasir Putih Tatari",
-        category: "Wisata Bahari",
+        id: 1,
+        title: 'Pantai Pasir Putih Tatari',
+        category: 'Wisata Bahari',
         description:
-            "Garis pantai landai dengan air jernih berkilau, gugusan karang alami untuk snorkeling, dan pemandangan matahari terbenam spektakuler di balik tanjung barat.",
-        image_url:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuDv1DeO0pGexQn7w8LqP_JMsPe7yafWLS97obnZLT0pUp5D5Nsplesc_JL26CSmS8wxmhAaC44eV1A04gZ7NhAQsaykBhKQR7_oh-aoDwKfjTfLIGOWUYOMVzljVAQ2yoz_EY-OZYqwQ80AQB-ul82TsjC9LacO_82JZHNBCyC8fxi44VtlAXtE1MWByg7yh8lmSSDQVo65l2oqRxPx9JXWks-Ft7W9OOHJZRpItNvY0AtvPeRMVNj9",
-        location_url: "https://maps.google.com",
-        tags: ["Snorkeling", "Perahu Katir"],
+            'Garis pantai landai dengan air jernih berkilau, gugusan karang alami untuk snorkeling, dan pemandangan matahari terbenam spektakuler di balik tanjung barat.',
+        image_path:
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuDv1DeO0pGexQn7w8LqP_JMsPe7yafWLS97obnZLT0pUp5D5Nsplesc_JL26CSmS8wxmhAaC44eV1A04gZ7NhAQsaykBhKQR7_oh-aoDwKfjTfLIGOWUYOMVzljVAQ2yoz_EY-OZYqwQ80AQB-ul82TsjC9LacO_82JZHNBCyC8fxi44VtlAXtE1MWByg7yh8lmSSDQVo65l2oqRxPx9JXWks-Ft7W9OOHJZRpItNvY0AtvPeRMVNj9',
+        location_url: 'https://maps.google.com',
+        is_active: true,
+        created_at: '2024-01-12',
+        updated_at: '2024-01-12',
     },
     {
-        title: "Agrowisata Bukit Hijau Lero",
-        category: "Ekowisata",
+        id: 2,
+        title: 'Agrowisata Bukit Hijau Lero',
+        category: 'Ekowisata',
         description:
-            "Jalur trekking menyegarkan melintasi perkebunan cengkeh dan kelapa tua dengan gardu pandang 360 derajat menghadap keindahan teluk desa dan selat lepas.",
-        image_url:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuAY1eDydulCo1JXyMoi2Bw_EtBdqaNqkFQD3KrXGd6BO5Pb-nTkwbbhju_LFFpc1Sk2YsBoUI02Tk75lODBfzTcXkbyiV83Zc_ix2kS-_dlUZa9Z92CwPrElG7MdUMByJaqee_IKXPVQIU3jYWJwUZEKFiG6Y_DVd7JvcrH24ZQMN0zAKj0ORv6SZ7pEc8oTuJbQILnCWNBCDT6o-9zVExK7pAXK1SZ5ZNIcJl7XgDZtOM39VB-ZP75",
-        location_url: "https://maps.google.com",
-        tags: ["Trekking", "Gardu Pandang"],
+            'Jalur trekking menyegarkan melintasi perkebunan cengkeh dan kelapa tua dengan gardu pandang 360 derajat menghadap keindahan teluk desa dan selat lepas.',
+        image_path:
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuAY1eDydulCo1JXyMoi2Bw_EtBdqaNqkFQD3KrXGd6BO5Pb-nTkwbbhju_LFFpc1Sk2YsBoUI02Tk75lODBfzTcXkbyiV83Zc_ix2kS-_dlUZa9Z92CwPrElG7MdUMByJaqee_IKXPVQIU3jYWJwUZEKFiG6Y_DVd7JvcrH24ZQMN0zAKj0ORv6SZ7pEc8oTuJbQILnCWNBCDT6o-9zVExK7pAXK1SZ5ZNIcJl7XgDZtOM39VB-ZP75',
+        location_url: 'https://maps.google.com',
+        is_active: true,
+        created_at: '2024-01-12',
+        updated_at: '2024-01-12',
     },
     {
-        title: "Kampung Budaya & Tenun",
-        category: "Kearifan Budaya",
+        id: 3,
+        title: 'Kampung Budaya & Tenun',
+        category: 'Kearifan Budaya',
         description:
-            "Pusat edukasi kerajinan tenun tangan dengan pewarna alami rempah lokal serta rumah panggung kayu bersejarah yang memelihara ritus syukuran laut.",
-        image_url:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuCuwktU1Um_JwKTTBNKKdRQOaejt5GQ02PFCl2qA72ZVSPyGVkasVlPdSPIL8oJBFrcncMkY3N6B2NlBUAHVdOdLJsvCHC4tvdaERTrYbMlVZuTwImKCmIevlFs_SMVfb4sn3WE7reouf_qakOx3UnfceS0_vTM94jEic0WTZEy8G3pFPieeqMT-taYahPvt83EpFXf8Wkb8HGs8slENi_8UXJKloaz1JiGYNHmy9fuE31qfviWzBRP",
-        location_url: "https://maps.google.com",
-        tags: ["Kerajinan Tenun", "Rumah Adat"],
+            'Pusat edukasi kerajinan tenun tangan dengan pewarna alami rempah lokal serta rumah panggung kayu bersejarah yang memelihara ritus syukuran laut.',
+        image_path:
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuCuwktU1Um_JwKTTBNKKdRQOaejt5GQ02PFCl2qA72ZVSPyGVkasVlPdSPIL8oJBFrcncMkY3N6B2NlBUAHVdOdLJsvCHC4tvdaERTrYbMlVZuTwImKCmIevlFs_SMVfb4sn3WE7reouf_qakOx3UnfceS0_vTM94jEic0WTZEy8G3pFPieeqMT-taYahPvt83EpFXf8Wkb8HGs8slENi_8UXJKloaz1JiGYNHmy9fuE31qfviWzBRP',
+        location_url: 'https://maps.google.com',
+        is_active: true,
+        created_at: '2024-01-12',
+        updated_at: '2024-01-12',
     },
 ];
 
@@ -190,33 +234,48 @@ const STITCH_DESTINATIONS_FALLBACK = [
 const STITCH_GALLERY: GalleryItem[] = [
     {
         id: 1,
-        title: "Musrenbangdes Penetapan RKPDes",
-        captured_at: "10 Januari 2024",
+        title: 'Musrenbangdes Penetapan RKPDes',
+        captured_at: '10 Januari 2024',
         image_url:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuAB2uMyrj0K8lTLRtJqpUO2Lh0wIsmX_8Bbb0HA1Hz89z0Cfspmg_EKY5-VO5kxda8M5dlwytnSV2vu7eOjr6IZd-jMyp7v9bCPngVO5aTqNH5__kSKKuSMOCczM85_mvPUXmYvQviHhWpT65cbxT3_qJhdjsqPvNh9m8cv2PBD3aovtAo-I7laPH84JYtg_nRGIzyR5cBaois-wQPxVZ2cz9AdJDqNF75fV3cze3MrwiLcBqRQWlIT",
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuAB2uMyrj0K8lTLRtJqpUO2Lh0wIsmX_8Bbb0HA1Hz89z0Cfspmg_EKY5-VO5kxda8M5dlwytnSV2vu7eOjr6IZd-jMyp7v9bCPngVO5aTqNH5__kSKKuSMOCczM85_mvPUXmYvQviHhWpT65cbxT3_qJhdjsqPvNh9m8cv2PBD3aovtAo-I7laPH84JYtg_nRGIzyR5cBaois-wQPxVZ2cz9AdJDqNF75fV3cze3MrwiLcBqRQWlIT',
     },
     {
         id: 2,
-        title: "Parade Perahu Hias Nelayan Teluk Tatari",
-        captured_at: "17 Agustus 2024",
+        title: 'Parade Perahu Hias Nelayan Teluk Tatari',
+        captured_at: '17 Agustus 2024',
         image_url:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuBYE6vM7WGhhBlPOAYCjtxk2oiOMxf9FIyOXSIaNrwA-UfTFwjgqKycNBGr57-P2txe0pxL_PKp5VkABAHrVvVAlToirke4qt-ERCO5tK8_VWoWroG-pZrM7IfBCgonAkG9tPwuTh41QgkJpr2NPcbbWhujp3cpRJbatEL_lTssDpLkC2Xs6MUQlCw2nmhsRrPJ0FSeOXfIzAoJ-bt1CF-LBUQAmnH7CHKT5LwOaDGEVcUUT3O688An",
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuBYE6vM7WGhhBlPOAYCjtxk2oiOMxf9FIyOXSIaNrwA-UfTFwjgqKycNBGr57-P2txe0pxL_PKp5VkABAHrVvVAlToirke4qt-ERCO5tK8_VWoWroG-pZrM7IfBCgonAkG9tPwuTh41QgkJpr2NPcbbWhujp3cpRJbatEL_lTssDpLkC2Xs6MUQlCw2nmhsRrPJ0FSeOXfIzAoJ-bt1CF-LBUQAmnH7CHKT5LwOaDGEVcUUT3O688An',
     },
     {
         id: 3,
-        title: "Turnamen Olahraga Pemuda Desa Lero Tatari",
-        captured_at: "02 September 2024",
+        title: 'Turnamen Olahraga Pemuda Desa Lero Tatari',
+        captured_at: '02 September 2024',
         image_url:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuDEDJZ5JIIFjsAJmjzNxYaS6BMrU-c18aFn8XSyIBRO92-fuwVrMWGjQAS4Q69mWj3y9A4LDTbwkSYDTz7QK5bD_e8yKPGBSmnzcyGCaLBeFwiJr5UhVqF2X7MjLywXlL8lKTahIhphDMw6u0TjFVXdJwWepodMUk3vqpRl4-eU2QIh3Fx1_ULDD8ijuzbfULZMflUOvm3or1WucY9mJltR_w6L197jtRZvIfC8_o4XDnHvfqWiEg6D",
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuDEDJZ5JIIFjsAJmjzNxYaS6BMrU-c18aFn8XSyIBRO92-fuwVrMWGjQAS4Q69mWj3y9A4LDTbwkSYDTz7QK5bD_e8yKPGBSmnzcyGCaLBeFwiJr5UhVqF2X7MjLywXlL8lKTahIhphDMw6u0TjFVXdJwWepodMUk3vqpRl4-eU2QIh3Fx1_ULDD8ijuzbfULZMflUOvm3or1WucY9mJltR_w6L197jtRZvIfC8_o4XDnHvfqWiEg6D',
     },
     {
         id: 4,
-        title: "Lokakarya Digital & Kewirausahaan Karang Taruna",
-        captured_at: "21 Oktober 2024",
+        title: 'Lokakarya Digital & Kewirausahaan Karang Taruna',
+        captured_at: '21 Oktober 2024',
         image_url:
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuA2_ArbYlq3-QVMQF5cOmEGJ7LuvzTR2EiRZ-T9-qzf8fyjBODz8HP2CrN8dIHswuLLoXJewFtmb7GoYnM17zixYhg36S7IgipTxdhNXs1TwZMYRwGQM5zMf_TN8XCJ8kKNnc7VIMEmN8OEorm6r12yRZYJCoelLL4dbN8WqKgAF65AEeS1Xhw5zcLlfSRwb02iWNHtqJ3GhE2vpE5CqDa1-nolOYCqJLxfnHG7-aoSG9sfXIU2TLTX",
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuA2_ArbYlq3-QVMQF5cOmEGJ7LuvzTR2EiRZ-T9-qzf8fyjBODz8HP2CrN8dIHswuLLoXJewFtmb7GoYnM17zixYhg36S7IgipTxdhNXs1TwZMYRwGQM5zMf_TN8XCJ8kKNnc7VIMEmN8OEorm6r12yRZYJCoelLL4dbN8WqKgAF65AEeS1Xhw5zcLlfSRwb02iWNHtqJ3GhE2vpE5CqDa1-nolOYCqJLxfnHG7-aoSG9sfXIU2TLTX',
     },
 ];
+
+/** Kartu dialog placeholder bila tidak ada artikel terpilih. */
+const EMPTY_NEWS: News = {
+    id: 0,
+    user_id: 0,
+    title: '',
+    category: '',
+    content: '',
+    image_path: null,
+    status: 'published',
+    published_at: null,
+    author: null,
+    created_at: '',
+    updated_at: '',
+};
 
 export default function Welcome({
     officials = [],
@@ -230,40 +289,67 @@ export default function Welcome({
     const { auth } = usePage().props;
     const rootRef = useRef<HTMLDivElement>(null);
     const galleryTrackRef = useRef<HTMLDivElement>(null);
+    const newsTrackRef = useRef<HTMLDivElement>(null);
+    const destinationsTrackRef = useRef<HTMLDivElement>(null);
+
+    const [newsDetail, setNewsDetail] = useState<News | null>(null);
+    const [destinationDetail, setDestinationDetail] =
+        useState<Destination | null>(null);
 
     // Galeri aktif dari database; fallback ke mockup Stitch bila kosong.
     const galleryItems: GalleryItem[] =
         galleries.length > 0 ? galleries : STITCH_GALLERY;
 
-    const scrollGallery = (direction: "left" | "right") => {
+    const scrollGallery = (direction: 'left' | 'right') => {
         const track = galleryTrackRef.current;
 
         if (!track) {
             return;
         }
 
-        const card = track.querySelector<HTMLElement>("[data-gallery-card]");
+        const card = track.querySelector<HTMLElement>('[data-gallery-card]');
         const step = card ? card.offsetWidth + 20 : 360;
 
         track.scrollBy({
-            left: direction === "left" ? -step : step,
-            behavior: "smooth",
+            left: direction === 'left' ? -step : step,
+            behavior: 'smooth',
+        });
+    };
+
+    /** Geser track horizontal (berita/wisata) satu lebar kartu ke kiri/kanan. */
+    const scrollTrack = (
+        trackRef: RefObject<HTMLDivElement | null>,
+        cardMarker: string,
+        direction: 'left' | 'right',
+    ) => {
+        const track = trackRef.current;
+
+        if (!track) {
+            return;
+        }
+
+        const card = track.querySelector<HTMLElement>(`[${cardMarker}]`);
+        const step = card ? card.offsetWidth + 20 : 380;
+
+        track.scrollBy({
+            left: direction === 'left' ? -step : step,
+            behavior: 'smooth',
         });
     };
 
     // Active navbar section (scroll-spy highlight)
-    const [activeSection, setActiveSection] = useState("beranda");
+    const [activeSection, setActiveSection] = useState('beranda');
 
     useEffect(() => {
         const sectionIds = [
-            "beranda",
-            "profil",
-            "sejarah",
-            "aparat",
-            "data",
-            "berita",
-            "wisata",
-            "galeri",
+            'beranda',
+            'profil',
+            'sejarah',
+            'aparat',
+            'data',
+            'berita',
+            'wisata',
+            'galeri',
         ];
 
         const sections = sectionIds
@@ -283,7 +369,7 @@ export default function Welcome({
                 }
             },
             {
-                rootMargin: "-45% 0px -50% 0px",
+                rootMargin: '-45% 0px -50% 0px',
                 threshold: 0,
             },
         );
@@ -302,86 +388,90 @@ export default function Welcome({
         );
 
     const head =
-        officials.find((item) => item.category === "pimpinan") ||
-        findOfficial("KEPALA DESA");
+        officials.find((item) => item.category === 'pimpinan') ||
+        findOfficial('KEPALA DESA');
 
     const secretary =
         officials.find(
             (item) =>
-                item.category === "sekretariat" &&
-                item.position.toUpperCase().includes("SEKRETARIS"),
-        ) || findOfficial("SEKRETARIS");
+                item.category === 'sekretariat' &&
+                item.position.toUpperCase().includes('SEKRETARIS'),
+        ) || findOfficial('SEKRETARIS');
 
     // KASI List (3 positions: KASI PEMERINTAHAN, KASI KESEJAHTERAAN, KASI PELAYANAN)
     const kasiPemerintahan =
         officials.find((o) =>
-            o.position.toUpperCase().includes("PEMERINTAHAN"),
-        ) || officials.filter((o) => o.category === "kasi")[0];
+            o.position.toUpperCase().includes('PEMERINTAHAN'),
+        ) || officials.filter((o) => o.category === 'kasi')[0];
 
     const kasiKesejahteraan =
         officials.find((o) =>
-            o.position.toUpperCase().includes("KESEJAHTERAAN"),
-        ) || officials.filter((o) => o.category === "kasi")[1];
+            o.position.toUpperCase().includes('KESEJAHTERAAN'),
+        ) || officials.filter((o) => o.category === 'kasi')[1];
 
     const kasiPelayanan =
-        officials.find((o) => o.position.toUpperCase().includes("PELAYANAN")) ||
-        officials.filter((o) => o.category === "kasi")[2];
+        officials.find((o) => o.position.toUpperCase().includes('PELAYANAN')) ||
+        officials.filter((o) => o.category === 'kasi')[2];
 
     // KAUR List (3 positions: KAUR UMUM & T.U, KAUR KEUANGAN, KAUR PERENCANAAN)
     const kaurUmum =
-        officials.find((o) => o.position.toUpperCase().includes("UMUM")) ||
+        officials.find((o) => o.position.toUpperCase().includes('UMUM')) ||
         officials.filter(
             (o) =>
-                o.category === "sekretariat" &&
-                !o.position.toUpperCase().includes("SEKRETARIS"),
+                o.category === 'sekretariat' &&
+                !o.position.toUpperCase().includes('SEKRETARIS'),
         )[0];
 
     const kaurKeuangan =
-        officials.find((o) => o.position.toUpperCase().includes("KEUANGAN")) ||
+        officials.find((o) => o.position.toUpperCase().includes('KEUANGAN')) ||
         officials.filter(
             (o) =>
-                o.category === "sekretariat" &&
-                !o.position.toUpperCase().includes("SEKRETARIS"),
+                o.category === 'sekretariat' &&
+                !o.position.toUpperCase().includes('SEKRETARIS'),
         )[1];
 
     const kaurPerencanaan =
         officials.find((o) =>
-            o.position.toUpperCase().includes("PERENCANAAN"),
+            o.position.toUpperCase().includes('PERENCANAAN'),
         ) ||
         officials.filter(
             (o) =>
-                o.category === "sekretariat" &&
-                !o.position.toUpperCase().includes("SEKRETARIS"),
+                o.category === 'sekretariat' &&
+                !o.position.toUpperCase().includes('SEKRETARIS'),
         )[2];
 
     // Kadusun List (4 Dusun)
     const kadusun1 =
-        officials.find((o) =>
-            o.position.toUpperCase().includes("DUSUN I") ||
-            o.position.toUpperCase().includes("DUSUN 1"),
-        ) || officials.filter((o) => o.category === "kadusun")[0];
+        officials.find(
+            (o) =>
+                o.position.toUpperCase().includes('DUSUN I') ||
+                o.position.toUpperCase().includes('DUSUN 1'),
+        ) || officials.filter((o) => o.category === 'kadusun')[0];
 
     const kadusun2 =
-        officials.find((o) =>
-            o.position.toUpperCase().includes("DUSUN II") ||
-            o.position.toUpperCase().includes("DUSUN 2"),
-        ) || officials.filter((o) => o.category === "kadusun")[1];
+        officials.find(
+            (o) =>
+                o.position.toUpperCase().includes('DUSUN II') ||
+                o.position.toUpperCase().includes('DUSUN 2'),
+        ) || officials.filter((o) => o.category === 'kadusun')[1];
 
     const kadusun3 =
-        officials.find((o) =>
-            o.position.toUpperCase().includes("DUSUN III") ||
-            o.position.toUpperCase().includes("DUSUN 3"),
-        ) || officials.filter((o) => o.category === "kadusun")[2];
+        officials.find(
+            (o) =>
+                o.position.toUpperCase().includes('DUSUN III') ||
+                o.position.toUpperCase().includes('DUSUN 3'),
+        ) || officials.filter((o) => o.category === 'kadusun')[2];
 
     const kadusun4 =
-        officials.find((o) =>
-            o.position.toUpperCase().includes("DUSUN IV") ||
-            o.position.toUpperCase().includes("DUSUN 4"),
-        ) || officials.filter((o) => o.category === "kadusun")[3];
+        officials.find(
+            (o) =>
+                o.position.toUpperCase().includes('DUSUN IV') ||
+                o.position.toUpperCase().includes('DUSUN 4'),
+        ) || officials.filter((o) => o.category === 'kadusun')[3];
 
     // High fidelity data sources with fallback to Stitch
-    const displayNews = news.length > 0 ? news : STITCH_NEWS_FALLBACK;
-    const displayDestinations =
+    const displayNews: News[] = news.length > 0 ? news : STITCH_NEWS_FALLBACK;
+    const displayDestinations: LandingDestination[] =
         destinations.length > 0 ? destinations : STITCH_DESTINATIONS_FALLBACK;
 
     // Demographic statistics calculations
@@ -389,19 +479,19 @@ export default function Welcome({
     const femaleCount = demographic?.female_inhabitants ?? 839;
     const totalPop = demographic?.total_inhabitants ?? maleCount + femaleCount;
     const malePercent =
-        totalPop > 0 ? ((maleCount / totalPop) * 100).toFixed(1) : "50.5";
+        totalPop > 0 ? ((maleCount / totalPop) * 100).toFixed(1) : '50.5';
     const femalePercent =
-        totalPop > 0 ? ((femaleCount / totalPop) * 100).toFixed(1) : "49.5";
-    const growthRate = demographic?.population_growth_rate ?? "0.83";
+        totalPop > 0 ? ((femaleCount / totalPop) * 100).toFixed(1) : '49.5';
+    const growthRate = demographic?.population_growth_rate ?? '0.83';
 
     useEffect(() => {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             return;
         }
 
         // --- RELOAD FIX: Manual scroll restoration → always start at hero ---
-        if ("scrollRestoration" in history) {
-            history.scrollRestoration = "manual";
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
         }
         window.scrollTo(0, 0);
 
@@ -409,50 +499,62 @@ export default function Welcome({
 
         // --- PRE-SET: hide animated elements before JS runs (prevents FOUC) ---
         // Headers and cards will be revealed by their animations
-        gsap.set("[data-gsap-header]", { opacity: 0, y: 40 });
-        gsap.set("[data-gsap-card]", { opacity: 0, y: 30 });
-        gsap.set("[data-sejarah-img]", { opacity: 0, scale: 1.04 });
-        gsap.set("[data-hero-badge], [data-hero-title], [data-hero-subtitle], [data-hero-cta], [data-hero-metrics] > *", {
-            opacity: 0,
-        });
+        gsap.set('[data-gsap-header]', { opacity: 0, y: 40 });
+        gsap.set('[data-gsap-card]', { opacity: 0, y: 30 });
+        gsap.set('[data-sejarah-img]', { opacity: 0, scale: 1.04 });
+        gsap.set(
+            '[data-hero-badge], [data-hero-title], [data-hero-subtitle], [data-hero-cta], [data-hero-metrics] > *',
+            {
+                opacity: 0,
+            },
+        );
 
         const ctx = gsap.context(() => {
             // 1. HERO ENTRANCE — smooth staggered entrance
-            const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+            const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
             heroTl
                 .fromTo(
-                    "[data-hero-badge]",
+                    '[data-hero-badge]',
                     { opacity: 0, y: -16 },
-                    { opacity: 1, y: 0, duration: 0.6, clearProps: "all" },
+                    { opacity: 1, y: 0, duration: 0.6, clearProps: 'all' },
                 )
                 .fromTo(
-                    "[data-hero-title]",
+                    '[data-hero-title]',
                     { opacity: 0, y: 24 },
-                    { opacity: 1, y: 0, duration: 0.8, clearProps: "all" },
-                    "-=0.35",
+                    { opacity: 1, y: 0, duration: 0.8, clearProps: 'all' },
+                    '-=0.35',
                 )
                 .fromTo(
-                    "[data-hero-subtitle]",
+                    '[data-hero-subtitle]',
                     { opacity: 0, y: 16 },
-                    { opacity: 1, y: 0, duration: 0.65, clearProps: "all" },
-                    "-=0.45",
+                    { opacity: 1, y: 0, duration: 0.65, clearProps: 'all' },
+                    '-=0.45',
                 )
                 .fromTo(
-                    "[data-hero-cta]",
+                    '[data-hero-cta]',
                     { opacity: 0, y: 14 },
-                    { opacity: 1, y: 0, duration: 0.55, clearProps: "all" },
-                    "-=0.35",
+                    { opacity: 1, y: 0, duration: 0.55, clearProps: 'all' },
+                    '-=0.35',
                 )
                 .fromTo(
-                    "[data-hero-metrics] > *",
+                    '[data-hero-metrics] > *',
                     { opacity: 0, y: 12 },
-                    { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, clearProps: "all" },
-                    "-=0.3",
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.5,
+                        stagger: 0.1,
+                        clearProps: 'all',
+                    },
+                    '-=0.3',
                 );
 
             // 2. SEJARAH IMAGE — dedicated smooth entrance (no flicker)
-            const sejarahImg = rootRef.current?.querySelector<HTMLElement>("[data-sejarah-img]");
+            const sejarahImg =
+                rootRef.current?.querySelector<HTMLElement>(
+                    '[data-sejarah-img]',
+                );
             if (sejarahImg) {
                 gsap.fromTo(
                     sejarahImg,
@@ -461,11 +563,11 @@ export default function Welcome({
                         opacity: 1,
                         scale: 1,
                         duration: 1.2,
-                        ease: "power2.out",
-                        clearProps: "all",
+                        ease: 'power2.out',
+                        clearProps: 'all',
                         scrollTrigger: {
                             trigger: sejarahImg,
-                            start: "top 80%",
+                            start: 'top 80%',
                             once: true,
                         },
                     },
@@ -474,7 +576,7 @@ export default function Welcome({
 
             // 3. HEADERS — each header gets its own individual trigger
             rootRef.current
-                ?.querySelectorAll<HTMLElement>("[data-gsap-header]")
+                ?.querySelectorAll<HTMLElement>('[data-gsap-header]')
                 .forEach((header) => {
                     gsap.fromTo(
                         header,
@@ -483,11 +585,11 @@ export default function Welcome({
                             opacity: 1,
                             y: 0,
                             duration: 1.1,
-                            ease: "power3.out",
-                            clearProps: "all",
+                            ease: 'power3.out',
+                            clearProps: 'all',
                             scrollTrigger: {
                                 trigger: header,
-                                start: "top 87%",
+                                start: 'top 87%',
                                 once: true,
                             },
                         },
@@ -498,10 +600,10 @@ export default function Welcome({
             // (exclude sejarah-img card; it has its own animation above)
             ScrollTrigger.batch(
                 rootRef.current!.querySelectorAll<HTMLElement>(
-                    "[data-gsap-card]:not([data-sejarah-img])",
+                    '[data-gsap-card]:not([data-sejarah-img])',
                 ),
                 {
-                    start: "top 88%",
+                    start: 'top 88%',
                     once: true,
                     onEnter: (batch: Element[]) => {
                         gsap.fromTo(
@@ -512,8 +614,8 @@ export default function Welcome({
                                 y: 0,
                                 duration: 1.0,
                                 stagger: 0.1,
-                                ease: "power2.out",
-                                clearProps: "all",
+                                ease: 'power2.out',
+                                clearProps: 'all',
                             },
                         );
                     },
@@ -522,20 +624,20 @@ export default function Welcome({
 
             // 5. LINES — individual trigger per line
             rootRef.current
-                ?.querySelectorAll<HTMLElement>("[data-gsap-line]")
+                ?.querySelectorAll<HTMLElement>('[data-gsap-line]')
                 .forEach((line) => {
                     gsap.fromTo(
                         line,
                         { scaleY: 0 },
                         {
                             scaleY: 1,
-                            transformOrigin: "top center",
+                            transformOrigin: 'top center',
                             duration: 0.7,
-                            ease: "power2.out",
-                            clearProps: "all",
+                            ease: 'power2.out',
+                            clearProps: 'all',
                             scrollTrigger: {
                                 trigger: line,
-                                start: "top 88%",
+                                start: 'top 88%',
                                 once: true,
                             },
                         },
@@ -543,39 +645,44 @@ export default function Welcome({
                 });
 
             // 6. COUNTER ANIMATION — numbers count up from 0 on scroll
-            const counterEls = rootRef.current?.querySelectorAll<HTMLElement>("[data-counter]");
+            const counterEls =
+                rootRef.current?.querySelectorAll<HTMLElement>(
+                    '[data-counter]',
+                );
             counterEls?.forEach((el) => {
-                const raw = el.getAttribute("data-counter") ?? "0";
-                const fmt = el.getAttribute("data-counter-format") ?? "int";
-                const suffix = el.getAttribute("data-counter-suffix") ?? "";
-                const prefix = el.getAttribute("data-counter-prefix") ?? "";
+                const raw = el.getAttribute('data-counter') ?? '0';
+                const fmt = el.getAttribute('data-counter-format') ?? 'int';
+                const suffix = el.getAttribute('data-counter-suffix') ?? '';
+                const prefix = el.getAttribute('data-counter-prefix') ?? '';
                 const target = parseFloat(raw);
 
                 const obj = { val: 0 };
 
                 ScrollTrigger.create({
                     trigger: el,
-                    start: "top 88%",
+                    start: 'top 88%',
                     once: true,
                     onEnter: () => {
                         gsap.to(obj, {
                             val: target,
                             duration: 1.8,
-                            ease: "power2.out",
+                            ease: 'power2.out',
                             onUpdate: () => {
                                 let display: string;
-                                if (fmt === "decimal") {
-                                    display = obj.val.toLocaleString("id-ID", {
+                                if (fmt === 'decimal') {
+                                    display = obj.val.toLocaleString('id-ID', {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2,
                                     });
-                                } else if (fmt === "percent") {
-                                    display = obj.val.toLocaleString("id-ID", {
+                                } else if (fmt === 'percent') {
+                                    display = obj.val.toLocaleString('id-ID', {
                                         minimumFractionDigits: 1,
                                         maximumFractionDigits: 1,
                                     });
                                 } else {
-                                    display = Math.floor(obj.val).toLocaleString("id-ID");
+                                    display = Math.floor(
+                                        obj.val,
+                                    ).toLocaleString('id-ID');
                                 }
                                 el.textContent = prefix + display + suffix;
                             },
@@ -587,37 +694,37 @@ export default function Welcome({
             // 7. MICRO-INTERACTIONS — subtle hover lift
             const interactiveCards =
                 rootRef.current?.querySelectorAll<HTMLElement>(
-                    "[data-interactive-card]",
+                    '[data-interactive-card]',
                 );
             interactiveCards?.forEach((card) => {
                 const enter = () => {
                     gsap.to(card, {
                         y: -6,
                         duration: 0.35,
-                        ease: "power2.out",
-                        overwrite: "auto",
+                        ease: 'power2.out',
+                        overwrite: 'auto',
                     });
                 };
                 const leave = () => {
                     gsap.to(card, {
                         y: 0,
                         duration: 0.35,
-                        ease: "power2.out",
-                        overwrite: "auto",
+                        ease: 'power2.out',
+                        overwrite: 'auto',
                     });
                 };
-                card.addEventListener("mouseenter", enter);
-                card.addEventListener("mouseleave", leave);
+                card.addEventListener('mouseenter', enter);
+                card.addEventListener('mouseleave', leave);
             });
         }, rootRef);
 
         // --- REFRESH after all assets loaded (images, fonts) for accurate coords ---
         const onLoad = () => ScrollTrigger.refresh();
-        window.addEventListener("load", onLoad);
+        window.addEventListener('load', onLoad);
 
         return () => {
             ctx.revert();
-            window.removeEventListener("load", onLoad);
+            window.removeEventListener('load', onLoad);
         };
     }, []);
 
@@ -667,14 +774,14 @@ export default function Welcome({
                     {/* Nav Links */}
                     <nav className="hidden items-center gap-1 md:flex">
                         {[
-                            { id: "beranda", label: "Beranda" },
-                            { id: "profil", label: "Profil" },
-                            { id: "sejarah", label: "Sejarah" },
-                            { id: "aparat", label: "Aparat" },
-                            { id: "data", label: "Data" },
-                            { id: "berita", label: "Berita" },
-                            { id: "wisata", label: "Wisata" },
-                            { id: "galeri", label: "Galeri" },
+                            { id: 'beranda', label: 'Beranda' },
+                            { id: 'profil', label: 'Profil' },
+                            { id: 'sejarah', label: 'Sejarah' },
+                            { id: 'aparat', label: 'Aparat' },
+                            { id: 'data', label: 'Data' },
+                            { id: 'berita', label: 'Berita' },
+                            { id: 'wisata', label: 'Wisata' },
+                            { id: 'galeri', label: 'Galeri' },
                         ].map((item) => {
                             const isActive = activeSection === item.id;
 
@@ -683,11 +790,11 @@ export default function Welcome({
                                     key={item.id}
                                     className={
                                         isActive
-                                            ? "rounded-full bg-emerald-800 px-4 py-1.5 text-xs font-bold text-white shadow-2xs transition-all sm:text-sm"
-                                            : "rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-emerald-800 sm:text-sm"
+                                            ? 'rounded-full bg-emerald-800 px-4 py-1.5 text-xs font-bold text-white shadow-2xs transition-all sm:text-sm'
+                                            : 'rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-emerald-800 sm:text-sm'
                                     }
                                     href={`#${item.id}`}
-                                    aria-current={isActive ? "true" : undefined}
+                                    aria-current={isActive ? 'true' : undefined}
                                 >
                                     {item.label}
                                 </a>
@@ -703,7 +810,7 @@ export default function Welcome({
                         >
                             <LayoutDashboard className="h-3.5 w-3.5" />
                             <span>
-                                {auth.user ? "Dashboard" : "Portal Operator"}
+                                {auth.user ? 'Dashboard' : 'Portal Operator'}
                             </span>
                         </Link>
                     </div>
@@ -741,7 +848,7 @@ export default function Welcome({
                         {/* Hero Title */}
                         <h1
                             data-hero-title
-                            className="font-['Plus_Jakarta_Sans',sans-serif] mb-5 max-w-3xl text-4xl leading-[1.14] font-extrabold tracking-tight text-slate-900 sm:text-5xl md:text-6xl"
+                            className="mb-5 max-w-3xl font-['Plus_Jakarta_Sans',sans-serif] text-4xl leading-[1.14] font-extrabold tracking-tight text-slate-900 sm:text-5xl md:text-6xl"
                         >
                             Selamat Datang di Website Resmi Desa Lero Tatari
                         </h1>
@@ -751,7 +858,10 @@ export default function Welcome({
                             data-hero-subtitle
                             className="mb-8 max-w-2xl text-base leading-relaxed font-normal text-slate-600 sm:text-lg"
                         >
-                        Pusat layanan digital terpadu, transparansi informasi publik, dan sarana mewujudkan masyarakat Lero Tatari yang maju, religius, serta berdaya saing.
+                            Pusat layanan digital terpadu, transparansi
+                            informasi publik, dan sarana mewujudkan masyarakat
+                            Lero Tatari yang maju, religius, serta berdaya
+                            saing.
                         </p>
 
                         {/* Hero CTA Buttons */}
@@ -788,7 +898,7 @@ export default function Welcome({
                                             demographic?.total_inhabitants ??
                                                 3428,
                                         )}
-                                    </strong>{" "}
+                                    </strong>{' '}
                                     Jiwa Terdata
                                 </span>
                             </div>
@@ -797,7 +907,7 @@ export default function Welcome({
                                 <span>
                                     <strong className="font-bold text-slate-900">
                                         6.66 km²
-                                    </strong>{" "}
+                                    </strong>{' '}
                                     Luas Wilayah
                                 </span>
                             </div>
@@ -806,7 +916,7 @@ export default function Welcome({
                                 <span>
                                     <strong className="font-bold text-slate-900">
                                         4 Dusun
-                                    </strong>{" "}
+                                    </strong>{' '}
                                     Kawasan Bahari
                                 </span>
                             </div>
@@ -827,7 +937,7 @@ export default function Welcome({
                             <span className="text-xs font-bold tracking-wider text-emerald-700 uppercase">
                                 PROFIL DESA LERO TATARI
                             </span>
-                            <h2 className="font-['Plus_Jakarta_Sans',sans-serif] mt-1.5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                            <h2 className="mt-1.5 font-['Plus_Jakarta_Sans',sans-serif] text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                                 Mengenal Desa Lero Tatari
                             </h2>
                             <div className="mt-3 h-1 w-12 rounded-full bg-emerald-700"></div>
@@ -847,24 +957,24 @@ export default function Welcome({
                                             alt={
                                                 head?.name
                                                     ? `Potret resmi ${head.name}`
-                                                    : "Potret resmi Kepala Desa Mansyur S. Palalo, S.Sos."
+                                                    : 'Potret resmi Kepala Desa Mansyur S. Palalo, S.Sos.'
                                             }
                                             src={
                                                 head?.photo_url ||
-                                                "https://lh3.googleusercontent.com/aida-public/AB6AXuD39_NM6McgXMWmMB8MHR8cl9EfIa7WxRTcDxs7MKcPGd7wBp0HpcxpjYi_5EfEAi_tA8Y_3d8rYVoVBoNutByUgbudT7uxkpgih4qg1xLwTZQEDE8ied3UcgGkZUN3b9Yod5b_emLf06RCq272yt9r24YsjTek9LdxGRruipjAq1uoBdEimTg2ZmkYaSWT6HBF0xoqFqKDx3_WVE5VTv_3vZCPCnRQYs3a0BsD5iyiH-DHny-RT0lq"
+                                                'https://lh3.googleusercontent.com/aida-public/AB6AXuD39_NM6McgXMWmMB8MHR8cl9EfIa7WxRTcDxs7MKcPGd7wBp0HpcxpjYi_5EfEAi_tA8Y_3d8rYVoVBoNutByUgbudT7uxkpgih4qg1xLwTZQEDE8ied3UcgGkZUN3b9Yod5b_emLf06RCq272yt9r24YsjTek9LdxGRruipjAq1uoBdEimTg2ZmkYaSWT6HBF0xoqFqKDx3_WVE5VTv_3vZCPCnRQYs3a0BsD5iyiH-DHny-RT0lq'
                                             }
                                         />
                                     </div>
                                     <h3 className="font-['Plus_Jakarta_Sans',sans-serif] text-lg font-bold text-slate-900">
                                         {head?.name ??
-                                            "Mansyur S. Palalo, S.Sos."}
+                                            'Mansyur S. Palalo, S.Sos.'}
                                     </h3>
                                     <p className="mt-0.5 text-xs font-semibold tracking-wider text-emerald-800 uppercase">
                                         {head?.position ??
-                                            "Kepala Desa Lero Tatari"}
+                                            'Kepala Desa Lero Tatari'}
                                         {vision?.period
                                             ? ` (${vision.period})`
-                                            : " (2021–2027)"}
+                                            : ' (2021–2027)'}
                                     </p>
                                     <span className="mt-0.5 text-xs text-slate-500">
                                         NIPD. 19780512 001
@@ -875,7 +985,7 @@ export default function Welcome({
                                         <Quote className="h-5 w-5" />
                                         <span>Sambutan Kepala Desa</span>
                                     </div>
-                                    <h4 className="font-['Plus_Jakarta_Sans',sans-serif] mb-4 text-xl leading-snug font-bold text-slate-900 sm:text-2xl">
+                                    <h4 className="mb-4 font-['Plus_Jakarta_Sans',sans-serif] text-xl leading-snug font-bold text-slate-900 sm:text-2xl">
                                         "Melayani dengan Hati, Membangun dengan
                                         Keterbukaan &amp; Gotong Royong."
                                     </h4>
@@ -918,13 +1028,14 @@ export default function Welcome({
                                 <span className="text-xs font-bold tracking-wider text-emerald-700 uppercase">
                                     WARISAN &amp; ASAL-USUL
                                 </span>
-                                <h3 className="font-['Plus_Jakarta_Sans',sans-serif] mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                                <h3 className="mt-1 font-['Plus_Jakarta_Sans',sans-serif] text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
                                     Jejak Sejarah Desa Lero Tatari
                                 </h3>
                                 <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-500">
-                                    Pemekaran Desa Lero Tatari berawal dari inisiatif
-                                    tokoh masyarakat dan pemuda untuk pemerataan
-                                    pembangunan di Kecamatan Sindue, Kabupaten Donggala.
+                                    Pemekaran Desa Lero Tatari berawal dari
+                                    inisiatif tokoh masyarakat dan pemuda untuk
+                                    pemerataan pembangunan di Kecamatan Sindue,
+                                    Kabupaten Donggala.
                                 </p>
                             </div>
 
@@ -936,19 +1047,22 @@ export default function Welcome({
                                     data-sejarah-img
                                     data-interactive-card
                                     className="relative overflow-hidden rounded-2xl lg:col-span-7"
-                                    style={{ willChange: "transform, opacity" }}
+                                    style={{ willChange: 'transform, opacity' }}
                                 >
                                     <img
                                         src="/images/Sejarah.png"
                                         alt="Peresmian Desa Lero Tatari"
                                         className="h-full w-full object-cover"
-                                        style={{ minHeight: '340px', maxHeight: '420px' }}
+                                        style={{
+                                            minHeight: '340px',
+                                            maxHeight: '420px',
+                                        }}
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
                                     <div className="absolute right-3 bottom-3 left-3 text-white">
-                                       
                                         <p className="mt-1 text-xs font-medium text-slate-200">
-                                            Peresmian Desa Lero Tatari &amp; Pelantikan Kepala Desa Lero Tatari
+                                            Peresmian Desa Lero Tatari &amp;
+                                            Pelantikan Kepala Desa Lero Tatari
                                         </p>
                                     </div>
                                 </div>
@@ -970,23 +1084,30 @@ export default function Welcome({
                                     </div>
 
                                     {/* Quote */}
-                                    <blockquote className="font-['Plus_Jakarta_Sans',sans-serif] text-xl font-bold leading-snug text-emerald-950">
-                                        &ldquo;Lero Tatari: Kebersamaan, Rumpun Kaili,
-                                        dan Obat Kebajikan&rdquo;
+                                    <blockquote className="font-['Plus_Jakarta_Sans',sans-serif] text-xl leading-snug font-bold text-emerald-950">
+                                        &ldquo;Lero Tatari: Kebersamaan, Rumpun
+                                        Kaili, dan Obat Kebajikan&rdquo;
                                     </blockquote>
 
                                     {/* Deskripsi */}
                                     <p className="mt-4 text-sm leading-relaxed text-emerald-900/90">
-                                        <span className="font-semibold">Lero</span>{' '}
-                                        tetap dipakai agar menjaga ingatan asal-usul
-                                        keluarga rumpun{' '}
-                                        <span className="font-semibold">To Kaili</span>.{' '}
-                                        <span className="font-semibold">Tatari</span>{' '}
-                                        adalah tumbuhan sejenis ilalang
-                                        yang merambat dan menjadi obat tradisional. Nama
-                                        ini melambangkan sifat warga yang suka membantu,
-                                        bergotong-royong, taat adab, dan membahagiakan
-                                        orang lain.
+                                        <span className="font-semibold">
+                                            Lero
+                                        </span>{' '}
+                                        tetap dipakai agar menjaga ingatan
+                                        asal-usul keluarga rumpun{' '}
+                                        <span className="font-semibold">
+                                            To Kaili
+                                        </span>
+                                        .{' '}
+                                        <span className="font-semibold">
+                                            Tatari
+                                        </span>{' '}
+                                        adalah tumbuhan sejenis ilalang yang
+                                        merambat dan menjadi obat tradisional.
+                                        Nama ini melambangkan sifat warga yang
+                                        suka membantu, bergotong-royong, taat
+                                        adab, dan membahagiakan orang lain.
                                     </p>
 
                                     {/* Badge */}
@@ -1009,31 +1130,37 @@ export default function Welcome({
                                 >
                                     <div>
                                         <h4 className="font-['Plus_Jakarta_Sans',sans-serif] text-xl font-bold text-slate-900">
-                                            Perjuangan Pemekaran Perahu Rono (2002–2003)
+                                            Perjuangan Pemekaran Perahu Rono
+                                            (2002–2003)
                                         </h4>
                                         <p className="mt-4 text-sm leading-relaxed text-slate-600">
-                                            Berawal dari aspirasi masyarakat tahun{' '}
+                                            Berawal dari aspirasi masyarakat
+                                            tahun{' '}
                                             <span className="font-semibold text-emerald-800">
                                                 2002
                                             </span>{' '}
-                                            untuk pemerataan fasilitas publik, tokoh
-                                            pemuda dan masyarakat yang dipimpin{' '}
+                                            untuk pemerataan fasilitas publik,
+                                            tokoh pemuda dan masyarakat yang
+                                            dipimpin{' '}
                                             <span className="font-semibold text-slate-800">
                                                 Andi Mumin Labaso
                                             </span>{' '}
-                                            mengajukan pemekaran dari Desa Lero Induk.
+                                            mengajukan pemekaran dari Desa Lero
+                                            Induk.
                                         </p>
                                         <p className="mt-3 text-sm leading-relaxed text-slate-600">
-                                            Keterbatasan biaya tidak menyurutkan semangat
-                                            warga; proposal pemekaran diantar langsung ke
-                                            Kantor Bupati Donggala menggunakan{' '}
+                                            Keterbatasan biaya tidak menyurutkan
+                                            semangat warga; proposal pemekaran
+                                            diantar langsung ke Kantor Bupati
+                                            Donggala menggunakan{' '}
                                             <span className="font-semibold text-emerald-700">
-                                                perahu tradisional penangkap ikan (Rono)
+                                                perahu tradisional penangkap
+                                                ikan (Rono)
                                             </span>{' '}
-                                            mengarungi laut. Penetapan tapal batas
-                                            disepakati menggunakan patokan batas alam
-                                            sungai dan pegunungan berdasarkan pesan
-                                            tokoh tua{' '}
+                                            mengarungi laut. Penetapan tapal
+                                            batas disepakati menggunakan patokan
+                                            batas alam sungai dan pegunungan
+                                            berdasarkan pesan tokoh tua{' '}
                                             <span className="font-semibold text-slate-800">
                                                 Drs. Hi. Indra Bangsawan Wumbu
                                             </span>{' '}
@@ -1045,7 +1172,10 @@ export default function Welcome({
                                             <Newspaper className="h-3.5 w-3.5 text-emerald-700" />
                                             Naskah Tutur &amp; Arsip Desa
                                         </span>
-                                        <span>Pencatatan Sejarah Komunal Desa Lero Tatari</span>
+                                        <span>
+                                            Pencatatan Sejarah Komunal Desa Lero
+                                            Tatari
+                                        </span>
                                     </div>
                                 </div>
 
@@ -1063,7 +1193,6 @@ export default function Welcome({
                                                 Tonggak Sejarah Desa
                                             </span>
                                         </div>
-                                        
                                     </div>
 
                                     {/* Timeline Items */}
@@ -1076,15 +1205,17 @@ export default function Welcome({
                                                 </div>
                                                 <div className="mt-1 w-0.5 flex-1 bg-emerald-200"></div>
                                             </div>
-                                            <div className="pb-2 pt-1">
+                                            <div className="pt-1 pb-2">
                                                 <h4 className="font-['Plus_Jakarta_Sans',sans-serif] text-sm font-bold text-slate-900">
-                                                    Musyawarah &amp; Tapal Batas Alam
+                                                    Musyawarah &amp; Tapal Batas
+                                                    Alam
                                                 </h4>
                                                 <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
-                                                    Kesepakatan batas alam sungai dan
-                                                    perbukitan bersama para tokoh
-                                                    masyarakat dan pengajuan proposal ke
-                                                    Pemkab Donggala.
+                                                    Kesepakatan batas alam
+                                                    sungai dan perbukitan
+                                                    bersama para tokoh
+                                                    masyarakat dan pengajuan
+                                                    proposal ke Pemkab Donggala.
                                                 </p>
                                             </div>
                                         </div>
@@ -1097,9 +1228,10 @@ export default function Welcome({
                                                 </div>
                                                 <div className="mt-1 w-0.5 flex-1 bg-emerald-200"></div>
                                             </div>
-                                            <div className="pb-2 pt-1">
+                                            <div className="pt-1 pb-2">
                                                 <h4 className="font-['Plus_Jakarta_Sans',sans-serif] text-sm font-bold text-slate-900">
-                                                    Peresmian &amp; Pj. Kades Pertama
+                                                    Peresmian &amp; Pj. Kades
+                                                    Pertama
                                                 </h4>
                                                 <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
                                                     Desa resmi dimekarkan pada{' '}
@@ -1110,7 +1242,8 @@ export default function Welcome({
                                                     <span className="font-semibold text-slate-700">
                                                         Andi Mumin Labaso, ST
                                                     </span>{' '}
-                                                    sebagai Penjabat Kepala Desa Pertama.
+                                                    sebagai Penjabat Kepala Desa
+                                                    Pertama.
                                                 </p>
                                             </div>
                                         </div>
@@ -1127,12 +1260,13 @@ export default function Welcome({
                                                     Penetapan Desa Definitif
                                                 </h4>
                                                 <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
-                                                    Resmi berstatus desa definitif mandiri
-                                                    pada{' '}
+                                                    Resmi berstatus desa
+                                                    definitif mandiri pada{' '}
                                                     <span className="font-semibold text-slate-700">
                                                         12 Mei 2004
                                                     </span>{' '}
-                                                    di Kecamatan Sindue, Kabupaten Donggala.
+                                                    di Kecamatan Sindue,
+                                                    Kabupaten Donggala.
                                                 </p>
                                             </div>
                                         </div>
@@ -1147,13 +1281,13 @@ export default function Welcome({
                                 <span className="text-xs font-bold tracking-wider text-emerald-700 uppercase">
                                     ARAH KEBIJAKAN
                                 </span>
-                                <h3 className="font-['Plus_Jakarta_Sans',sans-serif] mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                                <h3 className="mt-1 font-['Plus_Jakarta_Sans',sans-serif] text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
                                     Visi &amp; Misi Pembangunan Desa
                                 </h3>
                                 <p className="mt-1.5 max-w-xl text-sm text-slate-500">
                                     Arah kebijakan dan komitmen pelayanan Desa
-                                    Lero Tatari periode{" "}
-                                    {vision?.period || "2024–2029"}
+                                    Lero Tatari periode{' '}
+                                    {vision?.period || '2024–2029'}
                                 </p>
                             </div>
                             <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12">
@@ -1167,22 +1301,22 @@ export default function Welcome({
                                         <div className="mb-6 inline-flex items-center gap-1.5 rounded-full bg-emerald-700 px-3.5 py-1.5 text-xs font-semibold text-white shadow-2xs">
                                             <Sparkles className="h-3.5 w-3.5" />
                                             <span>
-                                                VISI DESA{" "}
-                                                {vision?.period || "2024–2029"}
+                                                VISI DESA{' '}
+                                                {vision?.period || '2024–2029'}
                                             </span>
                                         </div>
                                         <span className="mb-3 block text-xs font-bold tracking-wider text-emerald-800 uppercase">
                                             Cita-cita Luhur Bersama
                                         </span>
-                                        <blockquote className="font-['Plus_Jakarta_Sans',sans-serif] mb-4 text-2xl leading-snug font-extrabold tracking-tight text-emerald-950 sm:text-[28px]">
+                                        <blockquote className="mb-4 font-['Plus_Jakarta_Sans',sans-serif] text-2xl leading-snug font-extrabold tracking-tight text-emerald-950 sm:text-[28px]">
                                             “
                                             {vision?.vision_statement ||
-                                                "Terwujudnya Desa Lero Tatari yang Religius, Berdaya Saing Mandiri, Maju dalam Ekonomi Maritim-Agraris, dan Transparan Berbasis Pelayanan Digital."}
+                                                'Terwujudnya Desa Lero Tatari yang Religius, Berdaya Saing Mandiri, Maju dalam Ekonomi Maritim-Agraris, dan Transparan Berbasis Pelayanan Digital.'}
                                             ”
                                         </blockquote>
                                         <p className="text-xs leading-relaxed font-medium text-emerald-800">
-                                            RPJMDes Periode{" "}
-                                            {vision?.period || "2024–2029"} •
+                                            RPJMDes Periode{' '}
+                                            {vision?.period || '2024–2029'} •
                                             Landasan Utama Pembangunan Desa
                                         </p>
                                     </div>
@@ -1363,7 +1497,7 @@ export default function Welcome({
                                 <span className="text-xs font-bold tracking-wider text-emerald-700 uppercase">
                                     KONDISI WILAYAH
                                 </span>
-                                <h3 className="font-['Plus_Jakarta_Sans',sans-serif] mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                                <h3 className="mt-1 font-['Plus_Jakarta_Sans',sans-serif] text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
                                     Lokasi &amp; Geografis Desa
                                 </h3>
                                 <p className="mt-1.5 max-w-xl text-sm text-slate-500">
@@ -1389,7 +1523,7 @@ export default function Welcome({
                                             </div>
                                         </div>
                                         <div className="mt-4 grid grid-cols-2 gap-2.5 text-xs">
-                                            <div className="rounded-xl border border-sky-200/60 bg-white/80 p-2.5 backdrop-blur-2xs">
+                                            <div className="backdrop-blur-2xs rounded-xl border border-sky-200/60 bg-white/80 p-2.5">
                                                 <span className="block text-[10px] font-bold text-sky-700 uppercase">
                                                     Utara
                                                 </span>
@@ -1397,7 +1531,7 @@ export default function Welcome({
                                                     Sungai Desa Lero
                                                 </span>
                                             </div>
-                                            <div className="rounded-xl border border-sky-200/60 bg-white/80 p-2.5 backdrop-blur-2xs">
+                                            <div className="backdrop-blur-2xs rounded-xl border border-sky-200/60 bg-white/80 p-2.5">
                                                 <span className="block text-[10px] font-bold text-sky-700 uppercase">
                                                     Selatan
                                                 </span>
@@ -1405,7 +1539,7 @@ export default function Welcome({
                                                     Desa Dalaka
                                                 </span>
                                             </div>
-                                            <div className="rounded-xl border border-sky-200/60 bg-white/80 p-2.5 backdrop-blur-2xs">
+                                            <div className="backdrop-blur-2xs rounded-xl border border-sky-200/60 bg-white/80 p-2.5">
                                                 <span className="block text-[10px] font-bold text-sky-700 uppercase">
                                                     Timur
                                                 </span>
@@ -1413,7 +1547,7 @@ export default function Welcome({
                                                     Pegunungan Pantai Timur
                                                 </span>
                                             </div>
-                                            <div className="rounded-xl border border-sky-200/60 bg-white/80 p-2.5 backdrop-blur-2xs">
+                                            <div className="backdrop-blur-2xs rounded-xl border border-sky-200/60 bg-white/80 p-2.5">
                                                 <span className="block text-[10px] font-bold text-sky-700 uppercase">
                                                     Barat
                                                 </span>
@@ -1439,7 +1573,7 @@ export default function Welcome({
                                             </div>
                                         </div>
                                         <div className="mt-4">
-                                            <span className="font-['Plus_Jakarta_Sans',sans-serif] block text-3xl font-extrabold tracking-tight text-amber-950 sm:text-4xl">
+                                            <span className="block font-['Plus_Jakarta_Sans',sans-serif] text-3xl font-extrabold tracking-tight text-amber-950 sm:text-4xl">
                                                 16 – 176 mdpl
                                             </span>
                                             <span className="mt-1 block text-xs font-semibold text-amber-800">
@@ -1460,7 +1594,6 @@ export default function Welcome({
                                         <h2 className="font-['Plus_Jakarta_Sans',sans-serif] font-bold text-gray-900">
                                             Peta Desa Lero Tatari
                                         </h2>
-                                        
                                     </div>
                                     <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
                                         <iframe
@@ -1525,7 +1658,7 @@ export default function Welcome({
                                         </div>
                                         <div className="mt-3 flex items-end justify-between">
                                             <div className="z-10">
-                                                <span className="font-['Plus_Jakarta_Sans',sans-serif] block text-3xl font-black tracking-tight text-emerald-950 sm:text-4xl">
+                                                <span className="block font-['Plus_Jakarta_Sans',sans-serif] text-3xl font-black tracking-tight text-emerald-950 sm:text-4xl">
                                                     24°C – 31°C
                                                 </span>
                                                 <span className="mt-1 block text-xs font-semibold text-emerald-800">
@@ -1577,7 +1710,7 @@ export default function Welcome({
                                                 </div>
                                             </div>
                                             <div className="mt-2">
-                                                <span className="font-['Plus_Jakarta_Sans',sans-serif] block text-3xl font-black tracking-tight text-amber-950 sm:text-4xl">
+                                                <span className="block font-['Plus_Jakarta_Sans',sans-serif] text-3xl font-black tracking-tight text-amber-950 sm:text-4xl">
                                                     78%
                                                 </span>
                                                 <span className="mt-0.5 block text-xs font-semibold text-amber-900">
@@ -1639,7 +1772,7 @@ export default function Welcome({
                                 <span className="text-xs font-bold tracking-wider text-emerald-700 uppercase">
                                     PEMERINTAHAN DESA
                                 </span>
-                                <h2 className="font-['Plus_Jakarta_Sans',sans-serif] mt-1.5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                                <h2 className="mt-1.5 font-['Plus_Jakarta_Sans',sans-serif] text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                                     Struktur Perangkat Desa
                                 </h2>
                                 <p className="mt-2 max-w-xl text-sm text-slate-600">
@@ -1648,14 +1781,12 @@ export default function Welcome({
                                     kemasyarakatan warga.
                                 </p>
                             </div>
-                            <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-emerald-800 shadow-2xs">
-                        
-                            </div>
+                            <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-emerald-800 shadow-2xs"></div>
                         </div>
 
                         {/* Complete Organigram Tree */}
                         <div className="w-full overflow-x-auto pb-6">
-                            <div className="mx-auto flex min-w-[1020px] w-full select-none flex-col items-center px-2 py-4">
+                            <div className="mx-auto flex w-full min-w-[1020px] flex-col items-center px-2 py-4 select-none">
                                 {/* Level 1: BPD & Kepala Desa */}
                                 <div className="relative mb-2 flex w-full max-w-4xl items-center justify-center gap-10">
                                     {/* BPD Card */}
@@ -1671,7 +1802,7 @@ export default function Welcome({
                                             <span className="mb-1 inline-block rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-bold tracking-wider text-amber-800 uppercase">
                                                 Mitra Pengawas
                                             </span>
-                                            <h4 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-sm font-bold text-slate-900 leading-tight">
+                                            <h4 className="truncate font-['Plus_Jakarta_Sans',sans-serif] text-sm leading-tight font-bold text-slate-900">
                                                 BPD
                                             </h4>
                                             <p className="truncate text-[11px] text-slate-500">
@@ -1699,8 +1830,8 @@ export default function Welcome({
                                             <span className="mb-1 inline-block rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[9px] font-bold tracking-wider text-emerald-800 uppercase">
                                                 Kepala Desa
                                             </span>
-                                            <h3 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-base font-extrabold text-slate-900 uppercase leading-tight">
-                                                {head?.name ?? "UMURJIN"}
+                                            <h3 className="truncate font-['Plus_Jakarta_Sans',sans-serif] text-base leading-tight font-extrabold text-slate-900 uppercase">
+                                                {head?.name ?? 'UMURJIN'}
                                             </h3>
                                             <p className="truncate text-[11px] font-medium text-slate-500">
                                                 Pimpinan Pemerintah Desa
@@ -1729,9 +1860,9 @@ export default function Welcome({
                                             <span className="mb-1 inline-block rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[9px] font-bold tracking-wider text-emerald-800 uppercase">
                                                 Sekretaris Desa
                                             </span>
-                                            <h4 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-sm font-extrabold text-slate-900 uppercase leading-tight">
+                                            <h4 className="truncate font-['Plus_Jakarta_Sans',sans-serif] text-sm leading-tight font-extrabold text-slate-900 uppercase">
                                                 {secretary?.name ??
-                                                    "ARFAN, S.Pd"}
+                                                    'ARFAN, S.Pd'}
                                             </h4>
                                             <p className="truncate text-[11px] text-slate-500">
                                                 Administrasi &amp; Tata Usaha
@@ -1774,9 +1905,9 @@ export default function Welcome({
                                                         <span className="mb-1 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-bold tracking-wider text-emerald-800 uppercase">
                                                             KASI PEMERINTAHAN
                                                         </span>
-                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900 uppercase">
+                                                        <h5 className="w-full truncate font-['Plus_Jakarta_Sans',sans-serif] text-xs font-bold text-slate-900 uppercase">
                                                             {kasiPemerintahan?.name ??
-                                                                "FIRMAN"}
+                                                                'FIRMAN'}
                                                         </h5>
                                                         <span className="mt-0.5 block w-full truncate text-[10px] text-slate-500">
                                                             Tata Praja &amp;
@@ -1794,9 +1925,9 @@ export default function Welcome({
                                                         <span className="mb-1 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-bold tracking-wider text-emerald-800 uppercase">
                                                             KASI KESEJAHTERAAN
                                                         </span>
-                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900 uppercase">
+                                                        <h5 className="w-full truncate font-['Plus_Jakarta_Sans',sans-serif] text-xs font-bold text-slate-900 uppercase">
                                                             {kasiKesejahteraan?.name ??
-                                                                "RUSLAN"}
+                                                                'RUSLAN'}
                                                         </h5>
                                                         <span className="mt-0.5 block w-full truncate text-[10px] text-slate-500">
                                                             Bansos &amp;
@@ -1814,9 +1945,9 @@ export default function Welcome({
                                                         <span className="mb-1 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-bold tracking-wider text-emerald-800 uppercase">
                                                             KASI PELAYANAN
                                                         </span>
-                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900 uppercase">
+                                                        <h5 className="w-full truncate font-['Plus_Jakarta_Sans',sans-serif] text-xs font-bold text-slate-900 uppercase">
                                                             {kasiPelayanan?.name ??
-                                                                "HASANUDIN"}
+                                                                'HASANUDIN'}
                                                         </h5>
                                                         <span className="mt-0.5 block w-full truncate text-[10px] text-slate-500">
                                                             Pelayanan Warga
@@ -1845,9 +1976,9 @@ export default function Welcome({
                                                         <span className="mb-1 inline-block rounded-full bg-[#E0F2FE] px-2 py-0.5 text-[9px] font-bold tracking-wider text-sky-700 uppercase">
                                                             KAUR UMUM &amp; T.U
                                                         </span>
-                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900 uppercase">
+                                                        <h5 className="w-full truncate font-['Plus_Jakarta_Sans',sans-serif] text-xs font-bold text-slate-900 uppercase">
                                                             {kaurUmum?.name ??
-                                                                "SARIFUDIN"}
+                                                                'SARIFUDIN'}
                                                         </h5>
                                                         <span className="mt-0.5 block w-full truncate text-[10px] text-slate-500">
                                                             Ketatausahaan &amp;
@@ -1865,9 +1996,9 @@ export default function Welcome({
                                                         <span className="mb-1 inline-block rounded-full bg-[#E0F2FE] px-2 py-0.5 text-[9px] font-bold tracking-wider text-sky-700 uppercase">
                                                             KAUR KEUANGAN
                                                         </span>
-                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900 uppercase">
+                                                        <h5 className="w-full truncate font-['Plus_Jakarta_Sans',sans-serif] text-xs font-bold text-slate-900 uppercase">
                                                             {kaurKeuangan?.name ??
-                                                                "NURLAELA"}
+                                                                'NURLAELA'}
                                                         </h5>
                                                         <span className="mt-0.5 block w-full truncate text-[10px] text-slate-500">
                                                             Bendahara &amp;
@@ -1885,9 +2016,9 @@ export default function Welcome({
                                                         <span className="mb-1 inline-block rounded-full bg-[#E0F2FE] px-2 py-0.5 text-[9px] font-bold tracking-wider text-sky-700 uppercase">
                                                             KAUR PERENCANAAN
                                                         </span>
-                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900 uppercase">
+                                                        <h5 className="w-full truncate font-['Plus_Jakarta_Sans',sans-serif] text-xs font-bold text-slate-900 uppercase">
                                                             {kaurPerencanaan?.name ??
-                                                                "AHMAD"}
+                                                                'AHMAD'}
                                                         </h5>
                                                         <span className="mt-0.5 block w-full truncate text-[10px] text-slate-500">
                                                             Program &amp; Data
@@ -1927,9 +2058,9 @@ export default function Welcome({
                                                     <span className="mb-0.5 inline-block rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold tracking-wider text-slate-700 uppercase">
                                                         KEPALA DUSUN I
                                                     </span>
-                                                    <h5 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-xs font-bold text-slate-900 uppercase">
+                                                    <h5 className="truncate font-['Plus_Jakarta_Sans',sans-serif] text-xs font-bold text-slate-900 uppercase">
                                                         {kadusun1?.name ??
-                                                            "ISMAIL"}
+                                                            'ISMAIL'}
                                                     </h5>
                                                     <span className="block truncate text-[10px] text-slate-500">
                                                         Wilayah Dusun 1
@@ -1948,9 +2079,9 @@ export default function Welcome({
                                                     <span className="mb-0.5 inline-block rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold tracking-wider text-slate-700 uppercase">
                                                         KEPALA DUSUN II
                                                     </span>
-                                                    <h5 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-xs font-bold text-slate-900 uppercase">
+                                                    <h5 className="truncate font-['Plus_Jakarta_Sans',sans-serif] text-xs font-bold text-slate-900 uppercase">
                                                         {kadusun2?.name ??
-                                                            "MOH. TAHIR"}
+                                                            'MOH. TAHIR'}
                                                     </h5>
                                                     <span className="block truncate text-[10px] text-slate-500">
                                                         Wilayah Dusun 2
@@ -1969,9 +2100,9 @@ export default function Welcome({
                                                     <span className="mb-0.5 inline-block rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold tracking-wider text-slate-700 uppercase">
                                                         KEPALA DUSUN III
                                                     </span>
-                                                    <h5 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-xs font-bold text-slate-900 uppercase">
+                                                    <h5 className="truncate font-['Plus_Jakarta_Sans',sans-serif] text-xs font-bold text-slate-900 uppercase">
                                                         {kadusun3?.name ??
-                                                            "BAHTIAR"}
+                                                            'BAHTIAR'}
                                                     </h5>
                                                     <span className="block truncate text-[10px] text-slate-500">
                                                         Wilayah Dusun 3
@@ -1990,9 +2121,9 @@ export default function Welcome({
                                                     <span className="mb-0.5 inline-block rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold tracking-wider text-slate-700 uppercase">
                                                         KEPALA DUSUN IV
                                                     </span>
-                                                    <h5 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-xs font-bold text-slate-900 uppercase">
+                                                    <h5 className="truncate font-['Plus_Jakarta_Sans',sans-serif] text-xs font-bold text-slate-900 uppercase">
                                                         {kadusun4?.name ??
-                                                            "SAMSUDIN"}
+                                                            'SAMSUDIN'}
                                                     </h5>
                                                     <span className="block truncate text-[10px] text-slate-500">
                                                         Wilayah Dusun 4
@@ -2035,7 +2166,7 @@ export default function Welcome({
                             <span className="text-xs font-bold tracking-wider text-emerald-700 uppercase">
                                 TRANSPARANSI DATA
                             </span>
-                            <h2 className="font-['Plus_Jakarta_Sans',sans-serif] mt-1.5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                            <h2 className="mt-1.5 font-['Plus_Jakarta_Sans',sans-serif] text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                                 Data Statistik &amp; Demografi Desa
                             </h2>
                             <p className="mt-2 max-w-xl text-sm text-slate-500">
@@ -2064,8 +2195,11 @@ export default function Welcome({
                                     </div>
                                     <div>
                                         <span
-                                            className="font-['Plus_Jakarta_Sans',sans-serif] block text-4xl font-extrabold tracking-tight text-slate-800 sm:text-5xl"
-                                            data-counter={demographic?.total_inhabitants ?? 3428}
+                                            className="block font-['Plus_Jakarta_Sans',sans-serif] text-4xl font-extrabold tracking-tight text-slate-800 sm:text-5xl"
+                                            data-counter={
+                                                demographic?.total_inhabitants ??
+                                                3428
+                                            }
                                             data-counter-format="int"
                                         >
                                             {formatNumber(
@@ -2086,7 +2220,7 @@ export default function Welcome({
                                     className="relative flex h-[220px] flex-col justify-between overflow-hidden rounded-[24px] bg-[#CCFBF1] p-6"
                                 >
                                     <div className="z-10">
-                                        <h3 className="font-['Plus_Jakarta_Sans',sans-serif] text-lg font-bold text-slate-800 leading-snug">
+                                        <h3 className="font-['Plus_Jakarta_Sans',sans-serif] text-lg leading-snug font-bold text-slate-800">
                                             Mata Pencaharian Utama
                                         </h3>
                                         <div className="mt-3 space-y-1.5 text-sm font-medium text-slate-700">
@@ -2159,7 +2293,7 @@ export default function Welcome({
                                     className="relative flex h-[454px] flex-col justify-between overflow-hidden rounded-[24px] bg-[#D1FAE5] p-7"
                                 >
                                     <div>
-                                        <span className="font-['Plus_Jakarta_Sans',sans-serif] block text-lg font-bold text-emerald-900">
+                                        <span className="block font-['Plus_Jakarta_Sans',sans-serif] text-lg font-bold text-emerald-900">
                                             Wilayah Desa Lero Tatari
                                         </span>
                                         <span className="mt-0.5 block text-xs font-medium text-emerald-700">
@@ -2221,11 +2355,11 @@ export default function Welcome({
                                     <div>
                                         <div className="mb-3">
                                             <span
-                                            className="font-['Plus_Jakarta_Sans',sans-serif] block text-5xl font-black tracking-tight text-emerald-950"
-                                            data-counter="6.66"
-                                            data-counter-format="decimal"
-                                            data-counter-suffix=" km²"
-                                        >
+                                                className="block font-['Plus_Jakarta_Sans',sans-serif] text-5xl font-black tracking-tight text-emerald-950"
+                                                data-counter="6.66"
+                                                data-counter-format="decimal"
+                                                data-counter-suffix=" km²"
+                                            >
                                                 6.66 km²
                                             </span>
                                             <span className="mt-0.5 block text-sm font-medium text-emerald-800">
@@ -2257,8 +2391,11 @@ export default function Welcome({
                                     </div>
                                     <div>
                                         <span
-                                            className="font-['Plus_Jakarta_Sans',sans-serif] block text-4xl font-extrabold tracking-tight text-slate-800 sm:text-5xl"
-                                            data-counter={demographic?.total_families ?? 892}
+                                            className="block font-['Plus_Jakarta_Sans',sans-serif] text-4xl font-extrabold tracking-tight text-slate-800 sm:text-5xl"
+                                            data-counter={
+                                                demographic?.total_families ??
+                                                892
+                                            }
                                             data-counter-format="int"
                                         >
                                             {formatNumber(
@@ -2288,7 +2425,7 @@ export default function Welcome({
                                     </div>
                                     <div>
                                         <span
-                                            className="font-['Plus_Jakarta_Sans',sans-serif] block text-4xl font-black tracking-tight text-emerald-950 sm:text-5xl"
+                                            className="block font-['Plus_Jakarta_Sans',sans-serif] text-4xl font-black tracking-tight text-emerald-950 sm:text-5xl"
                                             data-counter="254"
                                             data-counter-format="int"
                                             data-counter-suffix=" "
@@ -2323,7 +2460,7 @@ export default function Welcome({
                                     </div>
                                     <div>
                                         <span
-                                            className="font-['Plus_Jakarta_Sans',sans-serif] block text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl"
+                                            className="block font-['Plus_Jakarta_Sans',sans-serif] text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl"
                                             data-counter="61.1"
                                             data-counter-format="percent"
                                             data-counter-suffix="%"
@@ -2360,7 +2497,7 @@ export default function Welcome({
                                         <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
                                             <div
                                                 className="h-full rounded-full bg-emerald-600 transition-all duration-1000"
-                                                style={{ width: "68%" }}
+                                                style={{ width: '68%' }}
                                             ></div>
                                         </div>
                                         <div className="flex items-center justify-between pt-1 text-xs">
@@ -2375,7 +2512,7 @@ export default function Welcome({
                                         <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
                                             <div
                                                 className="h-full rounded-full bg-blue-400 transition-all duration-1000"
-                                                style={{ width: "32%" }}
+                                                style={{ width: '32%' }}
                                             ></div>
                                         </div>
 
@@ -2391,7 +2528,7 @@ export default function Welcome({
                                         <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
                                             <div
                                                 className="h-full rounded-full bg-slate-400 transition-all duration-1000"
-                                                style={{ width: "6%" }}
+                                                style={{ width: '6%' }}
                                             ></div>
                                         </div>
                                     </div>
@@ -2423,7 +2560,7 @@ export default function Welcome({
                                 <div className="relative z-10 mt-4">
                                     <div className="flex items-baseline gap-2">
                                         <span
-                                            className="font-['Plus_Jakarta_Sans',sans-serif] block text-4xl font-extrabold tracking-tight text-purple-950 sm:text-5xl"
+                                            className="block font-['Plus_Jakarta_Sans',sans-serif] text-4xl font-extrabold tracking-tight text-purple-950 sm:text-5xl"
                                             data-counter={maleCount}
                                             data-counter-format="int"
                                         >
@@ -2437,7 +2574,6 @@ export default function Welcome({
                                         <span className="inline-flex items-center rounded-full border border-purple-300/60 bg-white/80 px-2.5 py-0.5 text-[11px] font-bold text-purple-900 shadow-2xs">
                                             {malePercent}% dari Total
                                         </span>
-
                                     </div>
                                 </div>
                                 {/* Abstract decorative 2D SVG graphic in corner */}
@@ -2487,7 +2623,7 @@ export default function Welcome({
                                 <div className="relative z-10 mt-4">
                                     <div className="flex items-baseline gap-2">
                                         <span
-                                            className="font-['Plus_Jakarta_Sans',sans-serif] block text-4xl font-extrabold tracking-tight text-pink-950 sm:text-5xl"
+                                            className="block font-['Plus_Jakarta_Sans',sans-serif] text-4xl font-extrabold tracking-tight text-pink-950 sm:text-5xl"
                                             data-counter={femaleCount}
                                             data-counter-format="int"
                                         >
@@ -2501,7 +2637,6 @@ export default function Welcome({
                                         <span className="inline-flex items-center rounded-full border border-pink-300/60 bg-white/80 px-2.5 py-0.5 text-[11px] font-bold text-pink-900 shadow-2xs">
                                             {femalePercent}% dari Total
                                         </span>
-
                                     </div>
                                 </div>
                                 {/* Abstract decorative 2D SVG graphic in corner */}
@@ -2592,11 +2727,10 @@ export default function Welcome({
                                         </div>
                                         <div className="flex items-center justify-between pt-0.5 text-[10px] text-amber-800/90">
                                             <span>
-                                                Perbandingan:{" "}
-                                                {formatNumber(maleCount)} L /{" "}
+                                                Perbandingan:{' '}
+                                                {formatNumber(maleCount)} L /{' '}
                                                 {formatNumber(femaleCount)} P
                                             </span>
-                                           
                                         </div>
                                     </div>
                                 </div>
@@ -2650,7 +2784,7 @@ export default function Welcome({
                                             <span className="font-bold text-slate-800">
                                                 {formatNumber(
                                                     demographic.sd_graduates,
-                                                )}{" "}
+                                                )}{' '}
                                                 Jiwa
                                             </span>
                                         </div>
@@ -2661,7 +2795,7 @@ export default function Welcome({
                                             <span className="font-bold text-slate-800">
                                                 {formatNumber(
                                                     demographic.sltp_graduates,
-                                                )}{" "}
+                                                )}{' '}
                                                 Jiwa
                                             </span>
                                         </div>
@@ -2672,7 +2806,7 @@ export default function Welcome({
                                             <span className="font-bold text-slate-800">
                                                 {formatNumber(
                                                     demographic.slta_graduates,
-                                                )}{" "}
+                                                )}{' '}
                                                 Jiwa
                                             </span>
                                         </div>
@@ -2683,7 +2817,7 @@ export default function Welcome({
                                             <span className="font-bold text-slate-800">
                                                 {formatNumber(
                                                     demographic.higher_education_graduates,
-                                                )}{" "}
+                                                )}{' '}
                                                 Jiwa
                                             </span>
                                         </div>
@@ -2712,16 +2846,16 @@ export default function Welcome({
                                             <span className="block text-[11px] font-semibold text-amber-800">
                                                 Kebun Kelapa
                                             </span>
-                                            <p className="font-['Plus_Jakarta_Sans',sans-serif] mt-1 text-xl font-bold text-amber-950">
+                                            <p className="mt-1 font-['Plus_Jakarta_Sans',sans-serif] text-xl font-bold text-amber-950">
                                                 {formatDecimal(
                                                     demographic.coconut_land_area,
-                                                )}{" "}
+                                                )}{' '}
                                                 Ha
                                             </p>
                                             <span className="text-[10px] text-slate-500">
                                                 {formatDecimal(
                                                     demographic.coconut_production,
-                                                )}{" "}
+                                                )}{' '}
                                                 Ton / Thn
                                             </span>
                                         </div>
@@ -2729,16 +2863,16 @@ export default function Welcome({
                                             <span className="block text-[11px] font-semibold text-amber-800">
                                                 Lahan Jagung
                                             </span>
-                                            <p className="font-['Plus_Jakarta_Sans',sans-serif] mt-1 text-xl font-bold text-amber-950">
+                                            <p className="mt-1 font-['Plus_Jakarta_Sans',sans-serif] text-xl font-bold text-amber-950">
                                                 {formatDecimal(
                                                     demographic.corn_land_area,
-                                                )}{" "}
+                                                )}{' '}
                                                 Ha
                                             </p>
                                             <span className="text-[10px] text-slate-500">
                                                 {formatDecimal(
                                                     demographic.corn_production,
-                                                )}{" "}
+                                                )}{' '}
                                                 Ton / Thn
                                             </span>
                                         </div>
@@ -2759,7 +2893,7 @@ export default function Welcome({
                                     </div>
                                     <div className="grid grid-cols-3 gap-2 text-center">
                                         <div className="rounded-xl bg-slate-50 p-2.5">
-                                            <span className="font-['Plus_Jakarta_Sans',sans-serif] block text-base font-bold text-emerald-800">
+                                            <span className="block font-['Plus_Jakarta_Sans',sans-serif] text-base font-bold text-emerald-800">
                                                 {formatNumber(
                                                     demographic.piped_water_families,
                                                 )}
@@ -2769,7 +2903,7 @@ export default function Welcome({
                                             </span>
                                         </div>
                                         <div className="rounded-xl bg-slate-50 p-2.5">
-                                            <span className="font-['Plus_Jakarta_Sans',sans-serif] block text-base font-bold text-emerald-800">
+                                            <span className="block font-['Plus_Jakarta_Sans',sans-serif] text-base font-bold text-emerald-800">
                                                 {formatNumber(
                                                     demographic.healthy_wc_families,
                                                 )}
@@ -2779,7 +2913,7 @@ export default function Welcome({
                                             </span>
                                         </div>
                                         <div className="rounded-xl bg-slate-50 p-2.5">
-                                            <span className="font-['Plus_Jakarta_Sans',sans-serif] block text-base font-bold text-emerald-800">
+                                            <span className="block font-['Plus_Jakarta_Sans',sans-serif] text-base font-bold text-emerald-800">
                                                 {formatNumber(
                                                     demographic.brick_houses,
                                                 )}
@@ -2811,7 +2945,7 @@ export default function Welcome({
                                 <span className="text-xs font-bold tracking-wider text-emerald-700 uppercase">
                                     KABAR DESA
                                 </span>
-                                <h2 className="font-['Plus_Jakarta_Sans',sans-serif] mt-1.5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                                <h2 className="mt-1.5 font-['Plus_Jakarta_Sans',sans-serif] text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                                     Warta &amp; Pengumuman Terkini
                                 </h2>
                                 <p className="mt-2 max-w-xl text-sm text-slate-600">
@@ -2819,68 +2953,118 @@ export default function Welcome({
                                     masyarakat, dan agenda resmi desa.
                                 </p>
                             </div>
-                            <a
-                                className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-800 transition-colors hover:text-emerald-900 hover:underline sm:text-sm"
-                                href="#berita"
-                            >
-                                <span>Arsip Seluruh Berita</span>
-                                <ArrowRight className="h-4 w-4" />
-                            </a>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        scrollTrack(
+                                            newsTrackRef,
+                                            'data-news-card',
+                                            'left',
+                                        )
+                                    }
+                                    aria-label="Geser berita ke kiri"
+                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:bg-emerald-700 hover:text-white"
+                                >
+                                    <ChevronLeft className="h-5 w-5" />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        scrollTrack(
+                                            newsTrackRef,
+                                            'data-news-card',
+                                            'right',
+                                        )
+                                    }
+                                    aria-label="Geser berita ke kanan"
+                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:bg-emerald-700 hover:text-white"
+                                >
+                                    <ChevronRight className="h-5 w-5" />
+                                </button>
+                            </div>
                         </div>
 
-                        {/* 3-Column Card Grid */}
-                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                            {displayNews.slice(0, 3).map((article) => (
-                                <article
+                        {/* Horizontal scrollable card track */}
+                        <div
+                            ref={newsTrackRef}
+                            className="no-scrollbar -mx-6 flex snap-x snap-mandatory scroll-px-6 gap-5 overflow-x-auto px-6 pt-2 pb-2 lg:-mx-8 lg:scroll-px-8 lg:px-8"
+                        >
+                            {displayNews.map((article) => (
+                                <div
                                     key={article.id}
+                                    data-news-card
                                     data-gsap-card
                                     data-interactive-card
-                                    className="group flex flex-col justify-between overflow-hidden rounded-xl border border-slate-200 bg-white transition-all hover:border-emerald-700"
+                                    className="w-72 shrink-0 snap-start sm:w-80 lg:w-96"
                                 >
-                                    <div>
-                                        <div className="aspect-[16/10] w-full overflow-hidden bg-slate-100">
-                                            {article.image_url ? (
-                                                <img
-                                                    alt={article.title}
-                                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                                    src={article.image_url}
-                                                />
-                                            ) : (
-                                                <div className="flex h-full w-full items-center justify-center bg-emerald-50">
-                                                    <Newspaper className="h-10 w-10 text-emerald-600" />
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="p-6">
-                                            <div className="mb-3 flex items-center gap-2">
-                                                <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-800">
-                                                    {article.category ||
-                                                        "Kabar Warga"}
-                                                </span>
-                                                <span className="flex items-center gap-1 text-xs font-medium text-slate-500">
-                                                    <Calendar className="h-3.5 w-3.5" />
-                                                    {article.published_at ||
-                                                        "Terbaru"}
-                                                </span>
+                                    <article
+                                        data-interactive-card
+                                        className="group flex h-full flex-col justify-between overflow-hidden rounded-xl border border-slate-200 bg-white transition-all hover:border-emerald-700"
+                                    >
+                                        <div>
+                                            <div className="aspect-[16/10] w-full overflow-hidden bg-slate-100">
+                                                {article.image_path ? (
+                                                    <img
+                                                        alt={article.title}
+                                                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                        src={article.image_path}
+                                                    />
+                                                ) : (
+                                                    <div className="flex h-full w-full items-center justify-center bg-emerald-50">
+                                                        <Newspaper className="h-10 w-10 text-emerald-600" />
+                                                    </div>
+                                                )}
                                             </div>
-                                            <h3 className="font-['Plus_Jakarta_Sans',sans-serif] line-clamp-2 text-base font-bold text-slate-900 leading-snug transition-colors group-hover:text-emerald-700">
-                                                {article.title}
-                                            </h3>
-                                            <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-slate-600 sm:text-sm">
-                                                {article.excerpt}
-                                            </p>
+                                            <div className="p-6">
+                                                <div className="mb-3 flex items-center gap-2">
+                                                    <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-800">
+                                                        {article.category ||
+                                                            'Kabar Warga'}
+                                                    </span>
+                                                    <span className="flex items-center gap-1 text-xs font-medium text-slate-500">
+                                                        <Calendar className="h-3.5 w-3.5" />
+                                                        {article.published_at
+                                                            ? formatDate(
+                                                                  article.published_at,
+                                                              )
+                                                            : 'Terbaru'}
+                                                    </span>
+                                                </div>
+                                                <h3 className="line-clamp-2 font-['Plus_Jakarta_Sans',sans-serif] text-base leading-snug font-bold text-slate-900">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            setNewsDetail(
+                                                                article,
+                                                            )
+                                                        }
+                                                        aria-label={`Buka detail ${article.title}`}
+                                                        className="cursor-pointer text-left transition-colors hover:text-emerald-700"
+                                                    >
+                                                        {article.title}
+                                                    </button>
+                                                </h3>
+                                                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-slate-600 sm:text-sm">
+                                                    {excerptOf(article.content)}
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="p-6 pt-0">
-                                        <a
-                                            className="inline-flex items-center gap-1 text-xs font-bold text-emerald-800 transition-all group-hover:gap-2 hover:text-emerald-900"
-                                            href="#berita"
-                                        >
-                                            <span>Baca Selengkapnya</span>
-                                            <ArrowRight className="h-4 w-4" />
-                                        </a>
-                                    </div>
-                                </article>
+                                        <div className="p-6 pt-0">
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setNewsDetail(article)
+                                                }
+                                                aria-label={`Buka detail ${article.title}`}
+                                                className="inline-flex cursor-pointer items-center gap-1 text-xs font-bold text-emerald-800 transition-all group-hover:gap-2 hover:text-emerald-900"
+                                            >
+                                                <span>Baca Selengkapnya</span>
+                                                <ArrowRight className="h-4 w-4" />
+                                            </button>
+                                        </div>
+                                    </article>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -2894,38 +3078,79 @@ export default function Welcome({
                 >
                     <div className="mx-auto max-w-7xl px-6 lg:px-8">
                         {/* Section Header */}
-                        <div data-gsap-header className="mb-16">
-                            <span className="text-xs font-bold tracking-wider text-emerald-700 uppercase">
-                                POTENSI DESA
-                            </span>
-                            <h2 className="font-['Plus_Jakarta_Sans',sans-serif] mt-1.5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-                                Destinasi Wisata Unggulan
-                            </h2>
-                            <p className="mt-2 max-w-xl text-sm text-slate-600">
-                                Pesona keindahan bentang alam bahari, panorama
-                                perbukitan, serta kearifan budaya masyarakat
-                                lokal.
-                            </p>
+                        <div
+                            data-gsap-header
+                            className="mb-16 flex flex-col justify-between gap-4 md:flex-row md:items-end"
+                        >
+                            <div>
+                                <span className="text-xs font-bold tracking-wider text-emerald-700 uppercase">
+                                    POTENSI DESA
+                                </span>
+                                <h2 className="mt-1.5 font-['Plus_Jakarta_Sans',sans-serif] text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                                    Destinasi Wisata Unggulan
+                                </h2>
+                                <p className="mt-2 max-w-xl text-sm text-slate-600">
+                                    Pesona keindahan bentang alam bahari,
+                                    panorama perbukitan, serta kearifan budaya
+                                    masyarakat lokal.
+                                </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        scrollTrack(
+                                            destinationsTrackRef,
+                                            'data-dest-card',
+                                            'left',
+                                        )
+                                    }
+                                    aria-label="Geser wisata ke kiri"
+                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:bg-emerald-700 hover:text-white"
+                                >
+                                    <ChevronLeft className="h-5 w-5" />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        scrollTrack(
+                                            destinationsTrackRef,
+                                            'data-dest-card',
+                                            'right',
+                                        )
+                                    }
+                                    aria-label="Geser wisata ke kanan"
+                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:bg-emerald-700 hover:text-white"
+                                >
+                                    <ChevronRight className="h-5 w-5" />
+                                </button>
+                            </div>
                         </div>
 
-                        {/* 3 Destination Cards Grid */}
-                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                            {displayDestinations
-                                .slice(0, 3)
-                                .map((item, idx) => (
+                        {/* Horizontal scrollable destination track */}
+                        <div
+                            ref={destinationsTrackRef}
+                            className="no-scrollbar -mx-6 flex snap-x snap-mandatory scroll-px-6 gap-5 overflow-x-auto px-6 pt-2 pb-2 lg:-mx-8 lg:scroll-px-8 lg:px-8"
+                        >
+                            {displayDestinations.map((item) => (
+                                <div
+                                    key={item.id}
+                                    data-dest-card
+                                    data-gsap-card
+                                    data-interactive-card
+                                    className="w-72 shrink-0 snap-start sm:w-80 lg:w-96"
+                                >
                                     <div
-                                        key={item.title}
-                                        data-gsap-card
                                         data-interactive-card
-                                        className="group flex flex-col justify-between overflow-hidden rounded-xl border border-slate-200 bg-white transition-all hover:border-emerald-700"
+                                        className="group flex h-full flex-col justify-between overflow-hidden rounded-xl border border-slate-200 bg-white transition-all hover:border-emerald-700"
                                     >
                                         <div>
                                             <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
-                                                {item.image_url ? (
+                                                {item.image_path ? (
                                                     <img
                                                         alt={item.title}
                                                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                                        src={item.image_url}
+                                                        src={item.image_path}
                                                     />
                                                 ) : (
                                                     <div className="flex h-full w-full items-center justify-center bg-teal-50">
@@ -2933,55 +3158,28 @@ export default function Welcome({
                                                     </div>
                                                 )}
                                                 <div className="absolute top-3 left-3 rounded-md border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-900 shadow-2xs">
-                                                    {"category" in item &&
-                                                    typeof item.category ===
-                                                        "string"
-                                                        ? item.category
-                                                        : idx === 0
-                                                          ? "Wisata Bahari"
-                                                          : idx === 1
-                                                            ? "Ekowisata"
-                                                            : "Kearifan Budaya"}
+                                                    {item.category ||
+                                                        'Pariwisata'}
                                                 </div>
                                             </div>
                                             <div className="p-6">
                                                 <h3 className="font-['Plus_Jakarta_Sans',sans-serif] text-base font-bold text-slate-900 sm:text-lg">
-                                                    {item.title}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            setDestinationDetail(
+                                                                item,
+                                                            )
+                                                        }
+                                                        aria-label={`Buka detail ${item.title}`}
+                                                        className="cursor-pointer text-left transition-colors hover:text-emerald-700"
+                                                    >
+                                                        {item.title}
+                                                    </button>
                                                 </h3>
                                                 <p className="mt-2 text-xs leading-relaxed text-slate-600 sm:text-sm">
                                                     {item.description}
                                                 </p>
-                                                <div className="mt-4 flex items-center gap-4 text-xs font-medium text-slate-600">
-                                                    {"tags" in item &&
-                                                    Array.isArray(item.tags) ? (
-                                                        item.tags.map((tag) => (
-                                                            <span
-                                                                key={tag}
-                                                                className="flex items-center gap-1.5"
-                                                            >
-                                                                <Waves className="h-4 w-4 text-emerald-700" />
-                                                                <span>
-                                                                    {tag}
-                                                                </span>
-                                                            </span>
-                                                        ))
-                                                    ) : (
-                                                        <>
-                                                            <span className="flex items-center gap-1.5">
-                                                                <Waves className="h-4 w-4 text-emerald-700" />
-                                                                <span>
-                                                                    Bahari
-                                                                </span>
-                                                            </span>
-                                                            <span className="flex items-center gap-1.5">
-                                                                <MapPin className="h-4 w-4 text-emerald-700" />
-                                                                <span>
-                                                                    Pesisir
-                                                                </span>
-                                                            </span>
-                                                        </>
-                                                    )}
-                                                </div>
                                             </div>
                                         </div>
                                         <div className="p-6 pt-0">
@@ -2989,7 +3187,7 @@ export default function Welcome({
                                                 className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-emerald-800"
                                                 href={
                                                     item.location_url ||
-                                                    "https://maps.google.com"
+                                                    'https://maps.google.com'
                                                 }
                                                 rel="noopener noreferrer"
                                                 target="_blank"
@@ -2999,7 +3197,8 @@ export default function Welcome({
                                             </a>
                                         </div>
                                     </div>
-                                ))}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </section>
@@ -3020,22 +3219,18 @@ export default function Welcome({
                                 <span className="text-xs font-bold tracking-wider text-emerald-700 uppercase">
                                     DOKUMENTASI KEGIATAN
                                 </span>
-                                <h2 className="font-['Plus_Jakarta_Sans',sans-serif] mt-1.5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                                <h2 className="mt-1.5 font-['Plus_Jakarta_Sans',sans-serif] text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                                     Galeri Foto &amp; Aktivitas Warga
                                 </h2>
                                 <p className="mt-2 max-w-xl text-sm text-slate-600">
                                     Rekam jejak kebersamaan, musyawarah
-                                    pembangunan, dan geliat pemuda desa.
+                                    pembangunan, dan aktivitas pemuda desa.
                                 </p>
-                            </div>
-                            <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
-                                <span className="h-2.5 w-2.5 rounded-full bg-emerald-700"></span>
-                                <span>Dokumentasi Resmi Lero Tatari</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <button
                                     type="button"
-                                    onClick={() => scrollGallery("left")}
+                                    onClick={() => scrollGallery('left')}
                                     aria-label="Geser galeri ke kiri"
                                     className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:bg-emerald-700 hover:text-white"
                                 >
@@ -3043,7 +3238,7 @@ export default function Welcome({
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => scrollGallery("right")}
+                                    onClick={() => scrollGallery('right')}
                                     aria-label="Geser galeri ke kanan"
                                     className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:bg-emerald-700 hover:text-white"
                                 >
@@ -3055,7 +3250,7 @@ export default function Welcome({
                         {/* Horizontal scrollable gallery (cards + prev/next) */}
                         <div
                             ref={galleryTrackRef}
-                            className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-6 px-6 pb-2 lg:-mx-8 lg:scroll-px-8 lg:px-8"
+                            className="no-scrollbar -mx-6 flex snap-x snap-mandatory scroll-px-6 gap-5 overflow-x-auto px-6 pb-2 lg:-mx-8 lg:scroll-px-8 lg:px-8"
                         >
                             {galleryItems.map((galeri) => (
                                 <div
@@ -3078,7 +3273,7 @@ export default function Welcome({
                                                         {galeri.captured_at}
                                                     </span>
                                                 )}
-                                                <p className="font-['Plus_Jakarta_Sans',sans-serif] mt-1 text-sm font-bold">
+                                                <p className="mt-1 font-['Plus_Jakarta_Sans',sans-serif] text-sm font-bold">
                                                     {galeri.title}
                                                 </p>
                                             </div>
@@ -3090,6 +3285,28 @@ export default function Welcome({
                     </div>
                 </section>
             </main>
+
+            {/* Dialog detail berita (sama dengan admin panel) */}
+            <NewsDetailDialog
+                item={newsDetail ?? EMPTY_NEWS}
+                open={Boolean(newsDetail)}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        setNewsDetail(null);
+                    }
+                }}
+            />
+
+            {/* Dialog detail wisata (sama dengan admin panel) */}
+            <DestinationDetailDialog
+                item={destinationDetail}
+                open={Boolean(destinationDetail)}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        setDestinationDetail(null);
+                    }
+                }}
+            />
 
             {/* 8. FOOTER (Exact Stitch Layout) */}
             <footer className="w-full border-t border-slate-200 bg-white">
@@ -3121,7 +3338,7 @@ export default function Welcome({
 
                         {/* Col 2: Navigasi Cepat */}
                         <div>
-                            <h4 className="font-['Plus_Jakarta_Sans',sans-serif] mb-4 text-sm font-bold text-slate-900">
+                            <h4 className="mb-4 font-['Plus_Jakarta_Sans',sans-serif] text-sm font-bold text-slate-900">
                                 Navigasi Cepat
                             </h4>
                             <ul className="flex flex-col gap-2.5 text-xs">
@@ -3186,7 +3403,7 @@ export default function Welcome({
 
                         {/* Col 3: Alamat & Kontak */}
                         <div>
-                            <h4 className="font-['Plus_Jakarta_Sans',sans-serif] mb-4 text-sm font-bold text-slate-900">
+                            <h4 className="mb-4 font-['Plus_Jakarta_Sans',sans-serif] text-sm font-bold text-slate-900">
                                 Alamat &amp; Kontak
                             </h4>
                             <div className="flex flex-col gap-2.5 text-xs text-slate-600">
@@ -3210,7 +3427,7 @@ export default function Welcome({
 
                         {/* Col 4: Kanal Publik & Portal */}
                         <div>
-                            <h4 className="font-['Plus_Jakarta_Sans',sans-serif] mb-4 text-sm font-bold text-slate-900">
+                            <h4 className="mb-4 font-['Plus_Jakarta_Sans',sans-serif] text-sm font-bold text-slate-900">
                                 Kanal Publik
                             </h4>
                             <p className="mb-3 text-xs text-slate-500">

@@ -1,4 +1,4 @@
-import { Bold, Italic, List, ListOrdered } from 'lucide-react';
+import { Bold, Italic } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import InputError from '@/components/input-error';
 import { cn } from '@/lib/utils';
@@ -9,7 +9,13 @@ const editorBoxClass =
 const toolButtonClass =
     'flex h-8 w-8 items-center justify-center rounded-lg text-slate-600 transition-colors hover:bg-white hover:shadow-xs hover:text-brand-dark focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60';
 
-const toolButtonActiveClass = 'bg-brand text-white shadow-xs hover:bg-brand-dark hover:text-white';
+const toolButtonActiveClass =
+    'bg-brand text-white shadow-xs hover:bg-brand-dark hover:text-white';
+
+/** Struktur blok yang membuat editor memunculkan elemen visual sendiri
+ * (mis. baris kosong, gambar, atau konten tempelan) meskipun teksnya
+ * masih kosong. */
+const STRUCTURAL_TAG_PATTERN = /<(ol|ul|li|img|br|blockquote|div|p)\b/i;
 
 interface ContentEditorProps {
     /** HTML awal dari berita yang sedang diedit. */
@@ -20,18 +26,20 @@ interface ContentEditorProps {
 
 /**
  * Editor isi berita berbasis contentEditable dengan toolbar ringan
- * (Bold, Italic, daftar bernomor, dan daftar poin). Nilai HTML
- * disuplai ke form Inertia lewat input hidden bernama "content".
+ * (Bold dan Italic). Nilai HTML disuplai ke form Inertia lewat input
+ * hidden bernama "content".
  */
-export function ContentEditor({ defaultValue, disabled, error }: ContentEditorProps) {
+export function ContentEditor({
+    defaultValue,
+    disabled,
+    error,
+}: ContentEditorProps) {
     const editorRef = useRef<HTMLDivElement>(null);
     const [content, setContent] = useState(defaultValue);
     const [isEmpty, setIsEmpty] = useState(true);
     const [active, setActive] = useState({
         bold: false,
         italic: false,
-        ordered: false,
-        unordered: false,
     });
 
     const isEditorEmpty = (html: string | null | undefined): boolean => {
@@ -44,7 +52,14 @@ export function ContentEditor({ defaultValue, disabled, error }: ContentEditorPr
             .replace(/<[^>]+>/g, '')
             .replace(/&nbsp;|\s/g, '');
 
-        return text === '';
+        if (text !== '') {
+            return false;
+        }
+
+        // Teks kosong bukan berarti layak dianggap kosong: elemen visual
+        // seperti gambar atau baris kosong masih bisa tampil, sehingga
+        // placeholder tidak boleh ikut tampil menimpanya.
+        return !STRUCTURAL_TAG_PATTERN.test(html);
     };
 
     const syncContent = useCallback(() => {
@@ -61,8 +76,6 @@ export function ContentEditor({ defaultValue, disabled, error }: ContentEditorPr
             setActive({
                 bold: document.queryCommandState('bold'),
                 italic: document.queryCommandState('italic'),
-                ordered: document.queryCommandState('insertOrderedList'),
-                unordered: document.queryCommandState('insertUnorderedList'),
             });
         } catch {
             // Browser tanpa dukungan queryCommandState: abaikan.
@@ -166,37 +179,6 @@ export function ContentEditor({ defaultValue, disabled, error }: ContentEditorPr
                     >
                         <Italic className="size-4" strokeWidth={2.4} />
                     </button>
-                    <span className="mx-1 h-5 w-px bg-slate-200" />
-                    <button
-                        type="button"
-                        title="Daftar bernomor"
-                        aria-label="Daftar bernomor"
-                        aria-pressed={active.ordered}
-                        disabled={disabled}
-                        onMouseDown={(event) => event.preventDefault()}
-                        onClick={() => exec('insertOrderedList')}
-                        className={cn(
-                            toolButtonClass,
-                            active.ordered && toolButtonActiveClass,
-                        )}
-                    >
-                        <ListOrdered className="size-4" strokeWidth={2.2} />
-                    </button>
-                    <button
-                        type="button"
-                        title="Daftar poin"
-                        aria-label="Daftar poin"
-                        aria-pressed={active.unordered}
-                        disabled={disabled}
-                        onMouseDown={(event) => event.preventDefault()}
-                        onClick={() => exec('insertUnorderedList')}
-                        className={cn(
-                            toolButtonClass,
-                            active.unordered && toolButtonActiveClass,
-                        )}
-                    >
-                        <List className="size-4" strokeWidth={2.2} />
-                    </button>
                 </div>
             </div>
 
@@ -219,8 +201,6 @@ export function ContentEditor({ defaultValue, disabled, error }: ContentEditorPr
                         setActive({
                             bold: false,
                             italic: false,
-                            ordered: false,
-                            unordered: false,
                         });
                     }}
                     onFocus={refreshStates}
@@ -228,15 +208,11 @@ export function ContentEditor({ defaultValue, disabled, error }: ContentEditorPr
                     onMouseUp={refreshStates}
                     className={cn(
                         editorBoxClass,
-                        'content-editor min-h-[280px] max-h-[45vh]',
+                        'content-editor max-h-[45vh] min-h-[280px]',
                     )}
                 />
             </div>
 
-            <p className="text-[11px] text-slate-500">
-                Gunakan toolbar di atas untuk Bold, Italic, daftar bernomor, dan
-                daftar poin.
-            </p>
             <InputError message={error} />
         </div>
     );

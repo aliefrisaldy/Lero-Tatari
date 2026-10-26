@@ -41,29 +41,18 @@ class HomeController extends Controller
                     'description' => preg_replace('/^\s*\d+[.)]\s*/u', '', $mission->description),
                 ]),
             'demographic' => Demographic::query()->first(),
+            // Model utuh (dengan author) supaya card detail landing memakai
+            // komponen dialog yang sama dengan admin panel.
             'news' => News::query()
+                ->with('author:id,name')
                 ->where('status', 'published')
                 ->orderByDesc('published_at')
-                ->take(3)
-                ->get(['id', 'title', 'category', 'content', 'image_path', 'published_at'])
-                ->map(fn (News $article): array => [
-                    'id' => $article->id,
-                    'title' => $article->title,
-                    'category' => $article->category,
-                    'excerpt' => str($article->content)->stripTags()->limit(180)->toString(),
-                    'image_url' => $this->imageUrl($article->image_path),
-                    'published_at' => $article->published_at?->translatedFormat('j F Y'),
-                ]),
+                ->take(6)
+                ->get(),
             'destinations' => Destination::query()
                 ->where('is_active', true)
                 ->latest('id')
-                ->get(['title', 'description', 'image_path', 'location_url'])
-                ->map(fn (Destination $destination): array => [
-                    'title' => $destination->title,
-                    'description' => $destination->description,
-                    'image_url' => $this->imageUrl($destination->image_path),
-                    'location_url' => $destination->location_url,
-                ]),
+                ->get(),
             'galleries' => Gallery::query()
                 ->where('is_active', true)
                 ->orderBy('order_index')
