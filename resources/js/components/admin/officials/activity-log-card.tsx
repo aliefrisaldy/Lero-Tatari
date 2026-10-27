@@ -1,80 +1,78 @@
-const logEntries = [
+import {
+    ArrowUpRight,
+    Pencil,
+    Trash2,
+    UserPlus,
+    type LucideIcon,
+} from 'lucide-react';
+
+export interface ActivityLogEntry {
+    id: number;
+    action: string;
+    description: string;
+    actor: string | null;
+    actor_role: string | null;
+    created_at: string | null;
+}
+
+interface ActivityLogCardProps {
+    entries?: ActivityLogEntry[];
+}
+
+const roleLabels: Record<string, string> = {
+    super_admin: 'Super Admin',
+    operator: 'Operator Desa',
+};
+
+const actionMeta: Record<
+    string,
     {
-        title: 'SK Kaur Keuangan Diperbarui',
-        actor: 'Oleh: Arfan, S.Pd (Sekdes)',
-        time: 'Hari ini, 10:30 WITA',
-        badge: 'Sukses',
+        badge: string;
+        badgeClass: string;
+        iconClass: string;
+        icon: LucideIcon;
+    }
+> = {
+    created: {
+        badge: 'Baru',
         badgeClass: 'bg-emerald-50 text-brand',
         iconClass: 'bg-emerald-50 text-brand',
-        icon: (
-            <svg
-                className="size-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-            >
-                <path
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                />
-            </svg>
-        ),
+        icon: UserPlus,
     },
-    {
-        title: 'Foto Profil Kadus I Diganti',
-        actor: 'Sapri. R (Kepala Dusun I)',
-        time: 'Kemarin, 14:15 WITA',
-        badge: 'Selesai',
-        badgeClass: 'bg-slate-100 text-slate-600',
+    updated: {
+        badge: 'Diperbarui',
+        badgeClass: 'bg-blue-50 text-blue-600',
         iconClass: 'bg-blue-50 text-blue-600',
-        icon: (
-            <svg
-                className="size-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-            >
-                <path
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                />
-            </svg>
-        ),
+        icon: Pencil,
     },
-    {
-        title: 'Koreksi NIP Kasi Pelayanan',
-        actor: 'Siti Marlina, S.Sos.',
-        time: '22 Jun 2025',
-        badge: 'Sukses',
-        badgeClass: 'bg-emerald-50 text-brand',
-        iconClass: 'bg-amber-50 text-amber-600',
-        icon: (
-            <svg
-                className="size-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-            >
-                <path
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                />
-            </svg>
-        ),
+    deleted: {
+        badge: 'Dihapus',
+        badgeClass: 'bg-red-50 text-red-600',
+        iconClass: 'bg-red-50 text-red-600',
+        icon: Trash2,
     },
-];
+};
+
+function formatTime(value: string | null): string {
+    if (!value) {
+        return '-';
+    }
+
+    return `${new Intl.DateTimeFormat('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: 'Asia/Makassar',
+    }).format(new Date(value))} WITA`;
+}
 
 /**
- * Log Perubahan Data — replika desain Stitch.
- * Sementara menampilkan riwayat static; akan dihubungkan ke tabel activity_log.
+ * Log Perubahan Data — menampilkan riwayat perubahan aparat dari tabel activity_logs.
  */
-export function ActivityLogCard() {
+export function ActivityLogCard({ entries = [] }: ActivityLogCardProps) {
     return (
         <section className="rounded-card border border-slate-100 bg-white p-6 shadow-bento">
             {/* Header */}
@@ -92,52 +90,61 @@ export function ActivityLogCard() {
                     title="Lihat Seluruh Log"
                     className="text-slate-400 transition-colors hover:text-brand"
                 >
-                    <svg
-                        className="size-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M7 17L17 7M17 7H7M17 7V17"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                        />
-                    </svg>
+                    <ArrowUpRight className="size-4" />
                 </button>
             </div>
 
             {/* Log Entries List */}
             <div className="space-y-3.5">
-                {logEntries.map((entry) => (
-                    <div
-                        key={entry.title}
-                        className="flex items-start gap-3 rounded-2xl p-2.5 transition-colors hover:bg-slate-50"
-                    >
+                {entries.length === 0 && (
+                    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 px-4 py-8 text-center">
+                        <Pencil className="mb-2 size-6 text-slate-300" />
+                        <p className="text-xs font-semibold text-slate-text">
+                            Belum ada perubahan data
+                        </p>
+                        <p className="text-[11px] text-slate-muted">
+                            Riwayat akan muncul setelah data aparat diubah.
+                        </p>
+                    </div>
+                )}
+
+                {entries.map((entry) => {
+                    const meta = actionMeta[entry.action] ?? actionMeta.updated;
+                    const Icon = meta.icon;
+                    const role = entry.actor_role
+                        ? (roleLabels[entry.actor_role] ?? entry.actor_role)
+                        : null;
+
+                    return (
                         <div
-                            className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${entry.iconClass}`}
+                            key={entry.id}
+                            className="flex items-start gap-3 rounded-2xl p-2.5 transition-colors hover:bg-slate-50"
                         >
-                            {entry.icon}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                            <p className="truncate text-xs font-semibold text-slate-text">
-                                {entry.title}
-                            </p>
-                            <p className="text-[11px] text-slate-muted">
-                                {entry.actor}
-                            </p>
-                            <span className="text-[10px] text-slate-400">
-                                {entry.time}
+                            <div
+                                className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${meta.iconClass}`}
+                            >
+                                <Icon className="size-4" />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <p className="truncate text-xs font-semibold text-slate-text">
+                                    {entry.description}
+                                </p>
+                                <p className="text-[11px] text-slate-muted">
+                                    Oleh: {entry.actor ?? 'Sistem'}
+                                    {role ? ` (${role})` : ''}
+                                </p>
+                                <span className="text-[10px] text-slate-400">
+                                    {formatTime(entry.created_at)}
+                                </span>
+                            </div>
+                            <span
+                                className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${meta.badgeClass}`}
+                            >
+                                {meta.badge}
                             </span>
                         </div>
-                        <span
-                            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${entry.badgeClass}`}
-                        >
-                            {entry.badge}
-                        </span>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </section>
     );

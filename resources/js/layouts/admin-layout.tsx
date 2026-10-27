@@ -8,7 +8,6 @@ import {
     Menu,
     Newspaper,
     Palmtree,
-    Settings,
     UserCog,
     Users,
     X,
@@ -22,7 +21,6 @@ import { index as officialsIndex } from '@/routes/admin/officials';
 import { index as usersIndex } from '@/routes/admin/users';
 import { index as visiMisiIndex } from '@/routes/admin/visi-misi';
 import { index as wisataIndex } from '@/routes/admin/wisata';
-import { edit as profileEdit } from '@/routes/profile';
 import type { AppLayoutProps } from '@/types';
 
 export interface AdminLayoutProps extends AppLayoutProps {
@@ -147,7 +145,7 @@ export default function AdminLayout({
             {/* ── Mobile Drawer ── */}
             {mobileOpen && (
                 <div className="fixed inset-0 z-50 flex bg-black/40 backdrop-blur-xs lg:hidden">
-                    <div className="flex h-full w-[280px] animate-in flex-col justify-between bg-white p-5 shadow-2xl duration-200 slide-in-from-left">
+                    <div className="flex h-full w-[280px] animate-in flex-col justify-between overflow-y-auto bg-white p-5 shadow-2xl duration-200 slide-in-from-left">
                         <div>
                             {/* Drawer Header */}
                             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -204,6 +202,22 @@ export default function AdminLayout({
 
                         {/* Drawer Bottom Controls */}
                         <div className="mt-4 space-y-1.5 border-t border-slate-100 pt-4">
+                            {user && (
+                                <div className="mb-3 flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-2.5">
+                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-brand/20 bg-brand-light text-xs font-bold text-brand">
+                                        {initials}
+                                    </div>
+                                    <div className="min-w-0 text-left">
+                                        <p className="truncate text-xs font-semibold text-slate-text">
+                                            {user.name}
+                                        </p>
+                                        <p className="text-[10px] text-slate-muted">
+                                            {roleLabels[user.role] ??
+                                                'Pegawai Desa'}
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
                             <Link
                                 href={home()}
                                 className="flex items-center gap-3 px-3 py-2 text-xs font-medium text-slate-600 hover:text-[#14532d]"
@@ -212,15 +226,9 @@ export default function AdminLayout({
                                 <span>Lihat Website Publik</span>
                             </Link>
                             <Link
-                                href={profileEdit()}
-                                className="flex items-center gap-3 px-3 py-2 text-xs font-medium text-slate-600 hover:text-[#14532d]"
-                            >
-                                <Settings className="h-4 w-4 text-slate-400" />
-                                <span>Pengaturan Akun</span>
-                            </Link>
-                            <Link
                                 href={logout()}
                                 as="button"
+                                method="post"
                                 className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
                             >
                                 <LogOut className="h-4 w-4 text-red-500" />
@@ -318,7 +326,7 @@ export default function AdminLayout({
                         </div>
 
                         {/* Right Quick Controls & Profile */}
-                        <div className="flex items-center gap-2.5 self-end lg:self-center">
+                        <div className="hidden items-center gap-2.5 lg:flex lg:self-center">
                             <Link
                                 href={home()}
                                 title="Lihat Website Publik"

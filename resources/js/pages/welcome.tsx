@@ -14,7 +14,6 @@ import {
     GraduationCap,
     Heart,
     HeartHandshake,
-    Headset,
     Home,
     Images,
     Landmark,
@@ -22,7 +21,6 @@ import {
     Mail,
     Map,
     MapPin,
-    Menu,
     Newspaper,
     Palmtree,
     Phone,
@@ -38,12 +36,13 @@ import {
     Users,
     Waves,
     Wheat,
-    X,
 } from "lucide-react";
 import Lenis from "lenis";
 import { useEffect, useRef, useState } from "react";
+import { PublicNavbar } from "@/components/public-navbar";
 import { login } from "@/routes";
 import { index as officialsIndex } from "@/routes/admin/officials";
+import { show as newsShow } from "@/routes/berita";
 
 type Official = {
     name: string;
@@ -126,17 +125,6 @@ function formatDecimal(value: number | string | null | undefined): string {
     });
 }
 
-const NAV_ITEMS = [
-    { id: "beranda", label: "Beranda" },
-    { id: "profil", label: "Profil" },
-    { id: "sejarah", label: "Sejarah" },
-    { id: "aparat", label: "Aparat" },
-    { id: "data", label: "Data" },
-    { id: "berita", label: "Berita" },
-    { id: "wisata", label: "Wisata" },
-    { id: "galeri", label: "Galeri" },
-] as const;
-
 export default function Welcome({
     officials = [],
     vision,
@@ -185,69 +173,11 @@ export default function Welcome({
         });
     };
 
-    // Active navbar section (scroll-spy highlight)
-    const [activeSection, setActiveSection] = useState("beranda");
-    const [mobileNavOpen, setMobileNavOpen] = useState(false);
     const [sliderOverflow, setSliderOverflow] = useState({
         gallery: false,
         news: false,
         destinations: false,
     });
-
-    useEffect(() => {
-        const sections = NAV_ITEMS.map(({ id }) =>
-            document.getElementById(id),
-        ).filter((el): el is HTMLElement => el !== null);
-
-        if (sections.length === 0) {
-            return;
-        }
-
-        // Section whose top has passed this line is considered active.
-        // 128px keeps the clicked section active right after the anchor jump
-        // (scroll-mt-24 = 96px) while sitting below the floating navbar.
-        const ACTIVATION_OFFSET = 128;
-        let frame = 0;
-
-        const update = () => {
-            frame = 0;
-
-            const atBottom =
-                window.scrollY + window.innerHeight >=
-                document.documentElement.scrollHeight - 4;
-
-            if (atBottom) {
-                setActiveSection(sections[sections.length - 1].id);
-                return;
-            }
-
-            let current = sections[0].id;
-
-            for (const section of sections) {
-                if (section.getBoundingClientRect().top <= ACTIVATION_OFFSET) {
-                    current = section.id;
-                }
-            }
-
-            setActiveSection(current);
-        };
-
-        const scheduleUpdate = () => {
-            if (!frame) {
-                frame = window.requestAnimationFrame(update);
-            }
-        };
-
-        update();
-        window.addEventListener("scroll", scheduleUpdate, { passive: true });
-        window.addEventListener("resize", scheduleUpdate);
-
-        return () => {
-            window.cancelAnimationFrame(frame);
-            window.removeEventListener("scroll", scheduleUpdate);
-            window.removeEventListener("resize", scheduleUpdate);
-        };
-    }, []);
 
     // Filter officials according to hierarchy & exact position matching
     const findOfficial = (match: string) =>
@@ -410,13 +340,32 @@ export default function Welcome({
             return;
         }
 
+        const isMobile = window.matchMedia("(max-width: 1023px)").matches;
+
         // --- RELOAD FIX: Manual scroll restoration → always start at hero ---
         if ("scrollRestoration" in history) {
             history.scrollRestoration = "manual";
         }
         window.scrollTo(0, 0);
 
+        // Mobile: drop any section hash so ScrollTrigger does not mark sections
+        // above the initial scroll position as already revealed.
+        if (isMobile) {
+            if (window.location.hash) {
+                history.replaceState(
+                    null,
+                    "",
+                    window.location.pathname + window.location.search,
+                );
+            }
+            window.scrollTo(0, 0);
+        }
+
         gsap.registerPlugin(ScrollTrigger);
+
+        if (isMobile) {
+            ScrollTrigger.config({ ignoreMobileResize: true });
+        }
 
         // --- SMOOTH SCROLL: Lenis drives native scroll, so fixed navbar stays intact ---
         // Longer duration = slower, silkier scroll. Anchors reuse `scroll-mt-24`.
@@ -636,10 +585,28 @@ export default function Welcome({
         const onLoad = () => ScrollTrigger.refresh();
         window.addEventListener("load", onLoad);
 
+        const refreshFrame = isMobile
+            ? window.requestAnimationFrame(() => {
+                  window.scrollTo(0, 0);
+                  ScrollTrigger.refresh();
+              })
+            : 0;
+
+        if (isMobile) {
+            if (document.readyState === "complete") {
+                ScrollTrigger.refresh();
+            }
+
+            void document.fonts.ready.then(() => ScrollTrigger.refresh());
+        }
+
         return () => {
             lenis.destroy();
             ctx.revert();
             window.removeEventListener("load", onLoad);
+            if (refreshFrame) {
+                window.cancelAnimationFrame(refreshFrame);
+            }
         };
     }, []);
 
@@ -661,130 +628,7 @@ export default function Welcome({
                 />
             </Head>
 
-            {/* FLOATING NAVBAR */}
-            <header className="pointer-events-none fixed top-4 right-0 left-0 z-50 px-4 sm:top-6 sm:px-6 lg:px-8">
-                <div className="pointer-events-auto mx-auto flex max-w-7xl items-center justify-between gap-4 rounded-full border border-slate-200/90 bg-white/95 px-4 py-2.5 shadow-md backdrop-blur-md transition-all sm:px-5">
-                    {/* Logo & Village Identity */}
-                    <a
-                        href="#beranda"
-                        onClick={() => setMobileNavOpen(false)}
-                        className="group flex items-center gap-2 transition-opacity hover:opacity-95"
-                    >
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white p-1.5 shadow-xs">
-                            <img
-                                alt={`Logo ${VILLAGE}`}
-                                className="h-7 w-auto object-contain"
-                                src="/images/logo.png"
-                            />
-                        </div>
-                        <div className="flex min-w-0 flex-col">
-                            <span className="font-['Plus_Jakarta_Sans',sans-serif] text-base leading-tight font-bold tracking-tight text-slate-900 sm:text-lg">
-                                {VILLAGE}
-                            </span>
-                            <span className="mt-0.5 hidden text-[11px] leading-none font-normal text-slate-500 sm:block">
-                                {REGION}
-                            </span>
-                        </div>
-                    </a>
-
-                    {/* Nav Links */}
-                    <nav className="hidden items-center gap-1 md:flex">
-                        {NAV_ITEMS.map((item) => {
-                            const isActive = activeSection === item.id;
-
-                            return (
-                                <a
-                                    key={item.id}
-                                    className={
-                                        isActive
-                                            ? "rounded-full bg-emerald-800 px-3.5 py-1.5 text-xs font-semibold text-white shadow-2xs transition-colors sm:text-sm"
-                                            : "rounded-full px-3.5 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-emerald-800 sm:text-sm"
-                                    }
-                                    href={`#${item.id}`}
-                                    aria-current={isActive ? "true" : undefined}
-                                >
-                                    {item.label}
-                                </a>
-                            );
-                        })}
-                    </nav>
-
-                    {/* Action Button + Mobile Menu Toggle */}
-                    <div className="flex items-center gap-2">
-                        <a
-                            href="https://wa.me/6282259709369"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hidden items-center justify-center gap-1.5 rounded-full bg-emerald-800 px-5 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-emerald-900 sm:text-sm md:inline-flex"
-                        >
-                            <Headset className="h-3.5 w-3.5" />
-                            <span>Hubungi Kami</span>
-                        </a>
-                        <button
-                            type="button"
-                            onClick={() => setMobileNavOpen((open) => !open)}
-                            aria-label={
-                                mobileNavOpen
-                                    ? "Tutup menu navigasi"
-                                    : "Buka menu navigasi"
-                            }
-                            aria-controls="mobile-menu"
-                            aria-expanded={mobileNavOpen}
-                            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 md:hidden"
-                        >
-                            {mobileNavOpen ? (
-                                <X className="h-5 w-5" />
-                            ) : (
-                                <Menu className="h-5 w-5" />
-                            )}
-                        </button>
-                    </div>
-                </div>
-
-                {/* Mobile Navigation Dropdown */}
-                <div
-                    id="mobile-menu"
-                    className={`mx-auto mt-2 max-w-7xl origin-top overflow-hidden rounded-3xl border border-slate-200/90 bg-white/95 shadow-lg backdrop-blur-md transition-all duration-300 ease-out md:hidden ${
-                        mobileNavOpen
-                            ? "pointer-events-auto max-h-[calc(100vh-8rem)] translate-y-0 opacity-100"
-                            : "pointer-events-none max-h-0 -translate-y-2 opacity-0"
-                    }`}
-                >
-                    <nav className="flex flex-col gap-1 p-3">
-                        {NAV_ITEMS.map((item) => {
-                            const isActive = activeSection === item.id;
-
-                            return (
-                                <a
-                                    key={item.id}
-                                    href={`#${item.id}`}
-                                    onClick={() => setMobileNavOpen(false)}
-                                    aria-current={isActive ? "true" : undefined}
-                                    className={
-                                        isActive
-                                            ? "rounded-xl bg-emerald-800 px-4 py-2.5 text-sm font-semibold text-white"
-                                            : "rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-emerald-800"
-                                    }
-                                >
-                                    {item.label}
-                                </a>
-                            );
-                        })}
-                    </nav>
-                    <div className="border-t border-slate-100 p-3">
-                        <a
-                            href="https://wa.me/6282259709369"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() => setMobileNavOpen(false)}
-                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-800 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-900"
-                        >
-                            <Headset className="h-4 w-4" />
-                            <span>Hubungi Kami</span>
-                        </a>
-                    </div>
-                </div>
-            </header>
+            <PublicNavbar />
 
             <main className="w-full bg-[#F8FAFC]">
                 {/* 1. HERO SECTION (Clean White Background #FFFFFF - No Background Images/Patterns) */}
@@ -3408,13 +3252,15 @@ export default function Welcome({
                                         </div>
                                     </div>
                                     <div className="p-6 pt-0">
-                                        <a
+                                        <Link
+                                            href={newsShow({
+                                                news: article.id,
+                                            })}
                                             className="inline-flex items-center gap-1 text-xs font-bold text-emerald-800 transition-all group-hover:gap-2 hover:text-emerald-900"
-                                            href="#berita"
                                         >
                                             <span>Baca Selengkapnya</span>
                                             <ArrowRight className="h-4 w-4" />
-                                        </a>
+                                        </Link>
                                     </div>
                                 </article>
                             ))}
@@ -3530,7 +3376,7 @@ export default function Welcome({
                                             <h3 className="font-['Plus_Jakarta_Sans',sans-serif] text-base font-bold text-slate-900 sm:text-lg">
                                                 {item.title}
                                             </h3>
-                                            <p className="mt-2 text-xs leading-relaxed text-slate-600 sm:text-sm">
+                                            <p className="mt-2 line-clamp-6 text-xs leading-relaxed text-slate-600 sm:text-sm">
                                                 {item.description}
                                             </p>
                                         </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\Official;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,8 +21,24 @@ class OfficialController extends Controller
     {
         $officials = Official::orderBy('order_index')->get();
 
+        $activityLogs = ActivityLog::query()
+            ->with('user:id,name,role')
+            ->where('subject_type', Official::class)
+            ->latest()
+            ->limit(5)
+            ->get()
+            ->map(fn (ActivityLog $log): array => [
+                'id' => $log->id,
+                'action' => $log->action,
+                'description' => $log->description,
+                'actor' => $log->user?->name,
+                'actor_role' => $log->user?->role,
+                'created_at' => $log->created_at?->toIso8601String(),
+            ]);
+
         return Inertia::render('admin/officials/index', [
             'officials' => $officials,
+            'activityLogs' => $activityLogs,
         ]);
     }
 

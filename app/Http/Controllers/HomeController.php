@@ -9,7 +9,6 @@ use App\Models\Mission;
 use App\Models\News;
 use App\Models\Official;
 use App\Models\Vision;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -76,19 +75,5 @@ class HomeController extends Controller
                     'image_url' => $this->imageUrl($gallery->image_path),
                 ]),
         ]);
-    }
-
-    /**
-     * Normalise a stored image value into a browsable URL.
-     */
-    private function imageUrl(?string $path): ?string
-    {
-        if (blank($path)) {
-            return null;
-        }
-
-        return str_starts_with($path, 'http') || str_starts_with($path, '/')
-            ? $path
-            : Storage::url($path);
     }
 }

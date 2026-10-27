@@ -8,10 +8,12 @@ use App\Http\Controllers\Admin\OfficialController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VisionMissionController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NewsController as PublicNewsController;
 use App\Http\Middleware\EnsureSuperAdmin;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
+Route::get('/berita/{news}', [PublicNewsController::class, 'show'])->name('berita.show');
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
