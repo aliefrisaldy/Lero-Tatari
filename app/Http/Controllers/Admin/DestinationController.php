@@ -131,7 +131,7 @@ class DestinationController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'location_url' => ['nullable', 'url', 'max:2048'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
             'is_active' => ['nullable', 'boolean'],
         ], [
             'title.required' => 'Nama destinasi wajib diisi.',
@@ -141,8 +141,8 @@ class DestinationController extends Controller
             'location_url.max' => 'Tautan lokasi tidak boleh lebih dari 2048 karakter.',
             'image.image' => 'Berkas yang dipilih harus berupa gambar.',
             'image.mimes' => 'Format gambar harus JPG, PNG, atau WEBP.',
-            'image.max' => 'Ukuran gambar terlalu besar. Maksimal 2 MB.',
-            'image.uploaded' => 'Gambar gagal diunggah. Pastikan ukurannya tidak melebihi 2 MB.',
+            'image.max' => 'Ukuran gambar terlalu besar. Maksimal 1 MB.',
+            'image.uploaded' => 'Gambar gagal diunggah. Pastikan ukurannya tidak melebihi 1 MB.',
         ]);
     }
 

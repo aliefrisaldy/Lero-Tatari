@@ -154,7 +154,7 @@ class NewsController extends Controller
             'category' => ['required', 'string', 'max:100'],
             'content' => ['required', 'string'],
             'status' => ['required', Rule::in(['published', 'draft'])],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
         ], [
             'title.required' => 'Judul berita wajib diisi.',
             'title.max' => 'Judul berita tidak boleh lebih dari 255 karakter.',
@@ -163,8 +163,8 @@ class NewsController extends Controller
             'content.required' => 'Isi berita wajib diisi.',
             'image.image' => 'Berkas yang dipilih harus berupa gambar.',
             'image.mimes' => 'Format gambar harus JPG, PNG, atau WEBP.',
-            'image.max' => 'Ukuran gambar terlalu besar. Maksimal 2 MB.',
-            'image.uploaded' => 'Gambar gagal diunggah. Pastikan ukurannya tidak melebihi 2 MB.',
+            'image.max' => 'Ukuran gambar terlalu besar. Maksimal 1 MB.',
+            'image.uploaded' => 'Gambar gagal diunggah. Pastikan ukurannya tidak melebihi 1 MB.',
         ]);
     }
 

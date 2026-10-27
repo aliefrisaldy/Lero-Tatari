@@ -119,9 +119,14 @@ class OfficialController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'position' => ['required', 'string', 'max:255'],
             'category' => ['required', Rule::in(['pimpinan', 'sekretariat', 'kasi', 'kadusun'])],
-            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
             'order_index' => ['nullable', 'integer'],
             'is_active' => ['nullable', 'boolean'],
+        ], [
+            'photo.image' => 'Berkas yang dipilih harus berupa gambar.',
+            'photo.mimes' => 'Format gambar harus JPG, PNG, atau WEBP.',
+            'photo.max' => 'Ukuran gambar terlalu besar. Maksimal 1 MB.',
+            'photo.uploaded' => 'Gambar gagal diunggah. Pastikan ukurannya tidak melebihi 1 MB.',
         ]);
     }
 

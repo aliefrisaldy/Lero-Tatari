@@ -763,6 +763,7 @@ export default function Welcome({
                                 <div className="flex flex-col items-center text-center lg:col-span-4">
                                     <div className="mb-4 aspect-[4/5] w-48 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xs sm:w-56">
                                         <img
+                                            loading="lazy"
                                             className="h-full w-full object-cover"
                                             alt={
                                                 head?.name
@@ -1338,13 +1339,13 @@ export default function Welcome({
                             <div className="flex flex-col gap-4 lg:hidden">
                                 {[
                                     {
-                                        src: "/images/Mobile-Sejarah%201.png",
+                                        src: "/images/Mobile-Sejarah%201.webp",
                                         alt: "Peresmian Desa Lero Tatari",
                                         caption:
                                             "Peresmian Desa Lero Tatari",
                                     },
                                     {
-                                        src: "/images/Mobile-Sejarah%202.png",
+                                        src: "/images/Mobile-Sejarah%202.webp",
                                         alt: "Pelantikan Kepala Desa Pertama Lero Tatari",
                                         caption:
                                             "Pelantikan Kepala Desa Pertama Lero Tatari",
@@ -1357,6 +1358,7 @@ export default function Welcome({
                                         <img
                                             src={src}
                                             alt={alt}
+                                            loading="lazy"
                                             className="block h-auto w-full"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -1378,8 +1380,9 @@ export default function Welcome({
                                 style={{ willChange: "transform, opacity" }}
                             >
                                 <img
-                                    src="/images/Sejarah.png"
+                                    src="/images/Sejarah.webp"
                                     alt="Peresmian Desa Lero Tatari"
+                                    loading="lazy"
                                     className="h-full w-full object-cover"
                                     style={{ minHeight: '340px', maxHeight: '420px' }}
                                 />
@@ -3220,6 +3223,7 @@ export default function Welcome({
                                             {article.image_url ? (
                                                 <img
                                                     alt={article.title}
+                                                    loading="lazy"
                                                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                                     src={article.image_url}
                                                 />
@@ -3363,6 +3367,7 @@ export default function Welcome({
                                             {item.image_url ? (
                                                 <img
                                                     alt={item.title}
+                                                    loading="lazy"
                                                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                                     src={item.image_url}
                                                 />
@@ -3484,6 +3489,7 @@ export default function Welcome({
                                         {galeri.image_url ? (
                                             <img
                                                 alt={galeri.title}
+                                                loading="lazy"
                                                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                                 src={galeri.image_url}
                                             />
@@ -3521,6 +3527,7 @@ export default function Welcome({
                             <div className="mb-3 flex items-center gap-2">
                                 <img
                                     alt={`Logo ${VILLAGE}`}
+                                    loading="lazy"
                                     className="h-8 w-auto object-contain"
                                     src="/images/logo.png"
                                 />

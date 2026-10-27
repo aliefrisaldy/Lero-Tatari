@@ -21,6 +21,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { IMAGE_TOO_LARGE_MESSAGE, isImageTooLarge } from '@/lib/image-upload';
 import type { Official } from '@/types/official';
 
 interface OfficialFormProps {
@@ -41,6 +42,24 @@ const inputClass =
 export function OfficialForm({ initialData, onClose }: OfficialFormProps) {
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [photoError, setPhotoError] = useState<string | null>(null);
+
+    const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+
+        if (!file) {
+            return;
+        }
+
+        if (isImageTooLarge(file)) {
+            setPhotoError(IMAGE_TOO_LARGE_MESSAGE);
+            event.target.value = '';
+
+            return;
+        }
+
+        setPhotoError(null);
+    };
 
     const handleDelete = () => {
         if (!initialData || isDeleting) {
@@ -157,13 +176,14 @@ export function OfficialForm({ initialData, onClose }: OfficialFormProps) {
                             </div>
                             <div className="space-y-1.5">
                                 <Label className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
-                                    Foto (maks. 2 MB)
+                                    Foto (maks. 1 MB)
                                 </Label>
                                 <input
                                     className="w-full rounded-full border border-slate-200/80 bg-slate-50 px-3 py-2 text-xs file:mr-2 file:rounded-full file:border-0 file:bg-brand-light file:px-3 file:py-1 file:text-xs file:font-semibold file:text-brand"
                                     type="file"
                                     name="photo"
                                     accept="image/jpeg,image/png,image/webp"
+                                    onChange={handlePhotoChange}
                                     disabled={processing}
                                 />
                                 {progress && (
@@ -172,7 +192,9 @@ export function OfficialForm({ initialData, onClose }: OfficialFormProps) {
                                         {Math.round(progress.percentage ?? 0)}%
                                     </p>
                                 )}
-                                <InputError message={errors.photo} />
+                                <InputError
+                                    message={photoError ?? errors.photo}
+                                />
                             </div>
                         </div>
 

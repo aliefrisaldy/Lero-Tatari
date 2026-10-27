@@ -155,7 +155,7 @@ class GalleryController extends Controller
         return $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'captured_at' => ['nullable', 'date'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
             'order_index' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
         ], [
@@ -164,8 +164,8 @@ class GalleryController extends Controller
             'captured_at.date' => 'Tanggal harus berupa tanggal yang valid.',
             'image.image' => 'Berkas yang dipilih harus berupa gambar.',
             'image.mimes' => 'Format gambar harus JPG, PNG, atau WEBP.',
-            'image.max' => 'Ukuran gambar terlalu besar. Maksimal 2 MB.',
-            'image.uploaded' => 'Gambar gagal diunggah. Pastikan ukurannya tidak melebihi 2 MB.',
+            'image.max' => 'Ukuran gambar terlalu besar. Maksimal 1 MB.',
+            'image.uploaded' => 'Gambar gagal diunggah. Pastikan ukurannya tidak melebihi 1 MB.',
         ]);
     }
 

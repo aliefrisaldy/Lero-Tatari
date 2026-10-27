@@ -1,0 +1,1 @@
+var e=`Ukuran gambar terlalu besar. Maksimal 1 MB.`;function t(e){return e.size>1048576}export{t as n,e as t};

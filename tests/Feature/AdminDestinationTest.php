@@ -60,17 +60,17 @@ test('admin can manage destinations', function () {
     $this->assertDatabaseMissing('destinations', ['id' => $destination->id]);
 });
 
-test('destination image must not exceed two megabytes', function () {
+test('destination image must not exceed one megabyte', function () {
     $admin = User::where('role', 'super_admin')->firstOrFail();
 
     $this->actingAs($admin)
         ->post(route('admin.wisata.store'), [
             'title' => 'Destinasi Gambar Besar',
             'description' => 'Deskripsi destinasi uji.',
-            'image' => UploadedFile::fake()->image('foto.jpg')->size(2049),
+            'image' => UploadedFile::fake()->image('foto.jpg')->size(1025),
         ])
         ->assertSessionHasErrors([
-            'image' => 'Ukuran gambar terlalu besar. Maksimal 2 MB.',
+            'image' => 'Ukuran gambar terlalu besar. Maksimal 1 MB.',
         ]);
 
     $this->assertDatabaseMissing('destinations', ['title' => 'Destinasi Gambar Besar']);

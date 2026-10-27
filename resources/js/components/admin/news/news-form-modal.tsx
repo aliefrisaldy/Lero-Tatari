@@ -11,6 +11,7 @@ import {
     SheetHeader,
     SheetTitle,
 } from '@/components/ui/sheet';
+import { IMAGE_TOO_LARGE_MESSAGE, isImageTooLarge } from '@/lib/image-upload';
 import type { News } from '@/types/news';
 import { NEWS_CATEGORIES } from './news-categories';
 import { ContentEditor } from './content-editor';
@@ -28,6 +29,7 @@ export function NewsFormModal({ initialData, onClose }: NewsFormModalProps) {
         initialData?.image_path ?? null,
     );
     const [objectUrl, setObjectUrl] = useState<string | null>(null);
+    const [sizeError, setSizeError] = useState<string | null>(null);
 
     useEffect(() => {
         return () => {
@@ -44,6 +46,16 @@ export function NewsFormModal({ initialData, onClose }: NewsFormModalProps) {
             return;
         }
 
+        if (isImageTooLarge(file)) {
+            setSizeError(IMAGE_TOO_LARGE_MESSAGE);
+            event.target.value = '';
+            setPreview(initialData?.image_path ?? null);
+            setObjectUrl(null);
+
+            return;
+        }
+
+        setSizeError(null);
         const url = URL.createObjectURL(file);
         setObjectUrl(url);
         setPreview(url);
@@ -108,7 +120,7 @@ export function NewsFormModal({ initialData, onClose }: NewsFormModalProps) {
                                 className="w-full rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-3 py-2.5 text-xs text-slate-500 transition-colors file:mr-3 file:rounded-full file:border-0 file:bg-brand-light file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-brand-dark hover:border-brand/40 disabled:cursor-not-allowed disabled:opacity-60"
                             />
                             <p className="text-[11px] text-slate-500">
-                                JPG, PNG, atau WEBP. Maksimal 2 MB.
+                                JPG, PNG, atau WEBP. Maksimal 1 MB.
                             </p>
                             {progress && (
                                 <p className="text-xs text-slate-500">
@@ -116,7 +128,7 @@ export function NewsFormModal({ initialData, onClose }: NewsFormModalProps) {
                                     {Math.round(progress.percentage ?? 0)}%
                                 </p>
                             )}
-                            <InputError message={errors.image} />
+                            <InputError message={sizeError ?? errors.image} />
                         </div>
 
                         <div className="space-y-1.5">

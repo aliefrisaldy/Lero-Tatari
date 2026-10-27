@@ -249,6 +249,7 @@ export default function NewsShow({ article, latestNews }: Props) {
                                                         <img
                                                             src={item.image_url}
                                                             alt={item.title}
+                                                            loading="lazy"
                                                             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                                                         />
                                                     ) : (
