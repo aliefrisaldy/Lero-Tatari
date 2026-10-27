@@ -9,7 +9,6 @@ use App\Models\Mission;
 use App\Models\News;
 use App\Models\Official;
 use App\Models\Vision;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -41,18 +40,29 @@ class HomeController extends Controller
                     'description' => preg_replace('/^\s*\d+[.)]\s*/u', '', $mission->description),
                 ]),
             'demographic' => Demographic::query()->first(),
-            // Model utuh (dengan author) supaya card detail landing memakai
-            // komponen dialog yang sama dengan admin panel.
             'news' => News::query()
-                ->with('author:id,name')
                 ->where('status', 'published')
                 ->orderByDesc('published_at')
-                ->take(6)
-                ->get(),
+                ->get(['id', 'title', 'category', 'content', 'image_path', 'published_at'])
+                ->map(fn (News $article): array => [
+                    'id' => $article->id,
+                    'title' => $article->title,
+                    'category' => $article->category,
+                    'excerpt' => str($article->content)->stripTags()->limit(180)->toString(),
+                    'image_url' => $this->imageUrl($article->image_path),
+                    'published_at' => $article->published_at?->translatedFormat('j F Y'),
+                ]),
             'destinations' => Destination::query()
                 ->where('is_active', true)
                 ->latest('id')
-                ->get(),
+                ->get(['id', 'title', 'description', 'image_path', 'location_url'])
+                ->map(fn (Destination $destination): array => [
+                    'id' => $destination->id,
+                    'title' => $destination->title,
+                    'description' => $destination->description,
+                    'image_url' => $this->imageUrl($destination->image_path),
+                    'location_url' => $destination->location_url,
+                ]),
             'galleries' => Gallery::query()
                 ->where('is_active', true)
                 ->orderBy('order_index')
@@ -65,19 +75,5 @@ class HomeController extends Controller
                     'image_url' => $this->imageUrl($gallery->image_path),
                 ]),
         ]);
-    }
-
-    /**
-     * Normalise a stored image value into a browsable URL.
-     */
-    private function imageUrl(?string $path): ?string
-    {
-        if (blank($path)) {
-            return null;
-        }
-
-        return str_starts_with($path, 'http') || str_starts_with($path, '/')
-            ? $path
-            : Storage::url($path);
     }
 }

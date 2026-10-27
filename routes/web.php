@@ -8,14 +8,14 @@ use App\Http\Controllers\Admin\OfficialController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VisionMissionController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NewsController as PublicNewsController;
 use App\Http\Middleware\EnsureSuperAdmin;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
+Route::get('/berita/{news}', [PublicNewsController::class, 'show'])->name('berita.show');
 
 Route::middleware(['auth'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
-
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('officials', [OfficialController::class, 'index'])->name('officials.index');
         Route::post('officials', [OfficialController::class, 'store'])->name('officials.store');
@@ -61,6 +61,8 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
+    Route::redirect('dashboard', 'admin/officials');
+    Route::redirect('official', 'admin/officials');
     Route::redirect('officials', 'admin/officials');
 });
 

@@ -4,6 +4,31 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        {{-- Mobile homepage: always start at the hero so ScrollTrigger does not
+             fire sections above a restored scroll position or URL hash. --}}
+        <script>
+            (function () {
+                if (
+                    window.matchMedia('(max-width: 1023px)').matches &&
+                    window.location.pathname === '/'
+                ) {
+                    if ('scrollRestoration' in history) {
+                        history.scrollRestoration = 'manual';
+                    }
+
+                    if (window.location.hash) {
+                        history.replaceState(
+                            null,
+                            '',
+                            window.location.pathname + window.location.search,
+                        );
+                    }
+
+                    window.scrollTo(0, 0);
+                }
+            })();
+        </script>
+
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>
             (function() {

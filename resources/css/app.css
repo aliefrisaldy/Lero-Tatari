@@ -265,6 +265,15 @@
     text-decoration: underline;
 }
 
+.news-detail-content > p:first-of-type::first-letter {
+    float: left;
+    margin-right: 0.5rem;
+    font-size: 3rem;
+    line-height: 0.9;
+    font-weight: 700;
+    color: #047857;
+}
+
 .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;

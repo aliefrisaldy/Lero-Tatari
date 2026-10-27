@@ -8,7 +8,6 @@ import {
     Menu,
     Newspaper,
     Palmtree,
-    Settings,
     UserCog,
     Users,
     X,
@@ -22,7 +21,6 @@ import { index as officialsIndex } from '@/routes/admin/officials';
 import { index as usersIndex } from '@/routes/admin/users';
 import { index as visiMisiIndex } from '@/routes/admin/visi-misi';
 import { index as wisataIndex } from '@/routes/admin/wisata';
-import { edit as profileEdit } from '@/routes/profile';
 import type { AppLayoutProps } from '@/types';
 
 export interface AdminLayoutProps extends AppLayoutProps {
@@ -147,7 +145,7 @@ export default function AdminLayout({
             {/* ── Mobile Drawer ── */}
             {mobileOpen && (
                 <div className="fixed inset-0 z-50 flex bg-black/40 backdrop-blur-xs lg:hidden">
-                    <div className="flex h-full w-[280px] animate-in flex-col justify-between bg-white p-5 shadow-2xl duration-200 slide-in-from-left">
+                    <div className="flex h-full w-[280px] animate-in flex-col justify-between overflow-y-auto bg-white p-5 shadow-2xl duration-200 slide-in-from-left">
                         <div>
                             {/* Drawer Header */}
                             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -204,6 +202,22 @@ export default function AdminLayout({
 
                         {/* Drawer Bottom Controls */}
                         <div className="mt-4 space-y-1.5 border-t border-slate-100 pt-4">
+                            {user && (
+                                <div className="mb-3 flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-2.5">
+                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-brand/20 bg-brand-light text-xs font-bold text-brand">
+                                        {initials}
+                                    </div>
+                                    <div className="min-w-0 text-left">
+                                        <p className="truncate text-xs font-semibold text-slate-text">
+                                            {user.name}
+                                        </p>
+                                        <p className="text-[10px] text-slate-muted">
+                                            {roleLabels[user.role] ??
+                                                'Pegawai Desa'}
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
                             <Link
                                 href={home()}
                                 className="flex items-center gap-3 px-3 py-2 text-xs font-medium text-slate-600 hover:text-[#14532d]"
@@ -212,15 +226,9 @@ export default function AdminLayout({
                                 <span>Lihat Website Publik</span>
                             </Link>
                             <Link
-                                href={profileEdit()}
-                                className="flex items-center gap-3 px-3 py-2 text-xs font-medium text-slate-600 hover:text-[#14532d]"
-                            >
-                                <Settings className="h-4 w-4 text-slate-400" />
-                                <span>Pengaturan Akun</span>
-                            </Link>
-                            <Link
                                 href={logout()}
                                 as="button"
+                                method="post"
                                 className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
                             >
                                 <LogOut className="h-4 w-4 text-red-500" />
@@ -240,7 +248,7 @@ export default function AdminLayout({
             <div className="mx-auto flex min-h-screen max-w-[1720px] items-start gap-6 p-4 md:p-6 lg:p-7">
                 {/* ── BEGIN: Floating Left Icon Sidebar (Stitch Design) ── */}
                 <aside
-                    className="sticky top-6 z-30 hidden w-[72px] shrink-0 flex-col items-center justify-between select-none lg:flex"
+                    className="sticky top-6 z-30 hidden w-[72px] shrink-0 flex-col items-center select-none lg:flex"
                     style={{ height: 'calc(100vh - 48px)' }}
                 >
                     {/* Top Group: Logo & Primary Menu Icons */}
@@ -294,38 +302,6 @@ export default function AdminLayout({
                             })}
                         </nav>
                     </div>
-
-                    {/* Bottom Controls Dock (Lihat Website, Settings, Logout) */}
-                    <div className="flex flex-col items-center space-y-2.5 rounded-3xl border border-slate-200/80 bg-white/95 p-2 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.06)] backdrop-blur-md">
-                        {/* Lihat Website */}
-                        <div className="group relative">
-                            <Link
-                                href={home()}
-                                className="flex h-10 w-10 items-center justify-center rounded-2xl text-slate-400 transition-all hover:bg-slate-50 hover:text-[#14532d]"
-                            >
-                                <Globe className="h-4 w-4 stroke-[1.8]" />
-                            </Link>
-                            <div className="pointer-events-none absolute top-1/2 left-full z-50 -translate-y-1/2 rounded-lg bg-[#0F172A] px-2.5 py-1.5 text-[11px] font-medium whitespace-nowrap text-white opacity-0 shadow-md transition-opacity group-hover:opacity-100">
-                                Lihat Website Publik
-                                <div className="absolute top-1/2 -left-1 h-2 w-2 -translate-y-1/2 rotate-45 bg-[#0F172A]" />
-                            </div>
-                        </div>
-
-                        {/* Keluar */}
-                        <div className="group relative">
-                            <Link
-                                href={logout()}
-                                as="button"
-                                className="flex h-10 w-10 items-center justify-center rounded-2xl text-slate-400 transition-all hover:bg-red-50 hover:text-red-600"
-                            >
-                                <LogOut className="h-4 w-4 stroke-[1.8]" />
-                            </Link>
-                            <div className="pointer-events-none absolute top-1/2 left-full z-50 -translate-y-1/2 rounded-lg bg-[#0F172A] px-2.5 py-1.5 text-[11px] font-medium whitespace-nowrap text-white opacity-0 shadow-md transition-opacity group-hover:opacity-100">
-                                Keluar Akun
-                                <div className="absolute top-1/2 -left-1 h-2 w-2 -translate-y-1/2 rotate-45 bg-[#0F172A]" />
-                            </div>
-                        </div>
-                    </div>
                 </aside>
                 {/* ── END: Floating Left Icon Sidebar ── */}
 
@@ -350,7 +326,25 @@ export default function AdminLayout({
                         </div>
 
                         {/* Right Quick Controls & Profile */}
-                        <div className="flex items-center gap-2.5 self-end lg:self-center">
+                        <div className="hidden items-center gap-2.5 lg:flex lg:self-center">
+                            <Link
+                                href={home()}
+                                title="Lihat Website Publik"
+                                aria-label="Lihat Website Publik"
+                                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-600 shadow-sm transition-colors hover:border-brand/30 hover:text-brand"
+                            >
+                                <Globe className="size-4" />
+                            </Link>
+                            <Link
+                                href={logout()}
+                                as="button"
+                                method="post"
+                                title="Keluar Akun"
+                                aria-label="Keluar Akun"
+                                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-600 shadow-sm transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                            >
+                                <LogOut className="size-4" />
+                            </Link>
                             {user && (
                                 <div className="flex items-center gap-2.5 rounded-full border border-slate-200/80 bg-white py-1 pr-3.5 pl-1.5 shadow-sm">
                                     <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-brand/20 bg-brand-light text-xs font-bold text-brand">
