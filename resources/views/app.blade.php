@@ -72,22 +72,22 @@
 
         {{-- JSON-LD Structured Data (Schema.org) untuk Instansi Pemerintah Desa --}}
         <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "GovernmentOrganization",
-            "name": "Pemerintah Desa Lero Tatari",
-            "alternateName": "Desa Lero Tatari",
-            "url": "{{ url('/') }}",
-            "logo": "{{ asset('images/logo.png') }}",
-            "image": "{{ asset('images/logo.png') }}",
-            "description": "{{ $siteDescription }}",
-            "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Lero Tatari",
-                "addressRegion": "Sulawesi Tengah",
-                "addressCountry": "ID"
-            }
-        }
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'GovernmentOrganization',
+            'name' => 'Pemerintah Desa Lero Tatari',
+            'alternateName' => 'Desa Lero Tatari',
+            'url' => url('/'),
+            'logo' => asset('images/logo.png'),
+            'image' => asset('images/logo.png'),
+            'description' => $siteDescription,
+            'address' => [
+                '@type' => 'PostalAddress',
+                'addressLocality' => 'Lero Tatari',
+                'addressRegion' => 'Sulawesi Tengah',
+                'addressCountry' => 'ID',
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
         </script>
 
         {{-- Favicon & Icon Browser --}}
