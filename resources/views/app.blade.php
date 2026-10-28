@@ -60,16 +60,65 @@
             }
         </style>
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        @php
+            $siteTitle = config('app.name', 'Website Resmi Desa Lero Tatari');
+            $siteDescription = 'Website Resmi Pemerintah Desa Lero Tatari, Kecamatan Sindue, Kabupaten Donggala, Sulawesi Tengah. Pusat informasi, layanan publik, transparansi dan potensi desa.';
+            $siteImage = asset('images/logo.png');
+        @endphp
+
+        {{-- Meta Deskripsi Standar & Canonical --}}
+        <meta name="description" content="{{ $siteDescription }}">
+        <link rel="canonical" href="{{ url()->current() }}">
+
+        {{-- JSON-LD Structured Data (Schema.org) untuk Instansi Pemerintah Desa --}}
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "GovernmentOrganization",
+            "name": "Pemerintah Desa Lero Tatari",
+            "alternateName": "Desa Lero Tatari",
+            "url": "{{ url('/') }}",
+            "logo": "{{ asset('images/logo.png') }}",
+            "image": "{{ asset('images/logo.png') }}",
+            "description": "{{ $siteDescription }}",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Lero Tatari",
+                "addressRegion": "Sulawesi Tengah",
+                "addressCountry": "ID"
+            }
+        }
+        </script>
+
+        {{-- Favicon & Icon Browser --}}
+        <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+        <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+
+        {{-- Open Graph / Facebook / WhatsApp Preview --}}
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:site_name" content="{{ $siteTitle }}">
+        <meta property="og:title" content="{{ $siteTitle }}">
+        <meta property="og:description" content="{{ $siteDescription }}">
+        <meta property="og:image" content="{{ $siteImage }}">
+        <meta property="og:image:secure_url" content="{{ $siteImage }}">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="300">
+        <meta property="og:image:height" content="356">
+
+        {{-- Twitter Card Preview --}}
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{{ $siteTitle }}">
+        <meta name="twitter:description" content="{{ $siteDescription }}">
+        <meta name="twitter:image" content="{{ $siteImage }}">
 
         @fonts
 
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
         <x-inertia::head>
-            <title>{{ config('app.name', 'Laravel') }}</title>
+            <title inertia>{{ $siteTitle }}</title>
         </x-inertia::head>
     </head>
     <body class="font-sans antialiased">

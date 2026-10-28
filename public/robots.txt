@@ -1,2 +1,10 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+Disallow: /settings
+Disallow: /api/
+
+Sitemap: https://api.lerotatari.my.id/sitemap.xml

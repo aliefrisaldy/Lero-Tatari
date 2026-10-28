@@ -616,6 +616,24 @@ export default function Welcome({
             className="min-h-screen bg-[#F8FAFC] font-['Inter',sans-serif] text-slate-700 antialiased selection:bg-[#D1FAE5] selection:text-[#065F46]"
         >
             <Head title={`Website Resmi ${VILLAGE}`}>
+                <meta
+                    name="description"
+                    content="Website Resmi Pemerintah Desa Lero Tatari, Kecamatan Sindue, Kabupaten Donggala, Sulawesi Tengah. Pusat informasi, layanan publik, transparansi dan potensi desa."
+                />
+                <meta property="og:title" content={`Website Resmi ${VILLAGE}`} />
+                <meta
+                    property="og:description"
+                    content="Website Resmi Pemerintah Desa Lero Tatari, Kecamatan Sindue, Kabupaten Donggala, Sulawesi Tengah. Pusat informasi, layanan publik, transparansi dan potensi desa."
+                />
+                <link rel="canonical" href="/" />
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "WebSite",
+                        "name": `Website Resmi ${VILLAGE}`,
+                        "description": "Website Resmi Pemerintah Desa Lero Tatari, Kecamatan Sindue, Kabupaten Donggala, Sulawesi Tengah.",
+                    })}
+                </script>
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link
                     rel="preconnect"

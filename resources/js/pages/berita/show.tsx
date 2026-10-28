@@ -49,7 +49,34 @@ export default function NewsShow({ article, latestNews }: Props) {
 
     return (
         <>
-            <Head title={article.title} />
+            <Head title={article.title}>
+                <meta property="og:type" content="article" />
+                <meta property="og:title" content={article.title} />
+                {article.image_url && <meta property="og:image" content={article.image_url} />}
+                {article.share_url && <meta property="og:url" content={article.share_url} />}
+                {article.share_url && <link rel="canonical" href={article.share_url} />}
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "NewsArticle",
+                        "headline": article.title,
+                        "image": article.image_url ? [article.image_url] : [],
+                        "datePublished": article.published_at,
+                        "author": {
+                            "@type": "Person",
+                            "name": article.author || "Pemerintah Desa Lero Tatari",
+                        },
+                        "publisher": {
+                            "@type": "GovernmentOrganization",
+                            "name": "Pemerintah Desa Lero Tatari",
+                        },
+                        "mainEntityOfPage": {
+                            "@type": "WebPage",
+                            "@id": article.share_url,
+                        },
+                    })}
+                </script>
+            </Head>
 
             <div className="flex min-h-screen flex-col bg-slate-50">
                 <PublicNavbar activeItem="berita" />
