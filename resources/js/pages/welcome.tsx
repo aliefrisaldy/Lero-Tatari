@@ -1,4 +1,4 @@
-import { Head, Link, usePage } from "@inertiajs/react";
+﻿import { Head, Link, usePage } from "@inertiajs/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
@@ -3640,16 +3640,16 @@ export default function Welcome({
                                     <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" />
                                     <span>
                                         Kantor Kepala Desa Lero Tatari, Jl.
-                                        Poros Desa No. 01, Kode Pos 94362
+                                        Abdul Azis lamdjido No.02, Kode Pos 94353
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Phone className="h-4 w-4 shrink-0 text-emerald-700" />
-                                    <span>+62 812-3456-7890</span>
+                                    <span>+62 823‑2510‑3619</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Mail className="h-4 w-4 shrink-0 text-emerald-700" />
-                                    <span>kontak@lerotatari.desa.id</span>
+                                    <span>lerotatari6@gmail.com</span>
                                 </div>
                             </div>
                         </div>
@@ -3681,7 +3681,7 @@ export default function Welcome({
                                 <a
                                     aria-label="Kontak Surel"
                                     className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-600 transition-colors hover:bg-slate-200"
-                                    href="mailto:kontak@lerotatari.desa.id"
+                                    href="mailto:lerotatari6@gmail.com"
                                 >
                                     <Mail className="h-4 w-4" />
                                 </a>
