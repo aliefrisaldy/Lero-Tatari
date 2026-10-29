@@ -34,7 +34,7 @@ type Props = {
 };
 
 const SARAN_WHATSAPP_URL =
-    'https://wa.me/6282259709369?text=Halo%20Admin%20Desa%20Lero%20Tatari%2C%20saya%20ingin%20menyampaikan%20saran%2Fpengaduan.';
+    'https://wa.me/6282325103619?text=Halo%20Admin%20Desa%20Lero%20Tatari%2C%20saya%20ingin%20menyampaikan%20saran%2Fpengaduan.';
 
 export default function NewsShow({ article, latestNews }: Props) {
     const shareUrl = encodeURIComponent(article.share_url);

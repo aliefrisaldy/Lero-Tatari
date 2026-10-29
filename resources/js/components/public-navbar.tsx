@@ -133,7 +133,7 @@ export function PublicNavbar({ activeItem }: PublicNavbarProps) {
 
                 <div className="flex items-center gap-2">
                     <a
-                        href="https://wa.me/6282259709369"
+                        href="https://wa.me/6282325103619"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="hidden items-center justify-center gap-1.5 rounded-full bg-emerald-800 px-5 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-emerald-900 sm:text-sm md:inline-flex"
@@ -193,7 +193,7 @@ export function PublicNavbar({ activeItem }: PublicNavbarProps) {
                 </nav>
                 <div className="border-t border-slate-100 p-3">
                     <a
-                        href="https://wa.me/6282259709369"
+                        href="https://wa.me/6282325103619"
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => setMobileNavOpen(false)}

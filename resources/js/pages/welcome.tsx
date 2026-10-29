@@ -1644,7 +1644,7 @@ export default function Welcome({
                                         <span className="mb-1 inline-block rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-emerald-800 uppercase">
                                             Kepala Desa
                                         </span>
-                                        <h3 className="font-['Plus_Jakarta_Sans',sans-serif] text-lg leading-tight font-extrabold text-slate-900 uppercase">
+                                        <h3 className="font-['Plus_Jakarta_Sans',sans-serif] text-lg leading-tight font-extrabold text-slate-900">
                                             {head?.name ?? "UMURJIN"}
                                         </h3>
                                         <p className="text-xs font-medium text-slate-500">
@@ -1692,7 +1692,7 @@ export default function Welcome({
                                         <span className="mb-1 inline-block rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-emerald-800 uppercase">
                                             Sekretaris Desa
                                         </span>
-                                        <h4 className="font-['Plus_Jakarta_Sans',sans-serif] text-sm leading-tight font-extrabold text-slate-900 uppercase">
+                                        <h4 className="font-['Plus_Jakarta_Sans',sans-serif] text-sm leading-tight font-extrabold text-slate-900">
                                             {secretary?.name ?? "ARFAN, S.Pd"}
                                         </h4>
                                         <p className="text-xs text-slate-500">
@@ -1756,7 +1756,7 @@ export default function Welcome({
                                                                 <span className="mb-1 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold tracking-wider text-emerald-800 uppercase">
                                                                     {label}
                                                                 </span>
-                                                                <h5 className="font-['Plus_Jakarta_Sans',sans-serif] text-sm font-bold text-slate-900 uppercase">
+                                                                <h5 className="font-['Plus_Jakarta_Sans',sans-serif] text-sm font-bold text-slate-900">
                                                                     {name}
                                                                 </h5>
                                                                 <p className="mt-0.5 text-xs text-slate-500">
@@ -1824,7 +1824,7 @@ export default function Welcome({
                                                                 <span className="mb-1 inline-block rounded-full bg-[#E0F2FE] px-2 py-0.5 text-[10px] font-bold tracking-wider text-sky-700 uppercase">
                                                                     {label}
                                                                 </span>
-                                                                <h5 className="font-['Plus_Jakarta_Sans',sans-serif] text-sm font-bold text-slate-900 uppercase">
+                                                                <h5 className="font-['Plus_Jakarta_Sans',sans-serif] text-sm font-bold text-slate-900">
                                                                     {name}
                                                                 </h5>
                                                                 <p className="mt-0.5 text-xs text-slate-500">
@@ -1893,7 +1893,7 @@ export default function Welcome({
                                                         <span className="mb-1 inline-block rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold tracking-wider text-slate-700 uppercase">
                                                             {label}
                                                         </span>
-                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] text-sm font-bold text-slate-900 uppercase">
+                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] text-sm font-bold text-slate-900">
                                                             {name}
                                                         </h5>
                                                         <p className="mt-0.5 text-xs text-slate-500">
@@ -1954,7 +1954,7 @@ export default function Welcome({
                                             <span className="mb-1 inline-block rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[9px] font-bold tracking-wider text-emerald-800 uppercase">
                                                 Kepala Desa
                                             </span>
-                                            <h3 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-base font-extrabold text-slate-900 uppercase leading-tight">
+                                            <h3 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-base font-extrabold text-slate-900 leading-tight">
                                                 {head?.name ?? "UMURJIN"}
                                             </h3>
                                             <p className="truncate text-[11px] font-medium text-slate-500">
@@ -1984,7 +1984,7 @@ export default function Welcome({
                                             <span className="mb-1 inline-block rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[9px] font-bold tracking-wider text-emerald-800 uppercase">
                                                 Sekretaris Desa
                                             </span>
-                                            <h4 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-sm font-extrabold text-slate-900 uppercase leading-tight">
+                                            <h4 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-sm font-extrabold text-slate-900 leading-tight">
                                                 {secretary?.name ??
                                                     "ARFAN, S.Pd"}
                                             </h4>
@@ -2029,7 +2029,7 @@ export default function Welcome({
                                                         <span className="mb-1 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-bold tracking-wider text-emerald-800 uppercase">
                                                             KASI PEMERINTAHAN
                                                         </span>
-                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900 uppercase">
+                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900">
                                                             {kasiPemerintahan?.name ??
                                                                 "FIRMAN"}
                                                         </h5>
@@ -2049,7 +2049,7 @@ export default function Welcome({
                                                         <span className="mb-1 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-bold tracking-wider text-emerald-800 uppercase">
                                                             KASI KESEJAHTERAAN
                                                         </span>
-                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900 uppercase">
+                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900">
                                                             {kasiKesejahteraan?.name ??
                                                                 "RUSLAN"}
                                                         </h5>
@@ -2069,7 +2069,7 @@ export default function Welcome({
                                                         <span className="mb-1 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-bold tracking-wider text-emerald-800 uppercase">
                                                             KASI PELAYANAN
                                                         </span>
-                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900 uppercase">
+                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900">
                                                             {kasiPelayanan?.name ??
                                                                 "HASANUDIN"}
                                                         </h5>
@@ -2100,7 +2100,7 @@ export default function Welcome({
                                                         <span className="mb-1 inline-block rounded-full bg-[#E0F2FE] px-2 py-0.5 text-[9px] font-bold tracking-wider text-sky-700 uppercase">
                                                             KAUR UMUM &amp; T.U
                                                         </span>
-                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900 uppercase">
+                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900">
                                                             {kaurUmum?.name ??
                                                                 "SARIFUDIN"}
                                                         </h5>
@@ -2120,7 +2120,7 @@ export default function Welcome({
                                                         <span className="mb-1 inline-block rounded-full bg-[#E0F2FE] px-2 py-0.5 text-[9px] font-bold tracking-wider text-sky-700 uppercase">
                                                             KAUR KEUANGAN
                                                         </span>
-                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900 uppercase">
+                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900">
                                                             {kaurKeuangan?.name ??
                                                                 "NURLAELA"}
                                                         </h5>
@@ -2140,7 +2140,7 @@ export default function Welcome({
                                                         <span className="mb-1 inline-block rounded-full bg-[#E0F2FE] px-2 py-0.5 text-[9px] font-bold tracking-wider text-sky-700 uppercase">
                                                             KAUR PERENCANAAN
                                                         </span>
-                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900 uppercase">
+                                                        <h5 className="font-['Plus_Jakarta_Sans',sans-serif] w-full truncate text-xs font-bold text-slate-900">
                                                             {kaurPerencanaan?.name ??
                                                                 "AHMAD"}
                                                         </h5>
@@ -2182,7 +2182,7 @@ export default function Welcome({
                                                     <span className="mb-0.5 inline-block rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold tracking-wider text-slate-700 uppercase">
                                                         KEPALA DUSUN I
                                                     </span>
-                                                    <h5 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-xs font-bold text-slate-900 uppercase">
+                                                    <h5 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-xs font-bold text-slate-900">
                                                         {kadusun1?.name ??
                                                             "ISMAIL"}
                                                     </h5>
@@ -2203,7 +2203,7 @@ export default function Welcome({
                                                     <span className="mb-0.5 inline-block rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold tracking-wider text-slate-700 uppercase">
                                                         KEPALA DUSUN II
                                                     </span>
-                                                    <h5 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-xs font-bold text-slate-900 uppercase">
+                                                    <h5 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-xs font-bold text-slate-900">
                                                         {kadusun2?.name ??
                                                             "MOH. TAHIR"}
                                                     </h5>
@@ -2224,7 +2224,7 @@ export default function Welcome({
                                                     <span className="mb-0.5 inline-block rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold tracking-wider text-slate-700 uppercase">
                                                         KEPALA DUSUN III
                                                     </span>
-                                                    <h5 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-xs font-bold text-slate-900 uppercase">
+                                                    <h5 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-xs font-bold text-slate-900">
                                                         {kadusun3?.name ??
                                                             "BAHTIAR"}
                                                     </h5>
@@ -2245,7 +2245,7 @@ export default function Welcome({
                                                     <span className="mb-0.5 inline-block rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold tracking-wider text-slate-700 uppercase">
                                                         KEPALA DUSUN IV
                                                     </span>
-                                                    <h5 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-xs font-bold text-slate-900 uppercase">
+                                                    <h5 className="font-['Plus_Jakarta_Sans',sans-serif] truncate text-xs font-bold text-slate-900">
                                                         {kadusun4?.name ??
                                                             "SAMSUDIN"}
                                                     </h5>
